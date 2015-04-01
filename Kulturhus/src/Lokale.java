@@ -1,22 +1,30 @@
+import java.util.*;
+
 public class Lokale
 {
     private String navn;
-    private int type, lokaleNr;
+    private int type, lokaleNr, antPlasser;
     private static int nesteNr = 0;
-    private int[] plasser;
     private boolean harNrPlasser;
+    private LinkedList<Arrangement> arrListe = new LinkedList<>();
     
-    public Lokale(String n, int t, int p, boolean hNP)
+    public Lokale(String n, int t, int aP, boolean hNP)
     {
         navn = n;
         type = t;
         harNrPlasser = hNP;
         lokaleNr = ++nesteNr;
-
-        plasser = new int[p];
-        for(int i = 0; i < p; i++)
-        {
-            plasser[i] = i+1;
-        }
+        antPlasser = aP;
+    }
+    
+    public int getAntPlasser()
+    {
+        return antPlasser;
+    }
+    
+    public void settInnArr(Arrangement a)
+    {
+        a.setPlasser(antPlasser);
+        arrListe.add(a);
     }
 }
