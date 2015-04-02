@@ -2,8 +2,18 @@ import java.util.*;
 
 public class Foredrag extends Arrangement
 {
-    public Foredrag(String n, String p, double bp, String[] dt, Calendar d, Kontaktperson kP)
+    String tema;
+    
+    public Foredrag(String n, String p, double bpB, double bpV, String[] dt, Calendar d, Kontaktperson kP, String t)
     {
-        super(n, p, bp, dt, d, kP);
+        super(n, p, bpB, bpV, dt, d, kP);
+        tema = t;
+    }
+    
+    public String toString()
+    {
+        String tekst = super.toString();
+        tekst += "\nTema: " + tema;
+        return tekst;
     }
 }

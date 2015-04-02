@@ -2,8 +2,18 @@ import java.util.*;
 
 public class Konsert extends Arrangement
 {
-    public Konsert(String n, String p, double bp, String[] dt, Calendar d, Kontaktperson kP)
+    String sjanger;
+    
+    public Konsert(String n, String p, double bpB, double bpV, String[] dt, Calendar d, Kontaktperson kP, String sj)
     {
-        super(n, p, bp, dt, d, kP);
+        super(n, p, bpB, bpV, dt, d, kP);
+        sjanger = sj;
+    }
+    
+    public String toString()
+    {
+        String tekst = super.toString();
+        tekst += "\nSjanger: " + sjanger;
+        return tekst;
     }
 }
