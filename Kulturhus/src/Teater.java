@@ -12,4 +12,4 @@ public class Teater extends UnderholdningsArrangement
         String tekst = super.toString();
         return tekst;
     }
-}
+} //End of class Teater

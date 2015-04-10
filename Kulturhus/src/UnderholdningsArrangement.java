@@ -16,4 +16,4 @@ public abstract class UnderholdningsArrangement extends Arrangement
         tekst += "\nSjanger: " + sjanger;
         return tekst;
     }
-}
+} //End of class UnderholdningsArrangement

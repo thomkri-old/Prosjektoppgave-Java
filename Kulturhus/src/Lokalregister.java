@@ -8,4 +8,4 @@ public class Lokalregister
     {
         register.add(l);
     }
-}
+} //End of class Lokalregister

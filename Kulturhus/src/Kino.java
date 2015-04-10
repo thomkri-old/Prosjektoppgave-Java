@@ -16,4 +16,4 @@ public class Kino extends UnderholdningsArrangement
         tekst += "\nLengde: " + lengde +"\nAldersgrense: " + aldersgrense;
         return tekst;
     }
-}
+} //End of class Kino

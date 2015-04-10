@@ -8,4 +8,4 @@ public class Kontaktpersonregister
     {
         register.add(k);
     }
-}
+} //End of class Kontakpersonregister
