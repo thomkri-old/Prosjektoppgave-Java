@@ -15,4 +15,4 @@ public class Billett
         arr = a;
         pris = p;
     }
-}
+} //End of class Billett

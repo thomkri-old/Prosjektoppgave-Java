@@ -16,4 +16,4 @@ public abstract class FagligArrangement extends Arrangement
         tekst += "\nTema: " + tema;
         return tekst;
     }
-}
+} //End of class FagligArrangement

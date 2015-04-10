@@ -12,4 +12,4 @@ public class Barneforestilling extends UnderholdningsArrangement
         String tekst = super.toString();
         return tekst;
     }
-}
+} //End of class Barneforestilling

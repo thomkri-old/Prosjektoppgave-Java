@@ -4,4 +4,4 @@ public class Kulturhus
     {
         
     }
-}
+} //End of class Kulturhus

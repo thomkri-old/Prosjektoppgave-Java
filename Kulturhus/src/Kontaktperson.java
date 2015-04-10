@@ -26,4 +26,4 @@ public class Kontaktperson
     {
         return "";
     }
-}
+} //End of class Kontaktperson

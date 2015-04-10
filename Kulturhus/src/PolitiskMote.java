@@ -12,4 +12,4 @@ public class PolitiskMote extends FagligArrangement
         String tekst = super.toString();
         return tekst;
     }
-}
+} //End of class PolitiskMote

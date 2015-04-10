@@ -27,4 +27,4 @@ public class Lokale
         a.setPlasser(antPlasser);
         arrListe.add(a);
     }
-}
+} //End of class Lokale

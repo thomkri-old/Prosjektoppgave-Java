@@ -55,4 +55,4 @@ public abstract class Arrangement
                 + "\n\n" + program + "\n\nKontaktperson: " + kPerson;
         return tekst;
     }
-}
+} //End of class Arrangement
