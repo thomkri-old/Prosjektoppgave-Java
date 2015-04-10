@@ -2,7 +2,12 @@ import java.util.*;
 
 public class Kontaktpersonregister
 {
-    private ArrayList<Kontaktperson> register = new ArrayList<>();
+    private Set<Kontaktperson> register;
+    
+    public Kontaktpersonregister()
+    {
+        register = new LinkedHashSet<>();
+    }
     
     public void settInn(Kontaktperson k)
     {
