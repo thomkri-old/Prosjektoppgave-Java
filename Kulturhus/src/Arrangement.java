@@ -12,7 +12,7 @@ public abstract class Arrangement
     private Calendar dato;
     private DateFormat df;
     private Kontaktperson kPerson;
-    private ArrayList<Billett> billettListe;
+    private Set<Billett> billettListe;
     
     public Arrangement(String n, String p, double bpB, double bpV, String[] dt, Calendar d, Kontaktperson kP)
     {
@@ -25,7 +25,7 @@ public abstract class Arrangement
         df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
         kPerson = kP;
         arrId = ++ nesteId;
-        billettListe = new ArrayList<>();
+        billettListe = new HashSet<>();
     }
     
     public void setPlasser(int antP)
