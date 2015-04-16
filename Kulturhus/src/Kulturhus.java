@@ -1,4 +1,5 @@
 import java.awt.event.*;
+import javax.swing.JScrollPane;
 
 public class Kulturhus
 {

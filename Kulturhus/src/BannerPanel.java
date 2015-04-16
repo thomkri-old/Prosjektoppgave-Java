@@ -18,12 +18,12 @@ public class BannerPanel extends JPanel
         else
             bannerIkon = null;
         banner = bannerIkon.getImage();
-        setPreferredSize(new Dimension(BREDDE, HOYDE));
+        setPreferredSize(new Dimension(banner.getWidth(this), banner.getHeight(this)));
     }
     
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-        g.drawImage(banner, 0, 0, BREDDE, HOYDE, this);
+        g.drawImage(banner, 0, 0, banner.getWidth(this), banner.getHeight(this), this);
     }
 }//End of class BannerPanel
