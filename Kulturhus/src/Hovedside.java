@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.*;
-import java.net.*;
 
 public class Hovedside extends JFrame
 {
@@ -36,25 +34,36 @@ public class Hovedside extends JFrame
         ImageIcon[] arrListe = new ImageIcon[20];
         for(int i = 0; i < arrListe.length; i++)
         {
-            JFrame frame = new JFrame();
+            JFrame ramme = new JFrame();
             JPanel panel = new JPanel();
-            JTextArea tekst = new JTextArea(10, 20);
-            tekst.append("Hei...\n\n\n\n\n" + (i*3));
-            panel.add(tekst);
-            frame.add(panel);
-            frame.pack();
-            frame.setVisible(false);
-            BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
-            Graphics2D graphics = image.createGraphics();
+            JLabel navn = new JLabel("Tittel: Tammy");
+            JLabel lengde = new JLabel("Lengde: 1 time og 45 min");
+            ArrbildePanel plakat = new ArrbildePanel();
+            panel.add(plakat);
+            JPanel info = new JPanel(new GridLayout(2, 1, 5, 5));
+            info.add(navn);
+            info.add(lengde);
+            info.setBackground(Color.white);
+            panel.add(info);
+            ramme.add(panel);
+            ramme.pack();
+            panel.setBackground(Color.white);
+            ramme.setVisible(false);
+            BufferedImage bilde = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = bilde.createGraphics();
             panel.print(graphics);
             graphics.dispose();
-            frame.dispose();
-            ImageIcon icon = new ImageIcon(image);
-            arrListe[i] = icon;
+            ramme.dispose();
+            ImageIcon ikon = new ImageIcon(bilde);
+            arrListe[i] = ikon;
         }
         infoFelt = new JList<>(arrListe);
         infoFelt.setVisibleRowCount(VALGHOYDE);
         infoFelt.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+        infoFelt.setSelectedIndex(0);
+        DefaultListCellRenderer renderer =  (DefaultListCellRenderer)infoFelt.getCellRenderer();  
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+        renderer.setForeground(Color.gray);
         
         infoScroll = new JScrollPane(infoFelt, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         infoScroll.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
