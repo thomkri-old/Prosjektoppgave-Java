@@ -1,40 +1,75 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.*;
 import java.net.*;
 
 public class Hovedside extends JFrame
 {
     private final int BANNERBREDDE = 800;
+    private final int BANNERHOYDE = 100;
     private final int MENYBREDDE = 250;
-    private final int VALGBREDDE = 46;
-    private final int VALGHOYDE = 40;
-    private JPanel vindu, hovedPanel, meny, infoPanel;
-    private JTextArea infoFelt;
-    private JScrollPane infoScroll;
+    private final int VALGHOYDE = 3;
+    private final int SCROLLSPEED = 16;
+    private JPanel vindu, hovedPanel, meny, infoPanel, knapper;
+    private JList<ImageIcon> infoFelt;
+    private JScrollPane infoScroll, mainScroll;
+    private JSplitPane splitter;
+    private JButton infoKnapp, kjopKnapp;
     
     public Hovedside()
     {
         super("Målselv Kommune");
         
-        vindu = new JPanel();
+        vindu = new JPanel(new BorderLayout());
         vindu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        vindu.setLayout(new BorderLayout());
-        hovedPanel = new JPanel();
-        hovedPanel.setLayout(new GridBagLayout());
+        hovedPanel = new JPanel(new GridBagLayout());
 
         BannerPanel banner = new BannerPanel();
-        banner.setMinimumSize(new Dimension(BANNERBREDDE, 0));
-        banner.setMaximumSize(new Dimension(BANNERBREDDE, 0));
+        banner.setMinimumSize(new Dimension(BANNERBREDDE, BANNERHOYDE));
+        banner.setMaximumSize(new Dimension(BANNERBREDDE, BANNERHOYDE));
         
         meny = new JPanel();
         meny.setMinimumSize(new Dimension(MENYBREDDE, 0));
-        infoPanel = new JPanel();
+        infoPanel = new JPanel(new BorderLayout());
         
-        infoFelt = new JTextArea(VALGHOYDE, VALGBREDDE);
+        ImageIcon[] arrListe = new ImageIcon[20];
+        for(int i = 0; i < arrListe.length; i++)
+        {
+            JFrame frame = new JFrame();
+            JPanel panel = new JPanel();
+            JTextArea tekst = new JTextArea(10, 20);
+            tekst.append("Hei...\n\n\n\n\n" + (i*3));
+            panel.add(tekst);
+            frame.add(panel);
+            frame.pack();
+            frame.setVisible(false);
+            BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = image.createGraphics();
+            panel.print(graphics);
+            graphics.dispose();
+            frame.dispose();
+            ImageIcon icon = new ImageIcon(image);
+            arrListe[i] = icon;
+        }
+        infoFelt = new JList<>(arrListe);
+        infoFelt.setVisibleRowCount(VALGHOYDE);
+        infoFelt.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+        
         infoScroll = new JScrollPane(infoFelt, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        infoPanel.add(infoScroll);
-        JSplitPane splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, meny, infoPanel);
+        infoScroll.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        infoPanel.add(infoScroll, BorderLayout.CENTER);
+        
+        infoKnapp = new JButton("Info");
+        kjopKnapp = new JButton("Kjøp billett");
+        knapper = new JPanel(new BorderLayout());
+        knapper.add(infoKnapp, BorderLayout.LINE_START);
+        knapper.add(kjopKnapp, BorderLayout.LINE_END);
+        knapper.setBorder(BorderFactory.createEmptyBorder(0, 150, 5, 150));
+        
+        infoPanel.add(knapper, BorderLayout.PAGE_END);
+        
+        splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, meny, infoPanel);
         splitter.setEnabled(false);
         
         GridBagConstraints gbc = new GridBagConstraints();
@@ -43,21 +78,19 @@ public class Hovedside extends JFrame
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-
         hovedPanel.add(banner, gbc);
 
-        gbc.fill = GridBagConstraints.BOTH;
         gbc.gridy++;
 
         hovedPanel.add(splitter, gbc);
-
         vindu.add(hovedPanel, BorderLayout.CENTER);
         
-        JScrollPane scroll = new JScrollPane(vindu, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        setContentPane(scroll);
+        mainScroll = new JScrollPane(vindu, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        mainScroll.getVerticalScrollBar().setUnitIncrement(SCROLLSPEED);
+        
+        setContentPane(mainScroll);
         
         pack();
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setVisible(true);        
+        setExtendedState(JFrame.MAXIMIZED_BOTH);      
     }
 } //End of class Hovedside
