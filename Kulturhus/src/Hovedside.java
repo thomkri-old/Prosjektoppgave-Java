@@ -38,22 +38,28 @@ public class Hovedside extends JFrame
             JPanel panel = new JPanel();
             JLabel navn = new JLabel("Tittel: Tammy");
             JLabel lengde = new JLabel("Lengde: 1 time og 45 min");
+            
             ArrbildePanel plakat = new ArrbildePanel();
             panel.add(plakat);
+            
             JPanel info = new JPanel(new GridLayout(2, 1, 5, 5));
             info.add(navn);
             info.add(lengde);
             info.setBackground(Color.white);
+            
             panel.add(info);
+            panel.setBackground(Color.white);
+            
             ramme.add(panel);
             ramme.pack();
-            panel.setBackground(Color.white);
             ramme.setVisible(false);
+            
             BufferedImage bilde = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
             Graphics2D graphics = bilde.createGraphics();
             panel.print(graphics);
             graphics.dispose();
             ramme.dispose();
+            
             ImageIcon ikon = new ImageIcon(bilde);
             arrListe[i] = ikon;
         }
