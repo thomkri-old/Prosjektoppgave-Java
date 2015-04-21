@@ -1,7 +1,7 @@
 import java.util.*;
 public class Kino extends UnderholdningsArrangement
 {
-    private int aldersgrense, lengde; //Lengde i sekunder
+    private int aldersgrense, lengde; //Lengde i minutter
     
     public Kino(String n, String p, double bpB, double bpV, String[] dt, Calendar d, Kontaktperson kP, String sj, int l, int ag)
     {

@@ -4,7 +4,7 @@ public class Kontaktperson
     private int tlfNr, type, idNr;
     private static int nesteNr = 0;
     
-    public Kontaktperson(String fn, String en, String e, String n, String f, String o, int tN, int t)
+    public Kontaktperson(String fn, String en, String e, String n, String f, String o, int tN)
     {
         fornavn = fn;
         etternavn = en;
@@ -13,7 +13,6 @@ public class Kontaktperson
         firma = f;
         opplysninger = o;
         tlfNr = tN;
-        type = t;
         idNr = ++nesteNr;
     }
     

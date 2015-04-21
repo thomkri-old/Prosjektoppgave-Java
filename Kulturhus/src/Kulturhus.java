@@ -1,11 +1,12 @@
 import java.awt.event.*;
-import javax.swing.JScrollPane;
 
 public class Kulturhus
 {
     public static void main(String[] args)
     {
-        RegistreringsVindu r = new RegistreringsVindu("Opprett", 5);
+        Kontaktpersonregister kpregister = new Kontaktpersonregister();
+        Lokalregister lregister = new Lokalregister();
+        RegistreringsVindu r = new RegistreringsVindu("Opprett", 8, kpregister, lregister);
         Hovedside h = new Hovedside();
         h.addWindowListener(
             new WindowAdapter()

@@ -9,11 +9,15 @@ public class Hovedside extends JFrame
     private final int MENYBREDDE = 250;
     private final int VALGHOYDE = 3;
     private final int SCROLLSPEED = 16;
+    
     private JPanel vindu, hovedPanel, meny, infoPanel, knapper;
     private JList<ImageIcon> infoFelt;
     private JScrollPane infoScroll, mainScroll;
     private JSplitPane splitter;
     private JButton infoKnapp, kjopKnapp;
+    
+    private Kontaktpersonregister kpregister;
+    private Lokalregister lregister;
     
     public Hovedside()
     {
@@ -67,7 +71,8 @@ public class Hovedside extends JFrame
         infoFelt.setVisibleRowCount(VALGHOYDE);
         infoFelt.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         infoFelt.setSelectedIndex(0);
-        DefaultListCellRenderer renderer =  (DefaultListCellRenderer)infoFelt.getCellRenderer();  
+        
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer)infoFelt.getCellRenderer();  
         renderer.setHorizontalAlignment(JLabel.CENTER);
         renderer.setForeground(Color.gray);
         
