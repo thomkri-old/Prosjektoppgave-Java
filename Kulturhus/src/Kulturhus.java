@@ -5,8 +5,8 @@ public class Kulturhus
 {
     public static void main(String[] args)
     {
-        RegistreringsVindu r = new RegistreringsVindu("Opprett", 5);
-        Hovedside h = new Hovedside();
+        //RegistreringsVindu r = new RegistreringsVindu("Opprett", 5);
+        InternHovedside h = new InternHovedside();
         h.addWindowListener(
             new WindowAdapter()
             {
