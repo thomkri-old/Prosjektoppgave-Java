@@ -13,6 +13,11 @@ public class RegistreringsVindu extends JFrame
     private final int TEATER = 6;
     private final int KONTAKT_PERSON = 7;
     private final int LOKALE = 8;
+    private final int TEATERSAL = 0;
+    private final int DEBATTSAL = 1;
+    private final int FOREDRAGSSAL = 2;
+    private final int KINOSAL = 3;
+    private final int KONSERTSAL = 4;
     
     private int type;
     private JPanel vindu, utfylling, knapper;
@@ -34,6 +39,7 @@ public class RegistreringsVindu extends JFrame
     private JLabel lokaleNavn, lokaleType, antPlasser, harNrPlasser;
     private JTextField lokaleNavnFelt, antPlasserFelt;
     private JComboBox<String> lokaleTypeValg;
+    private String[] lokaleTypeListe = {"Teatersal", "Debattsal", "Foredragssal", "Kinosal", "Konsertsal"};
     private ButtonGroup harNrPlasserGruppe;
     private JRadioButton radioJa, radioNei;
     private JPanel radioKnapper;
@@ -274,7 +280,7 @@ public class RegistreringsVindu extends JFrame
         lokaleNavnFelt = new JTextField(15);
         antPlasserFelt = new JTextField(5);
         
-        lokaleTypeValg = new JComboBox<>();
+        lokaleTypeValg = new JComboBox<>(lokaleTypeListe);
         lokaleTypeValg.setPreferredSize(new Dimension(200, 20));
         
         radiolytter = new RadioKommandolytter();
