@@ -13,17 +13,16 @@ public class RegistreringsVindu extends JFrame
     private final int TEATER = 6;
     private final int KONTAKT_PERSON = 7;
     private final int LOKALE = 8;
-    private final int TEATERSAL = 0;
-    private final int DEBATTSAL = 1;
-    private final int FOREDRAGSSAL = 2;
-    private final int KINOSAL = 3;
-    private final int KONSERTSAL = 4;
+    private final int TEATERSAL = 1;
+    private final int DEBATTSAL = 2;
+    private final int FOREDRAGSSAL = 3;
+    private final int KINOSAL = 4;
+    private final int KONSERTSAL = 5;
     
     private int type;
     private JPanel vindu, utfylling, knapper;
     private JButton avbrytKnapp, regKnapp;
     private Kommandolytter knappelytter;
-    private RadioKommandolytter radiolytter;
     
     private JLabel infoTekst, arrNavn, program, bPrisBarn, bPrisVoksen, deltakere, dato, kPerson, sjanger, aldersgrense, lengde;
     private JTextField navnFelt, bpBarnFelt, bpVoksenFelt, datoFelt, sjangerFelt, alderFelt, lengdeFelt;
@@ -39,11 +38,11 @@ public class RegistreringsVindu extends JFrame
     private JLabel lokaleNavn, lokaleType, antPlasser, harNrPlasser;
     private JTextField lokaleNavnFelt, antPlasserFelt;
     private JComboBox<String> lokaleTypeValg;
-    private String[] lokaleTypeListe = {"Teatersal", "Debattsal", "Foredragssal", "Kinosal", "Konsertsal"};
+    private String[] lokaleTypeListe = {"", "Teatersal", "Debattsal", "Foredragssal", "Kinosal", "Konsertsal"};
     private ButtonGroup harNrPlasserGruppe;
     private JRadioButton radioJa, radioNei;
     private JPanel radioKnapper;
-    private boolean harNrPVerdi;
+    private boolean harNrPVerdi, rKnappTrykket = false;
     
     private Kontaktpersonregister kpregister;
     private Lokalregister lregister;
@@ -60,6 +59,8 @@ public class RegistreringsVindu extends JFrame
         utfylling = new JPanel(new GridBagLayout());
         utfylling.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
+        knappelytter = new Kommandolytter();
+        
         if(type == KONTAKT_PERSON)
             opprettKpersonVindu();
         else if(type == LOKALE)
@@ -68,8 +69,6 @@ public class RegistreringsVindu extends JFrame
             opprettArrVindu();
         
         infoTekst = new JLabel("Fyll inn info:");
-        
-        knappelytter = new Kommandolytter();
         
         avbrytKnapp = new JButton("Avbryt");
         avbrytKnapp.addActionListener(knappelytter);
@@ -283,12 +282,10 @@ public class RegistreringsVindu extends JFrame
         lokaleTypeValg = new JComboBox<>(lokaleTypeListe);
         lokaleTypeValg.setPreferredSize(new Dimension(200, 20));
         
-        radiolytter = new RadioKommandolytter();
-        
         radioJa = new JRadioButton("Ja", false);
-        radioJa.addActionListener(radiolytter);
+        radioJa.addActionListener(knappelytter);
         radioNei = new JRadioButton("Nei", false);
-        radioNei.addActionListener(radiolytter);
+        radioNei.addActionListener(knappelytter);
         
         harNrPlasserGruppe = new ButtonGroup();
         harNrPlasserGruppe.add(radioJa);
@@ -323,38 +320,74 @@ public class RegistreringsVindu extends JFrame
         utfylling.add(radioKnapper, gbc);
     }
     
-    public void opprett()
+    private void opprett()
     {
         if(type == KONTAKT_PERSON)
-        {
-            
-        }
+            opprettKontaktperson();
         else if(type == LOKALE)
-        {
-            
-        }
+            opprettLokale();
         else
-        {
-            String navn = navnFelt.getText();
-            String sjanger = sjangerFelt.getText();
-            String program = programFelt.getText();
-            String deltakere = deltakereFelt.getText();
-            String dato = datoFelt.getText();
-            if(navn.equals("") || sjanger.equals("") || program.equals("") || deltakere.equals("") || dato.equals(""))
-            {
-                visMelding("Du må fylle ut info i alle feltene");
-                return;
-            }
-            try
-            {
-                int bpBarn = Integer.parseInt(bpBarnFelt.getText());
-                int bpVoksen = Integer.parseInt(bpVoksenFelt.getText());
+            opprettArrangement();
+    }
+    
+    private void opprettKontaktperson()
+    {
                 
-            }
-            catch(NumberFormatException nfe)
-            {
-                visMelding("Feil i formateringen av tall");
-            }
+    }
+    
+    private void opprettLokale()
+    {
+        String navn = lokaleNavnFelt.getText();
+        int valgtIndex = lokaleTypeValg.getSelectedIndex();
+        if(!rKnappTrykket)
+        {
+            visMelding("Du må velge om lokalet har nummererte plasser eller ikke.");
+            return;
+        }
+        if(valgtIndex == 0)
+        {
+            visMelding("Du må velge type lokale.");
+            return;
+        }
+        if(navn.equals(""))
+        {
+            visMelding("Du må fylle inn navn på lokalet.");
+            return;
+        }
+        try
+        {
+            int antP = Integer.parseInt(antPlasserFelt.getText());
+            Lokale l = new Lokale(navn, valgtIndex, antP, harNrPVerdi);
+            lregister.settInn(l);
+            visMelding("Lokalet opprettet.");
+            lukkVindu();
+        }
+        catch(NumberFormatException nfe)
+        {
+            visMelding("Feil i formatering av tall.");
+        }
+    }
+    
+    private void opprettArrangement()
+    {
+        String navn = navnFelt.getText();
+        String sjanger = sjangerFelt.getText();
+        String program = programFelt.getText();
+        String deltakere = deltakereFelt.getText();
+        String dato = datoFelt.getText();
+        if(navn.equals("") || sjanger.equals("") || program.equals("") || deltakere.equals("") || dato.equals(""))
+        {
+            visMelding("Du må fylle ut info i alle feltene");
+            return;
+        }
+        try
+        {
+            int bpBarn = Integer.parseInt(bpBarnFelt.getText());
+            int bpVoksen = Integer.parseInt(bpVoksenFelt.getText());        
+        }
+        catch(NumberFormatException nfe)
+        {
+            visMelding("Feil i formateringen av tall");
         }
     }
     
@@ -376,17 +409,16 @@ public class RegistreringsVindu extends JFrame
                 lukkVindu();
             else if(e.getSource() == regKnapp)
                 opprett();
-        }
-    }
-    
-    private class RadioKommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
-    {
-        public void actionPerformed(ActionEvent e)
-        {
-            if(e.getSource() == radioJa)
+            else if(e.getSource() == radioJa)
+            {
                 harNrPVerdi = true;
+                rKnappTrykket = true;
+            }
             else if(e.getSource() == radioNei)
+            {
                 harNrPVerdi = false;
+                rKnappTrykket = true;
+            }
         }
     }
 } //End of class RegistreringsVindu
