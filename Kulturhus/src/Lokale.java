@@ -18,6 +18,11 @@ public class Lokale
         arrListe = new LinkedHashSet<>();
     }
     
+    public String getNavn()
+    {
+        return navn;
+    }
+    
     public int getAntPlasser()
     {
         return antPlasser;

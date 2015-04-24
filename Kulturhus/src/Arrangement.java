@@ -10,7 +10,7 @@ public abstract class Arrangement
     private int[] plasser;
     private String[] deltakere;
     private Calendar dato;
-    private DateFormat df;
+    private DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
     private Kontaktperson kPerson;
     private Set<Billett> billettListe;
     
@@ -22,7 +22,6 @@ public abstract class Arrangement
         billettprisVoksen = bpV;
         deltakere = dt;
         dato = d;
-        df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
         kPerson = kP;
         arrId = ++ nesteId;
         billettListe = new HashSet<>();

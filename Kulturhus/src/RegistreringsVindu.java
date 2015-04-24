@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.*;
+import java.util.*;
 
 public class RegistreringsVindu extends JFrame
 {
@@ -24,11 +26,15 @@ public class RegistreringsVindu extends JFrame
     private JButton avbrytKnapp, regKnapp;
     private Kommandolytter knappelytter;
     
-    private JLabel infoTekst, arrNavn, program, bPrisBarn, bPrisVoksen, deltakere, dato, kPerson, sjanger, aldersgrense, lengde;
-    private JTextField navnFelt, bpBarnFelt, bpVoksenFelt, datoFelt, sjangerFelt, alderFelt, lengdeFelt;
+    private JLabel infoTekst, arrNavn, program, bPrisBarn, bPrisVoksen, deltakere, dato, tid, kPerson, lokale, sjanger, aldersgrense, lengde;
+    private JTextField navnFelt, bpBarnFelt, bpVoksenFelt, sjangerFelt, alderFelt, lengdeFelt;
     private JTextArea programFelt, deltakereFelt;
     private JScrollPane programScroll, deltakereScroll;
-    private JComboBox<String> kPersonValg;
+    private JComboBox<String> dagValg, maanedValg, aarValg, timeValg, minuttValg;
+    private JComboBox<String> kPersonValg, lokaleValg;
+    private Lokale[] lokaleArray;
+    private Kontaktperson[] kPersonArray;
+    private JPanel datoPanel, tidPanel;
     
     private JLabel fornavn, etternavn, epost, nettside, firma, opplysninger, tlfNr;
     private JTextField fornavnFelt, etternavnFelt, epostFelt, nettsideFelt, firmaFelt, tlfNrFelt;
@@ -108,6 +114,20 @@ public class RegistreringsVindu extends JFrame
         pack();
         setResizable(false);
         setVisible(true);
+        
+        if(type != KONTAKT_PERSON && type != LOKALE)
+        {
+            if(lokaleArray == null)
+            {
+                visMelding("Du må opprette minst ett lokale\nfør du kan opprette et arrangement.");
+                lukkVindu();
+            }
+            else if(kPersonArray == null)
+            {
+                visMelding("Du må opprette minst èn kontaktperson\nfør du kan opprette et arrangement.");
+                lukkVindu();
+            }
+        }    
     }
     
     private void opprettArrVindu()
@@ -118,7 +138,9 @@ public class RegistreringsVindu extends JFrame
         bPrisVoksen = new JLabel("Billettpris voksen:");
         deltakere = new JLabel("Deltakere (skilles med komma \",\"):");
         dato = new JLabel("Dato:");
+        tid = new JLabel("Tidspunkt:");
         kPerson = new JLabel("Kontakt person:");
+        lokale = new JLabel("Lokale:");
         aldersgrense = new JLabel("Aldersgrense:");
         lengde = new JLabel("Lengde (i minutter):");
         
@@ -130,7 +152,6 @@ public class RegistreringsVindu extends JFrame
         navnFelt = new JTextField(15);
         bpBarnFelt = new JTextField(4);
         bpVoksenFelt = new JTextField(4);
-        datoFelt = new JTextField(8);
         sjangerFelt = new JTextField(10);
         alderFelt = new JTextField(5);
         lengdeFelt = new JTextField(10);
@@ -147,7 +168,38 @@ public class RegistreringsVindu extends JFrame
         
         deltakereScroll = new JScrollPane(deltakereFelt, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
-        kPersonValg = new JComboBox<>();
+        lokaleArray = lregister.getLokaler();
+        kPersonArray = kpregister.getKontaktpersoner();
+        
+        dagValg = new JComboBox<>(tallArray("Dag", 1, 31));
+        dagValg.setPreferredSize(new Dimension(50, 20));
+        
+        maanedValg = new JComboBox<>(tallArray("Måned", 1, 12));
+        maanedValg.setPreferredSize(new Dimension(70, 20));
+        
+        int getAar = Calendar.getInstance().get(Calendar.YEAR);
+        aarValg = new JComboBox<>(tallArray("År", getAar, getAar + 10));
+        aarValg.setPreferredSize(new Dimension(65, 20));
+        
+        datoPanel = new JPanel(new FlowLayout());
+        datoPanel.add(dagValg);
+        datoPanel.add(maanedValg);
+        datoPanel.add(aarValg);
+        
+        timeValg = new JComboBox<>(tallArray("Time", 0, 23));
+        timeValg.setPreferredSize(new Dimension(75, 20));
+        
+        minuttValg = new JComboBox<>(tallArray("Minutt", 0, 59));
+        minuttValg.setPreferredSize(new Dimension(75, 20));
+        
+        tidPanel = new JPanel(new FlowLayout());
+        tidPanel.add(timeValg);
+        tidPanel.add(minuttValg);
+        
+        lokaleValg = new JComboBox<>(navnArray(lokaleArray));
+        lokaleValg.setPreferredSize(new Dimension(200, 20));
+        
+        kPersonValg = new JComboBox<>(navnArray(kPersonArray));
         kPersonValg.setPreferredSize(new Dimension(200, 20));
         
         GridBagConstraints gbc = new GridBagConstraints();
@@ -179,6 +231,10 @@ public class RegistreringsVindu extends JFrame
         gbc.gridy++;
         utfylling.add(dato, gbc);
         gbc.gridy++;
+        utfylling.add(tid, gbc);
+        gbc.gridy++;
+        utfylling.add(lokale, gbc);
+        gbc.gridy++;
         utfylling.add(kPerson, gbc);
         
         gbc.gridx++;
@@ -204,7 +260,13 @@ public class RegistreringsVindu extends JFrame
         gbc.gridy++;
         utfylling.add(deltakereScroll, gbc);
         gbc.gridy++;
-        utfylling.add(datoFelt, gbc);
+        gbc.insets = new Insets(5, 0, 5, 5);
+        utfylling.add(datoPanel, gbc);
+        gbc.gridy++;
+        utfylling.add(tidPanel, gbc);
+        gbc.gridy++;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        utfylling.add(lokaleValg, gbc);
         gbc.gridy++;
         utfylling.add(kPersonValg, gbc);
     }
@@ -338,13 +400,13 @@ public class RegistreringsVindu extends JFrame
     private void opprettLokale()
     {
         String navn = lokaleNavnFelt.getText();
-        int valgtIndex = lokaleTypeValg.getSelectedIndex();
+        int typeValgtIndeks = lokaleTypeValg.getSelectedIndex();
         if(!rKnappTrykket)
         {
             visMelding("Du må velge om lokalet har nummererte plasser eller ikke.");
             return;
         }
-        if(valgtIndex == 0)
+        if(typeValgtIndeks == 0)
         {
             visMelding("Du må velge type lokale.");
             return;
@@ -357,7 +419,7 @@ public class RegistreringsVindu extends JFrame
         try
         {
             int antP = Integer.parseInt(antPlasserFelt.getText());
-            Lokale l = new Lokale(navn, valgtIndex, antP, harNrPVerdi);
+            Lokale l = new Lokale(navn, typeValgtIndeks, antP, harNrPVerdi);
             lregister.settInn(l);
             visMelding("Lokalet opprettet.");
             lukkVindu();
@@ -370,25 +432,132 @@ public class RegistreringsVindu extends JFrame
     
     private void opprettArrangement()
     {
-        String navn = navnFelt.getText();
-        String sjanger = sjangerFelt.getText();
-        String program = programFelt.getText();
-        String deltakere = deltakereFelt.getText();
-        String dato = datoFelt.getText();
-        if(navn.equals("") || sjanger.equals("") || program.equals("") || deltakere.equals("") || dato.equals(""))
+        String n = navnFelt.getText();
+        String s = sjangerFelt.getText();
+        String p = programFelt.getText();
+        String d = deltakereFelt.getText();
+        int lokaleValgtIndeks = lokaleValg.getSelectedIndex();
+        int kPersonValgtIndeks = kPersonValg.getSelectedIndex();
+        if(dagValg.getSelectedIndex() == 0 || maanedValg.getSelectedIndex() == 0 || aarValg.getSelectedIndex() == 0)
+        {
+            visMelding("Du må velge noe i alle felt på dato.");
+            return;
+        }
+        if(timeValg.getSelectedIndex() == 0 || minuttValg.getSelectedIndex() == 0)
+        {
+            visMelding("Du må velge noe i alle felt på tidspunkt.");
+            return;
+        }
+        if(lokaleValgtIndeks == 0)
+        {
+            visMelding("Du må velge et lokale");
+            return;
+        }
+        if(kPersonValgtIndeks == 0)
+        {
+            visMelding("Du må velge en kontaktperson");
+            return;
+        }
+        if(n.equals("") || s.equals("") || p.equals("") || d.equals(""))
         {
             visMelding("Du må fylle ut info i alle feltene");
             return;
         }
+        /*if(!d.matches("((.^\\d)+(,\\s*)?)+"))
+        {
+            visMelding("Deltakere må skilles med et komma.\nF. eks.: Ola Nordmann, Jan Teigen, Fredrik Karlsen");
+            return;
+        }*/
         try
         {
-            int bpBarn = Integer.parseInt(bpBarnFelt.getText());
-            int bpVoksen = Integer.parseInt(bpVoksenFelt.getText());        
+            int kinoL = 0;
+            int kinoAg = 0;
+            if(type == KINO)
+            {
+                kinoL = Integer.parseInt(lengdeFelt.getText());
+                kinoAg = Integer.parseInt(alderFelt.getText());
+            }
+            
+            int dag = Integer.parseInt((String) dagValg.getSelectedItem());
+            int maaned = Integer.parseInt((String) maanedValg.getSelectedItem());
+            int aar = Integer.parseInt((String) aarValg.getSelectedItem()) - 1;
+            int time = Integer.parseInt((String) timeValg.getSelectedItem());
+            int minutt = Integer.parseInt((String) maanedValg.getSelectedItem());
+            String[] dArray = d.split(",\\s*");
+            double bpBarn = Double.parseDouble(bpBarnFelt.getText());
+            double bpVoksen = Double.parseDouble(bpVoksenFelt.getText());
+            Kontaktperson kp = kPersonArray[kPersonValgtIndeks];
+            Lokale l = lokaleArray[lokaleValgtIndeks];
+            
+            GregorianCalendar c = new GregorianCalendar();
+            c.set(aar, maaned, dag, time, minutt);
+            
+            if(c.get(Calendar.DAY_OF_MONTH) != dag || c.get(Calendar.MONTH) != maaned || c.get(Calendar.YEAR) != aar)
+            {
+                visMelding("Du har valgt en ugyldig dato.");
+                return;
+            }
+            
+            Arrangement a;
+            
+            if(type == BARNE_FORESTILLING)
+                a = new Barneforestilling(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
+            else if(type == DEBATT)
+                a = new Debattkveld(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
+            else if(type == FOREDRAG)
+                a = new Foredrag(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
+            else if(type == KINO)
+                a = new Kino(n, p, bpBarn, bpVoksen, dArray, c, kp, s, kinoL, kinoAg);
+            else if(type == KONSERT)
+                a = new Konsert(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
+            else if(type == POLITISK_MOTE)
+                a = new PolitiskMote(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
+            else
+                a = new Teater(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
+            
+            l.settInnArr(a);
+            visMelding("Arrangement opprettet");
+            lukkVindu();
         }
         catch(NumberFormatException nfe)
         {
             visMelding("Feil i formateringen av tall");
         }
+        catch(Exception e)
+        {
+            visMelding("Du har valgt en dato som ikke eksisterer");
+        }
+    }
+    
+    private String[] tallArray(String tittel, int start, int slutt)
+    {
+        String[] tall = new String[slutt - start + 2];
+        tall[0] = tittel;
+        for(int i = 1; i < tall.length; i++)
+        {
+            tall[i] = ((start < 10)?"" + 0:"") + start++;
+        }
+        return tall;
+    }
+    
+    private String[] navnArray(Lokale[] lArray)
+    {
+        if(lArray == null)
+            return new String[0];
+        String[] navn = new String[lArray.length];
+        for(int i = 0; i < lArray.length; i++)
+            navn[i] = lArray[i].getNavn();
+        return navn;
+    }
+    
+    private String[] navnArray(Kontaktperson[] kpArray)
+    {
+        if(kpArray == null)
+            return new String[0];
+        String[] navn = new String[kpArray.length];
+        for(int i = 0; i < kpArray.length; i++)
+            navn[i] = kpArray[i].getNavn();
+        return navn;
     }
     
     private void visMelding(String melding)

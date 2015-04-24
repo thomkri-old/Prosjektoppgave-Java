@@ -13,4 +13,20 @@ public class Kontaktpersonregister
     {
         register.add(k);
     }
+    
+     public Kontaktperson[] getKontaktpersoner()
+    {
+        Iterator<Kontaktperson> registerIter = register.iterator();
+        if(register.isEmpty())
+            return null;
+        
+        Kontaktperson[] kontaktpersoner = new Kontaktperson[register.size()];
+        int i = 0;
+        while(registerIter.hasNext())
+        {
+            kontaktpersoner[i] = registerIter.next();
+            i++;
+        }
+        return kontaktpersoner;
+    }
 } //End of class Kontakpersonregister
