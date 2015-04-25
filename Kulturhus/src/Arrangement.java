@@ -1,5 +1,6 @@
 import java.util.*;
-import java.text.*;
+import java.time.*;
+import java.time.format.*;
 
 public abstract class Arrangement
 {
@@ -9,12 +10,12 @@ public abstract class Arrangement
     private double billettprisBarn, billettprisVoksen;
     private int[] plasser;
     private String[] deltakere;
-    private Calendar dato;
-    private DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+    private LocalDateTime dato;
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu HH:mm");
     private Kontaktperson kPerson;
     private Set<Billett> billettListe;
     
-    public Arrangement(String n, String p, double bpB, double bpV, String[] dt, Calendar d, Kontaktperson kP)
+    public Arrangement(String n, String p, double bpB, double bpV, String[] dt, LocalDateTime d, Kontaktperson kP)
     {
         navn = n;
         program = p;
@@ -43,7 +44,7 @@ public abstract class Arrangement
     
     public String toString()
     {
-        String tekst = navn + "\n" + df.format(dato.getTime()) + "\nDeltakere:";
+        String tekst = navn + "\n" + dtf.format(dato) + "\nDeltakere:";
         for(int i = 0; i < deltakere.length; i++)
         {
             tekst += " " + deltakere[i];
@@ -52,7 +53,7 @@ public abstract class Arrangement
         }
         tekst += "\nLedige plasser: " + (plasser.length - bilSolgt)
                 + "\nBillettpris voksen: " + billettprisVoksen + "\tBillettpris barn: " + billettprisBarn
-                + "\n\n" + program + "\n\nKontaktperson: " + kPerson;
+                + "\n\n" + program + "\n\nKontaktperson: " + kPerson.getNavn();
         return tekst;
     }
 } //End of class Arrangement

@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.*;
+import java.time.*;
 import java.util.*;
 
 public class RegistreringsVindu extends JFrame
@@ -394,12 +394,33 @@ public class RegistreringsVindu extends JFrame
     
     private void opprettKontaktperson()
     {
-                
+        String fn = fornavnFelt.getText();
+        String en = etternavnFelt.getText();
+        String ep = epostFelt.getText();
+        String ns = nettsideFelt.getText();
+        String f = firma.getText();
+        String o = opplysningerFelt.getText();
+        if(fn.equals("") || en.equals("") || ep.equals("") || ns.equals("") || f.equals("") || o.equals(""))
+        {
+            visMelding("Du må fylle ut info i alle feltene.");
+        }
+        try
+        {
+            int tn = Integer.parseInt(tlfNrFelt.getText());
+            Kontaktperson k = new Kontaktperson(fn, en, ep, ns, f, o, tn);
+            kpregister.settInn(k);
+            visMelding("Kontaktperson opprettet.");
+            lukkVindu();
+        }
+        catch(NumberFormatException nfe)
+        {
+            visMelding("Feil i formatering av tall.");
+        }
     }
     
     private void opprettLokale()
     {
-        String navn = lokaleNavnFelt.getText();
+        String n = lokaleNavnFelt.getText();
         int typeValgtIndeks = lokaleTypeValg.getSelectedIndex();
         if(!rKnappTrykket)
         {
@@ -411,7 +432,7 @@ public class RegistreringsVindu extends JFrame
             visMelding("Du må velge type lokale.");
             return;
         }
-        if(navn.equals(""))
+        if(n.equals(""))
         {
             visMelding("Du må fylle inn navn på lokalet.");
             return;
@@ -419,7 +440,7 @@ public class RegistreringsVindu extends JFrame
         try
         {
             int antP = Integer.parseInt(antPlasserFelt.getText());
-            Lokale l = new Lokale(navn, typeValgtIndeks, antP, harNrPVerdi);
+            Lokale l = new Lokale(n, typeValgtIndeks, antP, harNrPVerdi);
             lregister.settInn(l);
             visMelding("Lokalet opprettet.");
             lukkVindu();
@@ -438,6 +459,12 @@ public class RegistreringsVindu extends JFrame
         String d = deltakereFelt.getText();
         int lokaleValgtIndeks = lokaleValg.getSelectedIndex();
         int kPersonValgtIndeks = kPersonValg.getSelectedIndex();
+        
+        if(n.equals("") || s.equals("") || p.equals("") || d.equals(""))
+        {
+            visMelding("Du må fylle ut info i alle feltene.");
+            return;
+        }
         if(dagValg.getSelectedIndex() == 0 || maanedValg.getSelectedIndex() == 0 || aarValg.getSelectedIndex() == 0)
         {
             visMelding("Du må velge noe i alle felt på dato.");
@@ -450,24 +477,19 @@ public class RegistreringsVindu extends JFrame
         }
         if(lokaleValgtIndeks == 0)
         {
-            visMelding("Du må velge et lokale");
+            visMelding("Du må velge et lokale.");
             return;
         }
         if(kPersonValgtIndeks == 0)
         {
-            visMelding("Du må velge en kontaktperson");
+            visMelding("Du må velge en kontaktperson.");
             return;
         }
-        if(n.equals("") || s.equals("") || p.equals("") || d.equals(""))
+        if(!d.matches("([a-zA-ZæÆøØåÅöÖäÄàÀèÈëËüÜûÛâÂêÊãÃõÕïÏ\\s]+(,\\s*)?)+"))
         {
-            visMelding("Du må fylle ut info i alle feltene");
+            visMelding("Deltakere må skilles med et komma(Ingen tall).\nF. eks.: Ola Nordmann, Jan Teigen, Fredrik Karlsen");
             return;
         }
-        /*if(!d.matches("((.^\\d)+(,\\s*)?)+"))
-        {
-            visMelding("Deltakere må skilles med et komma.\nF. eks.: Ola Nordmann, Jan Teigen, Fredrik Karlsen");
-            return;
-        }*/
         try
         {
             int kinoL = 0;
@@ -480,52 +502,55 @@ public class RegistreringsVindu extends JFrame
             
             int dag = Integer.parseInt((String) dagValg.getSelectedItem());
             int maaned = Integer.parseInt((String) maanedValg.getSelectedItem());
-            int aar = Integer.parseInt((String) aarValg.getSelectedItem()) - 1;
+            int aar = Integer.parseInt((String) aarValg.getSelectedItem());
             int time = Integer.parseInt((String) timeValg.getSelectedItem());
             int minutt = Integer.parseInt((String) maanedValg.getSelectedItem());
-            String[] dArray = d.split(",\\s*");
+            String[] dArray = d.split("\\s*,\\s*");
             double bpBarn = Double.parseDouble(bpBarnFelt.getText());
             double bpVoksen = Double.parseDouble(bpVoksenFelt.getText());
-            Kontaktperson kp = kPersonArray[kPersonValgtIndeks];
-            Lokale l = lokaleArray[lokaleValgtIndeks];
+            Kontaktperson kp = kPersonArray[kPersonValgtIndeks - 1];
+            Lokale l = lokaleArray[lokaleValgtIndeks - 1];
             
-            GregorianCalendar c = new GregorianCalendar();
-            c.set(aar, maaned, dag, time, minutt);
-            
-            if(c.get(Calendar.DAY_OF_MONTH) != dag || c.get(Calendar.MONTH) != maaned || c.get(Calendar.YEAR) != aar)
-            {
-                visMelding("Du har valgt en ugyldig dato.");
-                return;
-            }
+            LocalDateTime ldt = LocalDateTime.of(aar, maaned, dag, time, minutt);
             
             Arrangement a;
             
-            if(type == BARNE_FORESTILLING)
-                a = new Barneforestilling(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
-            else if(type == DEBATT)
-                a = new Debattkveld(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
-            else if(type == FOREDRAG)
-                a = new Foredrag(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
-            else if(type == KINO)
-                a = new Kino(n, p, bpBarn, bpVoksen, dArray, c, kp, s, kinoL, kinoAg);
-            else if(type == KONSERT)
-                a = new Konsert(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
-            else if(type == POLITISK_MOTE)
-                a = new PolitiskMote(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
-            else
-                a = new Teater(n, p, bpBarn, bpVoksen, dArray, c, kp, s);
+            switch(type)
+            {
+                case BARNE_FORESTILLING:
+                    a = new Barneforestilling(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    break;
+                case DEBATT:
+                    a = new Debattkveld(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    break;
+                case FOREDRAG:
+                    a = new Foredrag(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    break;
+                case KINO:
+                    a = new Kino(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s, kinoL, kinoAg);
+                    break;
+                case KONSERT:
+                    a = new Konsert(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    break;
+                case POLITISK_MOTE:
+                    a = new PolitiskMote(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    break;
+                default:
+                    a = new Teater(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    break;
+            }
             
             l.settInnArr(a);
-            visMelding("Arrangement opprettet");
+            visMelding("Arrangement opprettet.");
             lukkVindu();
         }
         catch(NumberFormatException nfe)
         {
-            visMelding("Feil i formateringen av tall");
+            visMelding("Feil i formateringen av .");
         }
-        catch(Exception e)
+        catch(DateTimeException dte)
         {
-            visMelding("Du har valgt en dato som ikke eksisterer");
+            visMelding("Du har valgt en ugyldig dato.");
         }
     }
     
@@ -544,9 +569,10 @@ public class RegistreringsVindu extends JFrame
     {
         if(lArray == null)
             return new String[0];
-        String[] navn = new String[lArray.length];
+        String[] navn = new String[lArray.length + 1];
+        navn[0] = "";
         for(int i = 0; i < lArray.length; i++)
-            navn[i] = lArray[i].getNavn();
+            navn[i + 1] = lArray[i].getNavn();
         return navn;
     }
     
@@ -554,9 +580,10 @@ public class RegistreringsVindu extends JFrame
     {
         if(kpArray == null)
             return new String[0];
-        String[] navn = new String[kpArray.length];
+        String[] navn = new String[kpArray.length + 1];
+        navn[0] = "";
         for(int i = 0; i < kpArray.length; i++)
-            navn[i] = kpArray[i].getNavn();
+            navn[i + 1] = kpArray[i].getNavn();
         return navn;
     }
     

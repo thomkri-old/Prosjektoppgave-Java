@@ -1,8 +1,8 @@
-import java.util.*;
+import java.time.*;
 
 public class Foredrag extends FagligArrangement
 {    
-    public Foredrag(String n, String p, double bpB, double bpV, String[] dt, Calendar d, Kontaktperson kP, String t)
+    public Foredrag(String n, String p, double bpB, double bpV, String[] dt, LocalDateTime d, Kontaktperson kP, String t)
     {
         super(n, p, bpB, bpV, dt, d, kP, t);
     }

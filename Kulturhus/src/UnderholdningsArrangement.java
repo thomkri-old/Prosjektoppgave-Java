@@ -1,10 +1,10 @@
-import java.util.*;
+import java.time.*;
 
 public abstract class UnderholdningsArrangement extends Arrangement
 {
     private String sjanger;
     
-    public UnderholdningsArrangement(String n, String p, double bpB, double bpV, String[] dt, Calendar d, Kontaktperson kP, String sj)
+    public UnderholdningsArrangement(String n, String p, double bpB, double bpV, String[] dt, LocalDateTime d, Kontaktperson kP, String sj)
     {
         super(n, p, bpB, bpV, dt, d, kP);
         sjanger = sj;
