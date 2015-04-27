@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java .awt.image.*;
+import java.awt.image.*;
 
 public class InternHovedside extends JFrame {
     
