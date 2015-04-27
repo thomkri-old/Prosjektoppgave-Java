@@ -28,9 +28,71 @@ public class Lokale
         return antPlasser;
     }
     
+    public int getType()
+    {
+        return type;
+    }
+    
+    public int getAntArr()
+    {
+        return arrListe.size();
+    }
+    
     public void settInnArr(Arrangement a)
     {
         a.setPlasser(antPlasser);
         arrListe.add(a);
+    }
+    
+    public Arrangement[] getArrangementer()
+    {
+        Iterator<Arrangement> arrIter = arrListe.iterator();
+        if(arrListe.isEmpty())
+            return null;
+        
+        Arrangement[] arrangementer = new Arrangement[arrListe.size()];
+        int i = 0;
+        while(arrIter.hasNext())
+        {
+            arrangementer[i] = arrIter.next();
+            i++;
+        }
+        return arrangementer;
+    }
+    
+    public Arrangement[] getArrangementer(int type)
+    {
+        Iterator<Arrangement> arrIter = arrListe.iterator();
+        if(arrListe.isEmpty())
+            return null;
+        
+        Arrangement[] arrangementer = new Arrangement[arrListe.size()];
+        int i = 0;
+        while(arrIter.hasNext())
+        {
+            Arrangement a = arrIter.next();
+            if(a.getType() == type)
+            {
+                arrangementer[i] = a;
+                i++;
+            }
+        }
+        return arrangementer;
+    }
+    
+    private int getAntArr(int type)
+    {
+        Iterator<Arrangement> arrIter = arrListe.iterator();
+        if(arrListe.isEmpty())
+            return null;
+        
+        int ant = 0;
+        while(arrIter.hasNext())
+        {
+            Arrangement a = arrIter.next();
+            if(arrIter.harsN.getType() == type;
+                ant++;
+        }
+        return ant;
     }
 } //End of class Lokale
