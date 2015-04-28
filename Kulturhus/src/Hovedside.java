@@ -113,4 +113,14 @@ public class Hovedside extends JFrame
         pack();
         setExtendedState(JFrame.MAXIMIZED_BOTH);      
     }
+    
+    private Arrangement[] finnArr(int type)
+    {
+        Lokale[] l = lregister.getLokaler();
+        Arrangement[] a = new Arrangement[getAntArr(l, type)];
+        for(int i = 0; i < l.length; i++)
+        {
+            
+        }
+    }
 } //End of class Hovedside
