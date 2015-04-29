@@ -6,22 +6,22 @@ import java.util.*;
 
 public class RegistreringsVindu extends JFrame
 {
-    private final int DEBATT = 0;
-    private final int FOREDRAG = 1;
-    private final int POLITISK_MOTE = 2;
-    private final int BARNE_FORESTILLING = 3;
-    private final int KINO = 4;
-    private final int KONSERT = 5;
-    private final int TEATER = 6;
-    private final int KONTAKT_PERSON = 7;
-    private final int LOKALE = 8;
-    private final int TEATERSAL = 1;
-    private final int DEBATTSAL = 2;
-    private final int FOREDRAGSSAL = 3;
-    private final int KINOSAL = 4;
-    private final int KONSERTSAL = 5;
+    private static final int DEBATT = 0;
+    private static final int FOREDRAG = 1;
+    private static final int POLITISK_MOTE = 2;
+    private static final int BARNE_FORESTILLING = 3;
+    private static final int KINO = 4;
+    private static final int KONSERT = 5;
+    private static final int TEATER = 6;
+    private static final int KONTAKT_PERSON = 7;
+    private static final int LOKALE = 8;
+    private static final int TEATERSAL = 1;
+    private static final int DEBATTSAL = 2;
+    private static final int FOREDRAGSSAL = 3;
+    private static final int KINOSAL = 4;
+    private static final int KONSERTSAL = 5;
     
-    private int type;
+    private final int type;
     private JPanel vindu, utfylling, knapper;
     private JButton avbrytKnapp, regKnapp;
     private Kommandolytter knappelytter;
@@ -518,25 +518,25 @@ public class RegistreringsVindu extends JFrame
             switch(type)
             {
                 case BARNE_FORESTILLING:
-                    a = new Barneforestilling(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Barneforestilling(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
                     break;
                 case DEBATT:
-                    a = new Debattkveld(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Debattkveld(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
                     break;
                 case FOREDRAG:
-                    a = new Foredrag(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Foredrag(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
                     break;
                 case KINO:
-                    a = new Kino(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s, kinoL, kinoAg);
+                    a = new Kino(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s, kinoL, kinoAg);
                     break;
                 case KONSERT:
-                    a = new Konsert(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Konsert(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
                     break;
                 case POLITISK_MOTE:
-                    a = new PolitiskMote(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new PolitiskMote(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
                     break;
                 default:
-                    a = new Teater(n, p, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Teater(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
                     break;
             }
             

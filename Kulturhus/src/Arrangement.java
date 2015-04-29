@@ -7,6 +7,7 @@ public abstract class Arrangement
     private String navn, program;
     private int arrId, bilSolgt = 0;
     private static int nesteId = 0;
+    private int type;
     private double billettprisBarn, billettprisVoksen;
     private int[] plasser;
     private String[] deltakere;
@@ -15,7 +16,7 @@ public abstract class Arrangement
     private Kontaktperson kPerson;
     private Set<Billett> billettListe;
     
-    public Arrangement(String n, String p, double bpB, double bpV, String[] dt, LocalDateTime d, Kontaktperson kP)
+    public Arrangement(String n, String p, int t, double bpB, double bpV, String[] dt, LocalDateTime d, Kontaktperson kP)
     {
         navn = n;
         program = p;
@@ -25,7 +26,28 @@ public abstract class Arrangement
         dato = d;
         kPerson = kP;
         arrId = ++ nesteId;
+        type = t;
         billettListe = new HashSet<>();
+    }
+        
+    public String getNavn()
+    {
+        return navn;
+    }
+    
+    public double getBillettprisBarn()
+    {
+        return billettprisBarn;
+    }
+    
+    public double getBillettprisVoksen()
+    {
+        return billettprisVoksen;
+    }
+    
+    public int getType()
+    {
+        return type;
     }
     
     public void setPlasser(int antP)

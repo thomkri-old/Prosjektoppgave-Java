@@ -28,14 +28,14 @@ public class Lokale
         return antPlasser;
     }
     
-    public int getType()
-    {
-        return type;
-    }
-    
     public int getAntArr()
     {
         return arrListe.size();
+    }
+    
+    public int getType()
+    {
+        return type;
     }
     
     public void settInnArr(Arrangement a)
@@ -46,51 +46,43 @@ public class Lokale
     
     public Arrangement[] getArrangementer()
     {
-        Iterator<Arrangement> arrIter = arrListe.iterator();
         if(arrListe.isEmpty())
             return null;
         
+        Iterator<Arrangement> arrIter = arrListe.iterator();        
         Arrangement[] arrangementer = new Arrangement[arrListe.size()];
         int i = 0;
         while(arrIter.hasNext())
-        {
-            arrangementer[i] = arrIter.next();
-            i++;
-        }
+            arrangementer[i++] = arrIter.next();
         return arrangementer;
     }
     
-    public Arrangement[] getArrangementer(int type)
+    public Arrangement[] getArrangementer(int t)
     {
-        Iterator<Arrangement> arrIter = arrListe.iterator();
         if(arrListe.isEmpty())
             return null;
         
-        Arrangement[] arrangementer = new Arrangement[arrListe.size()];
+        Iterator<Arrangement> arrIter = arrListe.iterator();
+        Iterator<Arrangement> arrIter2 = arrListe.iterator();
+        Arrangement[] arrangementer = new Arrangement[getAntArr(1, arrIter2)];
         int i = 0;
         while(arrIter.hasNext())
         {
             Arrangement a = arrIter.next();
-            if(a.getType() == type)
-            {
-                arrangementer[i] = a;
-                i++;
-            }
+            arrangementer[i++] = a;
         }
         return arrangementer;
     }
     
-    private int getAntArr(int type)
+    private int getAntArr(int t, Iterator<Arrangement> iter)
     {
-        Iterator<Arrangement> arrIter = arrListe.iterator();
         if(arrListe.isEmpty())
-            return null;
+            return 0;
         
         int ant = 0;
-        while(arrIter.hasNext())
+        while(iter.hasNext())
         {
-            Arrangement a = arrIter.next();
-            if(arrIter.harsN.getType() == type;
+                iter.next();
                 ant++;
         }
         return ant;

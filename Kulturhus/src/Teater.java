@@ -2,9 +2,9 @@ import java.time.*;
 
 public class Teater extends UnderholdningsArrangement
 {
-    public Teater(String n, String p, double bpB, double bpV, String[] dt, LocalDateTime d, Kontaktperson kP, String sj)
+    public Teater(String n, String p, int t, double bpB, double bpV, String[] dt, LocalDateTime d, Kontaktperson kP, String sj)
     {
-        super(n, p, bpB, bpV, dt, d, kP, sj);
+        super(n, p, t, bpB, bpV, dt, d, kP, sj);
     }
     
     public String toString()
