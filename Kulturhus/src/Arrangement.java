@@ -1,6 +1,7 @@
 import java.util.*;
 import java.time.*;
 import java.time.format.*;
+import javax.swing.*;
 
 public abstract class Arrangement
 {
@@ -14,9 +15,10 @@ public abstract class Arrangement
     private LocalDateTime dato;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu HH:mm");
     private Kontaktperson kPerson;
+    private ImageIcon arrBilde;
     private Set<Billett> billettListe;
     
-    public Arrangement(String n, String p, int t, double bpB, double bpV, String[] dt, LocalDateTime d, Kontaktperson kP)
+    public Arrangement(String n, String p, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP)
     {
         navn = n;
         program = p;
@@ -25,6 +27,7 @@ public abstract class Arrangement
         deltakere = dt;
         dato = d;
         kPerson = kP;
+        arrBilde = aB;
         arrId = ++ nesteId;
         type = t;
         billettListe = new HashSet<>();

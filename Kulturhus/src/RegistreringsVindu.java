@@ -1,8 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.time.*;
 import java.util.*;
+import javax.imageio.*;
+import javax.swing.filechooser.*;
 
 public class RegistreringsVindu extends JFrame
 {
@@ -26,7 +29,7 @@ public class RegistreringsVindu extends JFrame
     private JButton avbrytKnapp, regKnapp;
     private Kommandolytter knappelytter;
     
-    private JLabel infoTekst, arrNavn, program, bPrisBarn, bPrisVoksen, deltakere, dato, tid, kPerson, lokale, sjanger, aldersgrense, lengde;
+    private JLabel infoTekst, arrNavn, program, bPrisBarn, bPrisVoksen, deltakere, dato, tid, kPerson, lokale, sjanger, aldersgrense, lengde, velgBilde;
     private JTextField navnFelt, bpBarnFelt, bpVoksenFelt, sjangerFelt, alderFelt, lengdeFelt;
     private JTextArea programFelt, deltakereFelt;
     private JScrollPane programScroll, deltakereScroll;
@@ -35,6 +38,10 @@ public class RegistreringsVindu extends JFrame
     private Lokale[] lokaleArray;
     private Kontaktperson[] kPersonArray;
     private JPanel datoPanel, tidPanel;
+    private JFileChooser filvelger;
+    private JButton filvelgerKnapp;
+    private int filvalgReturVerdi;
+    private ImageIcon arrBilde;
     
     private JLabel fornavn, etternavn, epost, nettside, firma, opplysninger, tlfNr;
     private JTextField fornavnFelt, etternavnFelt, epostFelt, nettsideFelt, firmaFelt, tlfNrFelt;
@@ -143,6 +150,7 @@ public class RegistreringsVindu extends JFrame
         lokale = new JLabel("Lokale:");
         aldersgrense = new JLabel("Aldersgrense:");
         lengde = new JLabel("Lengde (i minutter):");
+        velgBilde = new JLabel("Velg et arrangement bilde:");
         
         if(type == DEBATT || type == FOREDRAG || type == POLITISK_MOTE)
             sjanger = new JLabel("Tema:");
@@ -167,6 +175,9 @@ public class RegistreringsVindu extends JFrame
         deltakereFelt.setWrapStyleWord(true);
         
         deltakereScroll = new JScrollPane(deltakereFelt, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        filvelgerKnapp = new JButton("Velg fil");
+        filvelgerKnapp.addActionListener(knappelytter);
         
         lokaleArray = lregister.getLokaler();
         kPersonArray = kpregister.getKontaktpersoner();
@@ -214,6 +225,8 @@ public class RegistreringsVindu extends JFrame
         gbc.gridy++;        
         utfylling.add(program, gbc);
         gbc.gridy++;
+        utfylling.add(velgBilde, gbc);
+        gbc.gridy++;
         utfylling.add(bPrisBarn, gbc);
         gbc.gridy++;
         utfylling.add(bPrisVoksen, gbc);
@@ -244,6 +257,8 @@ public class RegistreringsVindu extends JFrame
         utfylling.add(sjangerFelt, gbc);
         gbc.gridy++;
         utfylling.add(programScroll, gbc);
+        gbc.gridy++;
+        utfylling.add(filvelgerKnapp, gbc);
         gbc.gridy++;
         utfylling.add(bpBarnFelt, gbc);
         gbc.gridy++;
@@ -465,6 +480,11 @@ public class RegistreringsVindu extends JFrame
             visMelding("Du må fylle ut info i alle feltene.");
             return;
         }
+        if(arrBilde == null)
+        {
+            visMelding("Du må velge et bilde til arrangementet");
+            return;
+        }
         if(dagValg.getSelectedIndex() == 0 || maanedValg.getSelectedIndex() == 0 || aarValg.getSelectedIndex() == 0)
         {
             visMelding("Du må velge noe i alle felt på dato.");
@@ -518,25 +538,25 @@ public class RegistreringsVindu extends JFrame
             switch(type)
             {
                 case BARNE_FORESTILLING:
-                    a = new Barneforestilling(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Barneforestilling(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 case DEBATT:
-                    a = new Debattkveld(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Debattkveld(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 case FOREDRAG:
-                    a = new Foredrag(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Foredrag(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 case KINO:
-                    a = new Kino(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s, kinoL, kinoAg);
+                    a = new Kino(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s, kinoL, kinoAg);
                     break;
                 case KONSERT:
-                    a = new Konsert(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Konsert(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 case POLITISK_MOTE:
-                    a = new PolitiskMote(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new PolitiskMote(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 default:
-                    a = new Teater(n, p, type, bpBarn, bpVoksen, dArray, ldt, kp, s);
+                    a = new Teater(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
             }
             
@@ -597,6 +617,28 @@ public class RegistreringsVindu extends JFrame
         this.dispose();
     }
     
+    private void kjorBildevelger()
+    {
+        filvelger = new JFileChooser();
+        FileFilter bildeFilter = new FileNameExtensionFilter("Bilde filer", ImageIO.getReaderFileSuffixes());
+        filvelger.addChoosableFileFilter(bildeFilter);
+        filvelger.setAcceptAllFileFilterUsed(false);
+        filvalgReturVerdi = filvelger.showOpenDialog(this);
+        
+        if(filvalgReturVerdi == JFileChooser.APPROVE_OPTION)
+        {
+            try
+            {
+                Image bilde = ImageIO.read(filvelger.getSelectedFile());
+                arrBilde = new ImageIcon(bilde);
+            }
+            catch(IOException ioe)
+            {
+                visMelding("Feil i formatering av bilde.\nPrøv en ny fil!");
+            }
+        }
+    }
+    
     private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
     {
         public void actionPerformed(ActionEvent e)
@@ -615,6 +657,8 @@ public class RegistreringsVindu extends JFrame
                 harNrPVerdi = false;
                 rKnappTrykket = true;
             }
+            else if(e.getSource() == filvelgerKnapp)
+                kjorBildevelger();
         }
     }
 } //End of class RegistreringsVindu

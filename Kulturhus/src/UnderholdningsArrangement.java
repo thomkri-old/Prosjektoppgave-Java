@@ -1,12 +1,13 @@
 import java.time.*;
+import javax.swing.*;
 
 public abstract class UnderholdningsArrangement extends Arrangement
 {
     private String sjanger;
     
-    public UnderholdningsArrangement(String n, String p, int t, double bpB, double bpV, String[] dt, LocalDateTime d, Kontaktperson kP, String sj)
+    public UnderholdningsArrangement(String n, String p, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP, String sj)
     {
-        super(n, p, t, bpB, bpV, dt, d, kP);
+        super(n, p, t, bpB, bpV, dt, d, aB, kP);
         sjanger = sj;
     }
     
