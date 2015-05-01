@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.*;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -34,22 +35,28 @@ public class Hovedside extends JFrame
     private Kontaktpersonregister kpregister;
     private Lokalregister lregister;
     
+    private Kommandolytter knappelytter;
+    
     public Hovedside(Lokalregister l, Kontaktperson kp, Lokale l1, Lokale l2, Lokale l3)
     {
         
         super("Målselv Kommune");
         
         lregister = l;
+        knappelytter = new Kommandolytter();
         
         URL bildeURL = Hovedside.class.getResource("/bilder/tammy.jpg");
         ImageIcon bildeIkon = new ImageIcon(bildeURL);
         
+        URL bildeURL1 = Hovedside.class.getResource("/bilder/lfc.jpeg");
+        ImageIcon bildeIkon1 = new ImageIcon(bildeURL1);
+        
         String[] dArray = {"hnifof", "jfiow"};
         Arrangement a = new Foredrag("Ting og tang", "fjiowgwjiop wnmefo p mo", 1, 125.5, 150, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
-        Arrangement a1 = new Foredrag("Hallo", "fjiowgwjiop wnmefo p mo", 1, 123, 115, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
+        Arrangement a1 = new Foredrag("Hallo", "fjiowgwjiop wnmefo p mo", 1, 123, 115, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
         Arrangement a2 = new Foredrag("Det jeg gjør", "fjiowgwjiop wnmefo p mo", 1, 124.4, 123, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
         Arrangement a3 = new Foredrag("Fakta og sånt", "fjiowgwjiop wnmefo p mo", 1, 123, 124, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
-        Arrangement a4 = new Foredrag("Foredrag om foredrag", "fjiowgwjiop wnmefo p mo", 1, 44.5, 98, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
+        Arrangement a4 = new Foredrag("Foredrag om foredrag", "fjiowgwjiop wnmefo p mo", 1, 44.5, 98, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
         
         l1.settInnArr(a);
         l2.settInnArr(a1);
@@ -76,7 +83,10 @@ public class Hovedside extends JFrame
         infoPanel.add(infoScroll, BorderLayout.CENTER);
         
         infoKnapp = new JButton("Info");
+        infoKnapp.addActionListener(knappelytter);
         kjopKnapp = new JButton("Kjøp billett");
+        kjopKnapp.addActionListener(knappelytter);
+        
         knapper = new JPanel(new BorderLayout());
         knapper.add(infoKnapp, BorderLayout.LINE_START);
         knapper.add(kjopKnapp, BorderLayout.LINE_END);
@@ -124,7 +134,7 @@ public class Hovedside extends JFrame
             JLabel navn = new JLabel(arrListe[i].getNavn());
             JLabel pris = new JLabel("Pris: " + arrListe[i].getBillettprisBarn() + "/" + arrListe[i].getBillettprisVoksen());
             
-            ArrbildePanel plakat = new ArrbildePanel();
+            ArrbildePanel plakat = new ArrbildePanel(arrListe[i].getArrBilde());
             panel.add(plakat);
             
             JPanel info = new JPanel(new GridLayout(2, 1, 5, 5));
@@ -158,4 +168,27 @@ public class Hovedside extends JFrame
         renderer.setHorizontalAlignment(JLabel.CENTER);
         renderer.setForeground(Color.gray);
     }
+    
+    public void visInfo()
+    {
+        JFrame infoVindu = new InfoArr(arrListe[infoFelt.getSelectedIndex()]);
+        infoVindu.setLocationRelativeTo(this);
+    }
+    
+    public void kjopBillett()
+    {
+        JFrame kjopVindu = new Kjop(arrListe[infoFelt.getSelectedIndex()]);
+        kjopVindu.setLocationRelativeTo(this);
+    }
+    
+    private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            if(e.getSource() == infoKnapp)
+                visInfo();
+            else if(e.getSource() == kjopKnapp)
+                kjopBillett();
+        }
+     }
 } //End of class Hovedside

@@ -53,6 +53,11 @@ public abstract class Arrangement
         return type;
     }
     
+    public ImageIcon getArrBilde()
+    {
+        return arrBilde;
+    }
+    
     public void setPlasser(int antP)
     {
         plasser = new int[antP];
