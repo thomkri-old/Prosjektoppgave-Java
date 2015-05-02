@@ -48,6 +48,26 @@ public abstract class Arrangement
         return billettprisVoksen;
     }
     
+    public String[] getDeltakere()
+    {
+        return deltakere;
+    }
+    
+    public String getDatoString()
+    {
+        return dtf.format(dato);
+    }
+    
+    public int getLedigePlasser()
+    {
+        return plasser.length - bilSolgt;
+    }
+    
+    public String getProgram()
+    {
+        return program;
+    }
+    
     public int getType()
     {
         return type;
@@ -81,7 +101,7 @@ public abstract class Arrangement
             if(i != deltakere.length - 1)
                 tekst += ",";
         }
-        tekst += "\nLedige plasser: " + (plasser.length - bilSolgt)
+        tekst += "\nLedige plasser: " + (getLedigePlasser())
                 + "\nBillettpris voksen: " + billettprisVoksen + "\tBillettpris barn: " + billettprisBarn
                 + "\n\n" + program + "\n\nKontaktperson: " + kPerson.getNavn();
         return tekst;

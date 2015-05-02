@@ -8,9 +8,8 @@ public class InfoArr extends JFrame
 {
     private JPanel vindu, infoPanel, knappePanel, bildePanel;
     private JTextPane arrInfo;
+    private JScrollPane arrInfoScroll;
     private JButton kjopKnapp, lukkKnapp;
-    
-    private SimpleAttributeSet attributeSet;
     
     private Kommandolytter knappelytter;
     
@@ -33,8 +32,28 @@ public class InfoArr extends JFrame
         arrInfo = new JTextPane();
         arrInfo.setBackground(this.getBackground());
         arrInfo.setEditable(false);
+        arrInfo.setPreferredSize(new Dimension(300, 150));
         
-        attributeSet = new SimpleAttributeSet();
+        lagInfoUtskrift(arrangement.getNavn() + "\n", 20, true);
+        lagInfoUtskrift("\nDato:", 14, true);
+        lagInfoUtskrift("\t\t" + arrangement.getDatoString(), 14, false);
+        lagInfoUtskrift("\nPris*:", 14, true);
+        lagInfoUtskrift("\t\t" + arrangement.getBillettprisBarn() + ",- / " + arrangement.getBillettprisVoksen() + ",-", 14, false);
+        lagInfoUtskrift("\nDeltakere:", 14, true);
+        
+        String[] deltakere = arrangement.getDeltakere();
+        for(int i = 0; i < deltakere.length; i++)
+            lagInfoUtskrift("\t" + ((i == 0)?"":"\t") + deltakere[i] + "\n", 14, false);
+        
+        lagInfoUtskrift("Ledige plasser:", 14, true);
+        lagInfoUtskrift("\t" + arrangement.getLedigePlasser(), 14, false);
+        lagInfoUtskrift("\n\n" + arrangement.getProgram(), 14, false);
+        
+        arrInfo.setCaretPosition(0);
+        
+        arrInfoScroll = new JScrollPane(arrInfo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        arrInfoScroll.setPreferredSize(new Dimension(300, 150));
+        arrInfoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         
         knappePanel = new JPanel(new GridBagLayout());
         knappePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -62,7 +81,7 @@ public class InfoArr extends JFrame
         
         infoPanel.add(bildePanel, gbc);
         gbc.gridx += 1;        
-        infoPanel.add(arrInfo, gbc);
+        infoPanel.add(arrInfoScroll, gbc);
         
         GridBagConstraints gbcV = new GridBagConstraints();
         gbcV.anchor = GridBagConstraints.CENTER;
@@ -79,18 +98,21 @@ public class InfoArr extends JFrame
         setVisible(true);
     }
     
-    private void lagInfoUtskrift(int posisjon, int fontStr, boolean fetSkrift, boolean undertekst)
+    private void lagInfoUtskrift(String tekst, int fontStr, boolean fetSkrift)
     {
-        StyleContext infoContext = new StyleContext();
-        StyledDocument infoDokument = new DefaultStyledDocument(infoContext);
+        SimpleAttributeSet style = new SimpleAttributeSet();
+        StyleConstants.setFontSize(style, fontStr);
+        StyleConstants.setBold(style, fetSkrift);
         
-        Style styleOverskrift = infoContext.getStyle(StyleContext.DEFAULT_STYLE);
-        StyleConstants.setAlignment(styleOverskrift, posisjon);
-        StyleConstants.setFontSize(styleOverskrift, fontStr);
-        StyleConstants.setSpaceAbove(styleOverskrift, 4);
-        StyleConstants.setSpaceBelow(styleOverskrift, 4);
-        StyleConstants.setBold(styleOverskrift, fetSkrift);
-        StyleConstants.setUnderline(styleOverskrift, undertekst);
+        StyledDocument infoDokument = arrInfo.getStyledDocument();
+        try
+        {
+            infoDokument.insertString(infoDokument.getLength(), tekst, style);
+        }
+        catch(BadLocationException ble)
+        {
+            visMelding("Her har det skjedd en feil.");
+        }
     }
     
     private void lukkVindu()
@@ -102,6 +124,11 @@ public class InfoArr extends JFrame
     {
         JFrame kjopVindu = new Kjop(arrangement);
         kjopVindu.setLocationRelativeTo(this);
+    }
+    
+    private void visMelding(String melding)
+    {
+        JOptionPane.showMessageDialog(this, melding);
     }
     
     private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
