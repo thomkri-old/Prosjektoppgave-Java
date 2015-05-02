@@ -2,16 +2,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.text.*;
 
 public class InfoArr extends JFrame
 {
     private JPanel vindu, infoPanel, knappePanel, bildePanel;
-    private JLabel tittel;
+    private JTextPane arrInfo;
     private JButton kjopKnapp, lukkKnapp;
     
-    Kommandolytter knappelytter;
+    private SimpleAttributeSet attributeSet;
     
-    Arrangement arrangement;
+    private Kommandolytter knappelytter;
+    
+    private Arrangement arrangement;
     
     public InfoArr(Arrangement a)
     {
@@ -27,7 +30,11 @@ public class InfoArr extends JFrame
         
         bildePanel = new ArrbildePanel(arrangement.getArrBilde());
         
-        tittel = new JLabel(arrangement.getNavn());
+        arrInfo = new JTextPane();
+        arrInfo.setBackground(this.getBackground());
+        arrInfo.setEditable(false);
+        
+        attributeSet = new SimpleAttributeSet();
         
         knappePanel = new JPanel(new GridBagLayout());
         knappePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -55,7 +62,7 @@ public class InfoArr extends JFrame
         
         infoPanel.add(bildePanel, gbc);
         gbc.gridx += 1;        
-        infoPanel.add(tittel, gbc);
+        infoPanel.add(arrInfo, gbc);
         
         GridBagConstraints gbcV = new GridBagConstraints();
         gbcV.anchor = GridBagConstraints.CENTER;
@@ -68,7 +75,22 @@ public class InfoArr extends JFrame
         vindu.add(knappePanel, gbcV);
         add(vindu);
         pack();
+        setResizable(false);
         setVisible(true);
+    }
+    
+    private void lagInfoUtskrift(int posisjon, int fontStr, boolean fetSkrift, boolean undertekst)
+    {
+        StyleContext infoContext = new StyleContext();
+        StyledDocument infoDokument = new DefaultStyledDocument(infoContext);
+        
+        Style styleOverskrift = infoContext.getStyle(StyleContext.DEFAULT_STYLE);
+        StyleConstants.setAlignment(styleOverskrift, posisjon);
+        StyleConstants.setFontSize(styleOverskrift, fontStr);
+        StyleConstants.setSpaceAbove(styleOverskrift, 4);
+        StyleConstants.setSpaceBelow(styleOverskrift, 4);
+        StyleConstants.setBold(styleOverskrift, fetSkrift);
+        StyleConstants.setUnderline(styleOverskrift, undertekst);
     }
     
     private void lukkVindu()
