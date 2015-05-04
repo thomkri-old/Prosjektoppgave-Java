@@ -32,27 +32,27 @@ public class InfoArr extends JFrame
         arrInfo = new JTextPane();
         arrInfo.setBackground(this.getBackground());
         arrInfo.setEditable(false);
-        arrInfo.setPreferredSize(new Dimension(300, 150));
         
-        lagInfoUtskrift(arrangement.getNavn() + "\n", 20, true);
-        lagInfoUtskrift("\nDato:", 14, true);
-        lagInfoUtskrift("\t\t" + arrangement.getDatoString(), 14, false);
-        lagInfoUtskrift("\nPris*:", 14, true);
-        lagInfoUtskrift("\t\t" + arrangement.getBillettprisBarn() + ",- / " + arrangement.getBillettprisVoksen() + ",-", 14, false);
-        lagInfoUtskrift("\nDeltakere:", 14, true);
+        lagInfoUtskrift(arrangement.getNavn() + "\n", 20, true, false);
+        lagInfoUtskrift("\nDato:", 14, true, false);
+        lagInfoUtskrift("\t\t" + arrangement.getDatoString(), 14, false, false);
+        lagInfoUtskrift("\nPris*:", 14, true, false);
+        lagInfoUtskrift("\t\t" + arrangement.getBillettprisBarn() + ",- / " + arrangement.getBillettprisVoksen() + ",-", 14, false, false);
+        lagInfoUtskrift("\nDeltakere:", 14, true, false);
         
         String[] deltakere = arrangement.getDeltakere();
         for(int i = 0; i < deltakere.length; i++)
-            lagInfoUtskrift("\t" + ((i == 0)?"":"\t") + deltakere[i] + "\n", 14, false);
+            lagInfoUtskrift("\t" + ((i == 0)?"":"\t") + deltakere[i] + "\n", 14, false, false);
         
-        lagInfoUtskrift("Ledige plasser:", 14, true);
-        lagInfoUtskrift("\t" + arrangement.getLedigePlasser(), 14, false);
-        lagInfoUtskrift("\n\n" + arrangement.getProgram(), 14, false);
+        lagInfoUtskrift("Ledige plasser:", 14, true, false);
+        lagInfoUtskrift("\t" + arrangement.getLedigePlasser(), 14, false, false);
+        lagInfoUtskrift("\n\n" + arrangement.getProgram(), 14, false, false);
+        lagInfoUtskrift("\n\n*Pris per billett skrevet på formen barn/voksen", 12, false, true);
         
         arrInfo.setCaretPosition(0);
         
         arrInfoScroll = new JScrollPane(arrInfo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        arrInfoScroll.setPreferredSize(new Dimension(300, 150));
+        arrInfoScroll.setPreferredSize(new Dimension(300, 275));
         arrInfoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         
         knappePanel = new JPanel(new GridBagLayout());
@@ -73,15 +73,16 @@ public class InfoArr extends JFrame
         gbcK.gridx += 1;
         knappePanel.add(lukkKnapp, gbcK);
         
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.LINE_START;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        GridBagConstraints gbcI = new GridBagConstraints();
+        gbcI.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbcI.insets = new Insets(7, 5, 5, 5);
+        gbcI.gridx = 0;
+        gbcI.gridy = 0;
         
-        infoPanel.add(bildePanel, gbc);
-        gbc.gridx += 1;        
-        infoPanel.add(arrInfoScroll, gbc);
+        infoPanel.add(bildePanel, gbcI);
+        gbcI.gridx += 1;
+        gbcI.insets = new Insets(0, 5, 5, 5);
+        infoPanel.add(arrInfoScroll, gbcI);
         
         GridBagConstraints gbcV = new GridBagConstraints();
         gbcV.anchor = GridBagConstraints.CENTER;
@@ -92,17 +93,19 @@ public class InfoArr extends JFrame
         vindu.add(infoPanel, gbcV);        
         gbcV.gridy += 1;
         vindu.add(knappePanel, gbcV);
+        
         add(vindu);
         pack();
         setResizable(false);
         setVisible(true);
     }
     
-    private void lagInfoUtskrift(String tekst, int fontStr, boolean fetSkrift)
+    private void lagInfoUtskrift(String tekst, int fontStr, boolean fetSkrift, boolean kursivSkrift)
     {
         SimpleAttributeSet style = new SimpleAttributeSet();
         StyleConstants.setFontSize(style, fontStr);
         StyleConstants.setBold(style, fetSkrift);
+        StyleConstants.setItalic(style, kursivSkrift);
         
         StyledDocument infoDokument = arrInfo.getStyledDocument();
         try

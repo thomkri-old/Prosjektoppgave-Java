@@ -6,9 +6,9 @@ public abstract class FagligArrangement extends Arrangement
 {
     String tema;
     
-    public FagligArrangement(String n, String p, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP, String tm)
+    public FagligArrangement(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP, String tm)
     {
-        super(n, p, t, bpB, bpV, dt, d, aB, kP);
+        super(n, p, lN, t, bpB, bpV, dt, d, aB, kP);
         tema = tm;
     }
     

@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public abstract class Arrangement
 {
-    private String navn, program;
+    private String navn, program, lokaleNavn;
     private int arrId, bilSolgt = 0;
     private static int nesteId = 0;
     private int type;
@@ -13,15 +13,16 @@ public abstract class Arrangement
     private int[] plasser;
     private String[] deltakere;
     private LocalDateTime dato;
-    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu HH:mm");
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu  'kl.' HH:mm");
     private Kontaktperson kPerson;
     private ImageIcon arrBilde;
     private Set<Billett> billettListe;
     
-    public Arrangement(String n, String p, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP)
+    public Arrangement(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP)
     {
         navn = n;
         program = p;
+        lokaleNavn = lN;
         billettprisBarn = bpB;
         billettprisVoksen = bpV;
         deltakere = dt;

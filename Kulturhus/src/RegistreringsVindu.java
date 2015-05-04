@@ -294,7 +294,7 @@ public class RegistreringsVindu extends JFrame
         nettside = new JLabel("Nettside:");
         firma = new JLabel("Firma:");
         opplysninger = new JLabel("Opplysninger:");
-        tlfNr = new JLabel("Telefon nr.:");
+        tlfNr = new JLabel("Telefonnummer:");
         
         fornavnFelt = new JTextField(10);
         etternavnFelt = new JTextField(10);
@@ -538,25 +538,25 @@ public class RegistreringsVindu extends JFrame
             switch(type)
             {
                 case BARNE_FORESTILLING:
-                    a = new Barneforestilling(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
+                    a = new Barneforestilling(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 case DEBATT:
-                    a = new Debattkveld(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
+                    a = new Debattkveld(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 case FOREDRAG:
-                    a = new Foredrag(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
+                    a = new Foredrag(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 case KINO:
-                    a = new Kino(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s, kinoL, kinoAg);
+                    a = new Kino(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s, kinoL, kinoAg);
                     break;
                 case KONSERT:
-                    a = new Konsert(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
+                    a = new Konsert(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 case POLITISK_MOTE:
-                    a = new PolitiskMote(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
+                    a = new PolitiskMote(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 default:
-                    a = new Teater(n, p, type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
+                    a = new Teater(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
             }
             
