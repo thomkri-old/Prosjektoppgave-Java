@@ -10,7 +10,7 @@ public class Kjop extends JFrame
     private JScrollPane infoScroll;
     private JButton kjopKnapp, lukkKnapp;
     
-    private JLabel fornavn, etternavn, epost, tlf, antBilletter;
+    private JLabel tittel, fornavn, etternavn, epost, tlf, antBilletter;
     private JTextField fornavnFelt, etternavnFelt, epostFelt, tlfFelt;
     private JComboBox<String> bBillettValg, vBillettValg;
     
@@ -55,6 +55,8 @@ public class Kjop extends JFrame
         
         kjopPanel = new JPanel(new GridBagLayout());
         
+        tittel = new JLabel("Fyll inn info:");
+        tittel.setFont(new Font(tittel.getFont().getName(), Font.PLAIN, 18));        
         fornavn = new JLabel("Fornavn:");
         etternavn = new JLabel("Etternavn:");
         epost = new JLabel("E-post:");
@@ -66,10 +68,10 @@ public class Kjop extends JFrame
         epostFelt = new JTextField(15);
         tlfFelt = new JTextField(8);
         
-        bBillettValg = new JComboBox<>(tallArray("Barn", 1, 20));
+        bBillettValg = new JComboBox<>(tallArray("Barn", 0, 20));
         bBillettValg.setPreferredSize(new Dimension(70, 20));
         
-        vBillettValg = new JComboBox<>(tallArray("Voksne", 1, 20));
+        vBillettValg = new JComboBox<>(tallArray("Voksne", 0, 20));
         vBillettValg.setPreferredSize(new Dimension(70, 20));
         
         valgPanel = new JPanel(new FlowLayout());
@@ -91,7 +93,7 @@ public class Kjop extends JFrame
         gbc.gridy = 0;
         
         knappePanel.add(kjopKnapp, gbc);
-        gbc.gridx += 1;
+        gbc.gridx++;
         knappePanel.add(lukkKnapp, gbc);
         
         GridBagConstraints gbcI = new GridBagConstraints();
@@ -101,36 +103,36 @@ public class Kjop extends JFrame
         gbcI.gridy = 0;
         
         infoPanel.add(bildePanel, gbcI);
-        gbcI.gridy += 1;
+        gbcI.gridy++;
         gbcI.anchor = GridBagConstraints.FIRST_LINE_START;
         infoPanel.add(infoScroll, gbcI);
         
         GridBagConstraints gbcK = new GridBagConstraints();
-        gbcK.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbcK.anchor = GridBagConstraints.LINE_START;
         gbcK.insets = new Insets(5, 5, 5, 5);
         gbcK.gridx = 0;
         gbcK.gridy = 0;
         
         kjopPanel.add(fornavn, gbcK);
-        gbcK.gridy += 1;
+        gbcK.gridy++;
         kjopPanel.add(etternavn, gbcK);
-        gbcK.gridy += 1;
+        gbcK.gridy++;
         kjopPanel.add(epost, gbcK);
-        gbcK.gridy += 1;
+        gbcK.gridy++;
         kjopPanel.add(tlf, gbcK);
-        gbcK.gridy += 1;
+        gbcK.gridy++;
         kjopPanel.add(antBilletter, gbcK);
         
         gbcK.gridy = 0;
-        gbcK.gridx += 1;
+        gbcK.gridx++;
         kjopPanel.add(fornavnFelt, gbcK);
-        gbcK.gridy += 1;
+        gbcK.gridy++;
         kjopPanel.add(etternavnFelt, gbcK);
-        gbcK.gridy += 1;
+        gbcK.gridy++;
         kjopPanel.add(epostFelt, gbcK);
-        gbcK.gridy += 1;
+        gbcK.gridy++;
         kjopPanel.add(tlfFelt, gbcK);
-        gbcK.gridy += 1;
+        gbcK.gridy++;
         kjopPanel.add(valgPanel, gbcK);
         
         GridBagConstraints gbcH = new GridBagConstraints();
@@ -139,12 +141,14 @@ public class Kjop extends JFrame
         gbcH.gridx = 0;
         gbcH.gridy = 0;
         
+        hoyrePanel.add(tittel, gbcH);
+        gbcH.gridy++;
         hoyrePanel.add(kjopPanel, gbcH);
-        gbcH.gridy += 1;
+        gbcH.gridy++;
         hoyrePanel.add(knappePanel, gbcH);
         
         GridBagConstraints gbcV = new GridBagConstraints();
-        gbcV.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbcV.anchor = GridBagConstraints.CENTER;
         gbcV.insets = new Insets(5, 5, 5, 5);
         gbcV.gridx = 0;
         gbcV.gridy = 0;
@@ -179,7 +183,59 @@ public class Kjop extends JFrame
     
     private void kjopBillett()
     {
-        
+        String fn = fornavnFelt.getText();
+        String en = etternavnFelt.getText();
+        String e = epostFelt.getText();
+        if(fn.equals("") || en.equals("") || e.equals(""))
+        {
+            visMelding("Du må fylle ut info i alle feltene.");
+            return;
+        }
+        if(!e.matches(".+@[a-zA-ZæÆøØåÅöÖäÄàÀèÈëËüÜûÛâÂêÊãÃõÕïÏ\\d]+\\.[a-zA-ZæÆøØåÅöÖäÄàÀèÈëËüÜûÛâÂêÊãÃõÕïÏ\\d]+"))
+        {
+            visMelding("Du har skrevet inn en ugyldig e-post adresse");
+            return;
+        }
+        if(bBillettValg.getSelectedIndex() == 0 || vBillettValg.getSelectedIndex() == 0)
+        {
+            visMelding("Du må velge både antall baren billetter og antall voksen billetter");
+            return;
+        }
+        if(bBillettValg.getSelectedIndex() == 1 && vBillettValg.getSelectedIndex() == 1)
+        {
+            visMelding("Du må velge minst èn billett");
+            return;
+        }
+        try
+        {
+            int t = Integer.parseInt(tlfFelt.getText());
+            int aBB = Integer.parseInt((String) bBillettValg.getSelectedItem());
+            int aVB = Integer.parseInt((String) vBillettValg.getSelectedItem());
+            
+            if((aBB + aVB) > arrangement.getLedigePlasser())
+            {
+                visMelding("Det er ikke nok ledige plasser igjen.");
+                return;
+            }
+            
+            for(int i = 0; i < aBB; i++)
+            {
+                Billett b = new Billett(fn, en, e, arrangement.getNavn(), arrangement.getLokaleNavn(), arrangement.getPlassNr(), t, arrangement.getBillettprisBarn());
+                arrangement.settInnBillett(b);
+            }
+            
+            for(int i = 0; i < aVB; i++)
+            {
+                Billett b = new Billett(fn, en, e, arrangement.getNavn(), arrangement.getLokaleNavn(), arrangement.getPlassNr(), t, arrangement.getBillettprisVoksen());
+                arrangement.settInnBillett(b);
+            }
+            visMelding("Billettene er bestilt!\nEn faktura på kroner " + (aBB * arrangement.getBillettprisBarn() + aVB * arrangement.getBillettprisVoksen()) + ",- er sendt til din e-post.");
+            lukkVindu();
+        }
+        catch(NumberFormatException nfe)
+        {
+            visMelding("Feil i formatering av tall.");
+        }
     }
     
     private String[] tallArray(String tittel, int start, int slutt)

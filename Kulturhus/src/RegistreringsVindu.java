@@ -29,7 +29,7 @@ public class RegistreringsVindu extends JFrame
     private JButton avbrytKnapp, regKnapp;
     private Kommandolytter knappelytter;
     
-    private JLabel infoTekst, arrNavn, program, bPrisBarn, bPrisVoksen, deltakere, dato, tid, kPerson, lokale, sjanger, aldersgrense, lengde, velgBilde;
+    private JLabel infoTekst, arrNavn, program, bPrisBarn, bPrisVoksen, deltakere, dato, tid, kPerson, lokale, sjanger, aldersgrense, lengde, velgBilde, valgtBildeSjekk;
     private JTextField navnFelt, bpBarnFelt, bpVoksenFelt, sjangerFelt, alderFelt, lengdeFelt;
     private JTextArea programFelt, deltakereFelt;
     private JScrollPane programScroll, deltakereScroll;
@@ -37,7 +37,7 @@ public class RegistreringsVindu extends JFrame
     private JComboBox<String> kPersonValg, lokaleValg;
     private Lokale[] lokaleArray;
     private Kontaktperson[] kPersonArray;
-    private JPanel datoPanel, tidPanel;
+    private JPanel datoPanel, tidPanel, bildeVelgerPanel;
     private JFileChooser filvelger;
     private JButton filvelgerKnapp;
     private int filvalgReturVerdi;
@@ -51,7 +51,7 @@ public class RegistreringsVindu extends JFrame
     private JLabel lokaleNavn, lokaleType, antPlasser, harNrPlasser;
     private JTextField lokaleNavnFelt, antPlasserFelt;
     private JComboBox<String> lokaleTypeValg;
-    private String[] lokaleTypeListe = {"", "Teatersal", "Debattsal", "Foredragssal", "Kinosal", "Konsertsal"};
+    private final String[] lokaleTypeListe = {"", "Teatersal", "Debattsal", "Foredragssal", "Kinosal", "Konsertsal"};
     private ButtonGroup harNrPlasserGruppe;
     private JRadioButton radioJa, radioNei;
     private JPanel radioKnapper;
@@ -151,6 +151,8 @@ public class RegistreringsVindu extends JFrame
         aldersgrense = new JLabel("Aldersgrense:");
         lengde = new JLabel("Lengde (i minutter):");
         velgBilde = new JLabel("Velg et arrangement bilde:");
+        valgtBildeSjekk = new JLabel("Bilde ikke valgt");
+        valgtBildeSjekk.setForeground(Color.red);
         
         if(type == DEBATT || type == FOREDRAG || type == POLITISK_MOTE)
             sjanger = new JLabel("Tema:");
@@ -178,6 +180,10 @@ public class RegistreringsVindu extends JFrame
         
         filvelgerKnapp = new JButton("Velg fil");
         filvelgerKnapp.addActionListener(knappelytter);
+        
+        bildeVelgerPanel = new JPanel(new FlowLayout());
+        bildeVelgerPanel.add(filvelgerKnapp);
+        bildeVelgerPanel.add(valgtBildeSjekk);
         
         lokaleArray = lregister.getLokaler();
         kPersonArray = kpregister.getKontaktpersoner();
@@ -258,8 +264,10 @@ public class RegistreringsVindu extends JFrame
         gbc.gridy++;
         utfylling.add(programScroll, gbc);
         gbc.gridy++;
-        utfylling.add(filvelgerKnapp, gbc);
+        gbc.insets = new Insets(5, 0, 5, 5);
+        utfylling.add(bildeVelgerPanel, gbc);
         gbc.gridy++;
+        gbc.insets = new Insets(5, 5, 5, 5);
         utfylling.add(bpBarnFelt, gbc);
         gbc.gridy++;
         utfylling.add(bpVoksenFelt, gbc);
@@ -419,6 +427,11 @@ public class RegistreringsVindu extends JFrame
         {
             visMelding("Du må fylle ut info i alle feltene.");
         }
+        if(!ep.matches(".+@[a-zA-ZæÆøØåÅöÖäÄàÀèÈëËüÜûÛâÂêÊãÃõÕïÏ\\d]+\\.[a-zA-ZæÆøØåÅöÖäÄàÀèÈëËüÜûÛâÂêÊãÃõÕïÏ\\d]+"))
+        {
+            visMelding("Du har skrevet inn en ugyldig e-post adresse");
+            return;
+        }
         try
         {
             int tn = Integer.parseInt(tlfNrFelt.getText());
@@ -485,6 +498,11 @@ public class RegistreringsVindu extends JFrame
             visMelding("Du må velge et bilde til arrangementet");
             return;
         }
+        if(!d.matches("([a-zA-ZæÆøØåÅöÖäÄàÀèÈëËüÜûÛâÂêÊãÃõÕïÏ\\s]+(,\\s*)?)+"))
+        {
+            visMelding("Deltakere må skilles med et komma(Ingen tall).\nF. eks.: Ola Nordmann, Jan Teigen, Fredrik Karlsen");
+            return;
+        }
         if(dagValg.getSelectedIndex() == 0 || maanedValg.getSelectedIndex() == 0 || aarValg.getSelectedIndex() == 0)
         {
             visMelding("Du må velge noe i alle felt på dato.");
@@ -503,11 +521,6 @@ public class RegistreringsVindu extends JFrame
         if(kPersonValgtIndeks == 0)
         {
             visMelding("Du må velge en kontaktperson.");
-            return;
-        }
-        if(!d.matches("([a-zA-ZæÆøØåÅöÖäÄàÀèÈëËüÜûÛâÂêÊãÃõÕïÏ\\s]+(,\\s*)?)+"))
-        {
-            visMelding("Deltakere må skilles med et komma(Ingen tall).\nF. eks.: Ola Nordmann, Jan Teigen, Fredrik Karlsen");
             return;
         }
         try
@@ -566,7 +579,7 @@ public class RegistreringsVindu extends JFrame
         }
         catch(NumberFormatException nfe)
         {
-            visMelding("Feil i formateringen av .");
+            visMelding("Feil i formateringen av tall.");
         }
         catch(DateTimeException dte)
         {
@@ -631,6 +644,8 @@ public class RegistreringsVindu extends JFrame
             {
                 Image bilde = ImageIO.read(filvelger.getSelectedFile());
                 arrBilde = new ImageIcon(bilde);
+                valgtBildeSjekk.setText("Bilde valgt ✓");
+                valgtBildeSjekk.setForeground(new Color(0, 153, 0));
             }
             catch(IOException ioe)
             {

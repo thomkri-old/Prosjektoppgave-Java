@@ -1,9 +1,10 @@
 public class Billett
 {
     private String fornavn, etternavn, epost, arrNavn, lokaleNavn;
-    private int plassNr, tlf, pris;
+    private int plassNr, tlf;
+    private double pris;
     
-    public Billett(String fnavn, String enavn, String e, String aN, String lN, int pN, int t, int p)
+    public Billett(String fnavn, String enavn, String e, String aN, String lN, int pN, int t, double p)
     {
         fornavn = fnavn;
         etternavn = enavn;

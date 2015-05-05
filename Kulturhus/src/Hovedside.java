@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.net.URL;
 import java.time.LocalDateTime;
+import javax.swing.border.BevelBorder;
 
 public class Hovedside extends JFrame
 {
@@ -22,20 +23,21 @@ public class Hovedside extends JFrame
     private static final int KONSERT = 5;
     private static final int TEATER = 6;
     
-    private JPanel vindu, hovedPanel, meny, infoPanel, knapper;
+    private JPanel vindu, meny, hovedPanel, infoPanel, knapper;
     private JList<ImageIcon> infoFelt;
     private JScrollPane infoScroll, mainScroll;
-    private JSplitPane splitter;
+    private JLabel menyOverskrift, arrangementer, underholdning, faglig, bForestilling, debattkveld, foredrag, kino, konsert, politiskM, teater;
     private JButton infoKnapp, kjopKnapp;
     
-    private int arrType = FOREDRAG;
+    private int arrType = ALLE;
     ImageIcon[] arrFrameListe;
     Arrangement[] arrListe;
     
     private Kontaktpersonregister kpregister;
     private Lokalregister lregister;
     
-    private Kommandolytter knappelytter;
+    private Knappelytter knappelytter;
+    private Labellytter labellytter;
     
     public Hovedside(Lokalregister l, Kontaktperson kp, Lokale l1, Lokale l2, Lokale l3)
     {
@@ -43,7 +45,8 @@ public class Hovedside extends JFrame
         super("Målselv Kommune");
         
         lregister = l;
-        knappelytter = new Kommandolytter();
+        knappelytter = new Knappelytter();
+        labellytter = new Labellytter();
         
         URL bildeURL = Hovedside.class.getResource("/bilder/tammy.jpg");
         ImageIcon bildeIkon = new ImageIcon(bildeURL);
@@ -64,22 +67,66 @@ public class Hovedside extends JFrame
         l2.settInnArr(a2);
         l3.settInnArr(a4);
         
-        vindu = new JPanel(new BorderLayout());
+        vindu = new JPanel(new GridBagLayout());
         vindu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        hovedPanel = new JPanel(new GridBagLayout());
-
+        
         BannerPanel banner = new BannerPanel();
         banner.setMinimumSize(new Dimension(BANNERBREDDE, BANNERHOYDE));
         banner.setMaximumSize(new Dimension(BANNERBREDDE, BANNERHOYDE));
         
-        meny = new JPanel();
-        meny.setMinimumSize(new Dimension(MENYBREDDE, 0));
+        meny = new JPanel(new GridBagLayout());
+        meny.setPreferredSize(new Dimension(MENYBREDDE, 350));
+        
+        menyOverskrift = new JLabel("Meny");
+        menyOverskrift.setFont(new Font(menyOverskrift.getFont().getName(), Font.BOLD, 20));
+        arrangementer = new JLabel("Arrangement");
+        arrangementer.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 18));
+        arrangementer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        arrangementer.addMouseListener(labellytter);
+        underholdning = new JLabel("Underholdning");
+        underholdning.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 16));
+        underholdning.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        underholdning.addMouseListener(labellytter);
+        faglig = new JLabel("Faglige arrangement");
+        faglig.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 16));
+        faglig.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        faglig.addMouseListener(labellytter);
+        bForestilling = new JLabel("Barne forestilling");
+        bForestilling.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        bForestilling.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        bForestilling.addMouseListener(labellytter);
+        debattkveld = new JLabel("Debattkveld");
+        debattkveld.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        debattkveld.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        debattkveld.addMouseListener(labellytter);
+        foredrag = new JLabel("Foredrag");
+        foredrag.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        foredrag.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        foredrag.addMouseListener(labellytter);
+        kino = new JLabel("Kino");
+        kino.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        kino.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        kino.addMouseListener(labellytter);
+        konsert = new JLabel("Konsert");
+        konsert.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        konsert.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        konsert.addMouseListener(labellytter);
+        politiskM = new JLabel("Politisk møte");
+        politiskM.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        politiskM.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        politiskM.addMouseListener(labellytter);
+        teater = new JLabel("Teater");
+        teater.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        teater.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        teater.addMouseListener(labellytter);
+        
         infoPanel = new JPanel(new BorderLayout());
+        infoPanel.setPreferredSize(new Dimension(535, 530));
         
         visArrangementer();
         
         infoScroll = new JScrollPane(infoFelt, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        infoScroll.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        infoScroll.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 5));
         infoPanel.add(infoScroll, BorderLayout.CENTER);
         
         infoKnapp = new JButton("Info");
@@ -93,9 +140,51 @@ public class Hovedside extends JFrame
         knapper.setBorder(BorderFactory.createEmptyBorder(0, 150, 5, 150));
         
         infoPanel.add(knapper, BorderLayout.PAGE_END);
+        infoPanel.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.lightGray));
         
-        splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, meny, infoPanel);
-        splitter.setEnabled(false);
+        GridBagConstraints gbcM = new GridBagConstraints();
+        gbcM.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbcM.insets = new Insets(5, 0, 5, 5);
+        gbcM.gridx = 0;
+        gbcM.gridy = 0;
+        
+        meny.add(menyOverskrift, gbcM);
+        gbcM.gridy++;
+        meny.add(arrangementer, gbcM);
+        gbcM.gridy++;
+        gbcM.insets = new Insets(5, 20, 5, 5);
+        meny.add(faglig, gbcM);
+        gbcM.gridy++;
+        gbcM.insets = new Insets(5, 40, 5, 5);
+        meny.add(debattkveld, gbcM);
+        gbcM.gridy++;
+        meny.add(foredrag, gbcM);
+        gbcM.gridy++;
+        meny.add(politiskM, gbcM);
+        gbcM.gridy++;
+        gbcM.insets = new Insets(5, 20, 5, 5);
+        meny.add(underholdning, gbcM);
+        gbcM.gridy++;
+        gbcM.insets = new Insets(5, 40, 5, 5);
+        meny.add(bForestilling, gbcM);
+        gbcM.gridy++;
+        meny.add(kino, gbcM);
+        gbcM.gridy++;
+        meny.add(konsert, gbcM);
+        gbcM.gridy++;
+        meny.add(teater, gbcM);
+        
+        hovedPanel = new JPanel(new GridBagLayout());
+        hovedPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
+        
+        GridBagConstraints gbcH = new GridBagConstraints();
+        gbcH.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbcH.gridx = 0;
+        gbcH.gridy = 0;
+        
+        hovedPanel.add(meny, gbcH);
+        gbcH.gridx++;
+        hovedPanel.add(infoPanel, gbcH);
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -103,12 +192,9 @@ public class Hovedside extends JFrame
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        hovedPanel.add(banner, gbc);
-
+        vindu.add(banner, gbc);
         gbc.gridy++;
-
-        hovedPanel.add(splitter, gbc);
-        vindu.add(hovedPanel, BorderLayout.CENTER);
+        vindu.add(hovedPanel, gbc);
         
         mainScroll = new JScrollPane(vindu, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         mainScroll.getVerticalScrollBar().setUnitIncrement(SCROLLSPEED);
@@ -116,7 +202,7 @@ public class Hovedside extends JFrame
         setContentPane(mainScroll);
         
         pack();
-        setExtendedState(JFrame.MAXIMIZED_BOTH);      
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
     
     private void visArrangementer()
@@ -161,12 +247,12 @@ public class Hovedside extends JFrame
         }
         infoFelt = new JList<>(arrFrameListe);
         infoFelt.setVisibleRowCount(VALGHOYDE);
-        infoFelt.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+        infoFelt.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         infoFelt.setSelectedIndex(0);
+        infoFelt.setPreferredSize(new Dimension(500, infoFelt.getPreferredSize().height));
         
-        DefaultListCellRenderer renderer = (DefaultListCellRenderer)infoFelt.getCellRenderer();  
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer)infoFelt.getCellRenderer();
         renderer.setHorizontalAlignment(JLabel.CENTER);
-        renderer.setForeground(Color.gray);
     }
     
     public void visInfo()
@@ -181,7 +267,7 @@ public class Hovedside extends JFrame
         kjopVindu.setLocationRelativeTo(this);
     }
     
-    private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    private class Knappelytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
     {
         public void actionPerformed(ActionEvent e)
         {
@@ -190,5 +276,40 @@ public class Hovedside extends JFrame
             else if(e.getSource() == kjopKnapp)
                 kjopBillett();
         }
-     }
+    }
+    
+    private class Labellytter implements MouseListener
+    {
+        public void mouseClicked(MouseEvent e)
+        {
+            if(e.getSource() == arrangementer)
+                System.out.println("Arrangement");
+            else if(e.getSource() == faglig)
+                System.out.println("Faglig");
+            else if(e.getSource() == underholdning)
+                System.out.println("Underholdning");
+            else if(e.getSource() == debattkveld)
+                System.out.println("Debattkveld");
+            else if(e.getSource() == foredrag)
+                System.out.println("Foredrag");
+            else if(e.getSource() == politiskM)
+                System.out.println("Politisk møte");
+            else if(e.getSource() == bForestilling)
+                System.out.println("Barne forestilling");
+            else if(e.getSource() == kino)
+                System.out.println("Kino");
+            else if(e.getSource() == konsert)
+                System.out.println("Konsert");
+            else if(e.getSource() == teater)
+                System.out.println("Teater");
+        }
+
+        public void mousePressed(MouseEvent e) { }
+
+        public void mouseReleased(MouseEvent e) { }
+
+        public void mouseEntered(MouseEvent e) { }
+
+        public void mouseExited(MouseEvent e) { }
+    }
 } //End of class Hovedside

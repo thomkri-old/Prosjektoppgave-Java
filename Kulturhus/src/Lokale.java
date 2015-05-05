@@ -64,12 +64,13 @@ public class Lokale
         
         Iterator<Arrangement> arrIter = arrListe.iterator();
         Iterator<Arrangement> arrIter2 = arrListe.iterator();
-        Arrangement[] arrangementer = new Arrangement[getAntArr(1, arrIter2)];
+        Arrangement[] arrangementer = new Arrangement[getAntArr(t, arrIter2)];
         int i = 0;
         while(arrIter.hasNext())
         {
             Arrangement a = arrIter.next();
-            arrangementer[i++] = a;
+            if(a.getType() == t)
+                arrangementer[i++] = a;
         }
         return arrangementer;
     }
@@ -82,7 +83,7 @@ public class Lokale
         int ant = 0;
         while(iter.hasNext())
         {
-                iter.next();
+            if(iter.next().getType() == t)
                 ant++;
         }
         return ant;

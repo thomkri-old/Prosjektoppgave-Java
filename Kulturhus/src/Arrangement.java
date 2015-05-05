@@ -1,10 +1,11 @@
+
 import java.util.*;
 import java.time.*;
 import java.time.format.*;
 import javax.swing.*;
 
-public abstract class Arrangement
-{
+public abstract class Arrangement {
+
     private String navn, program, lokaleNavn;
     private int arrId, bilSolgt = 0;
     private static int nesteId = 0;
@@ -17,9 +18,8 @@ public abstract class Arrangement
     private Kontaktperson kPerson;
     private ImageIcon arrBilde;
     private Set<Billett> billettListe;
-    
-    public Arrangement(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP)
-    {
+
+    public Arrangement(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP) {
         navn = n;
         program = p;
         lokaleNavn = lN;
@@ -29,78 +29,73 @@ public abstract class Arrangement
         dato = d;
         kPerson = kP;
         arrBilde = aB;
-        arrId = ++ nesteId;
+        arrId = ++nesteId;
         type = t;
         billettListe = new HashSet<>();
     }
-        
-    public String getNavn()
-    {
+
+    public String getNavn() {
         return navn;
     }
-    
-    public double getBillettprisBarn()
-    {
+
+    public double getBillettprisBarn() {
         return billettprisBarn;
     }
-    
-    public double getBillettprisVoksen()
-    {
+
+    public double getBillettprisVoksen() {
         return billettprisVoksen;
     }
-    
-    public String[] getDeltakere()
-    {
+
+    public String[] getDeltakere() {
         return deltakere;
     }
-    
-    public String getDatoString()
-    {
+
+    public String getDatoString() {
         return dtf.format(dato);
     }
-    
-    public int getLedigePlasser()
-    {
+
+    public int getLedigePlasser() {
         return plasser.length - bilSolgt;
     }
-    
-    public String getProgram()
-    {
+
+    public String getProgram() {
         return program;
     }
-    
-    public int getType()
-    {
+
+    public int getType() {
         return type;
     }
-    
-    public ImageIcon getArrBilde()
-    {
+
+    public ImageIcon getArrBilde() {
         return arrBilde;
     }
-    
-    public void setPlasser(int antP)
-    {
+
+    public String getLokaleNavn() {
+        return lokaleNavn;
+    }
+
+    public int getPlassNr() {
+        return ++bilSolgt;
+    }
+
+    public void setPlasser(int antP) {
         plasser = new int[antP];
-        for(int i = 0; i < antP; i++)
-        {
-            plasser[i] = i+1;
+        for (int i = 0; i < antP; i++) {
+            plasser[i] = i + 1;
         }
     }
-    
-    public void settInnBillett(Billett b)
-    {
+
+    public void settInnBillett(Billett b) {
         billettListe.add(b);
     }
-    
-    public String toString()
-    {
+
+    public String toString() {
         String tekst = navn + "\n" + dtf.format(dato) + "\nDeltakere:";
-        for(int i = 0; i < deltakere.length; i++)
-        {
+        for (int i = 0; i < deltakere.length; i++) {
             tekst += " " + deltakere[i];
-            if(i != deltakere.length - 1)
+            if (i != deltakere.length - 1) {
                 tekst += ",";
+            }
         }
         tekst += "\nLedige plasser: " + (getLedigePlasser())
                 + "\nBillettpris voksen: " + billettprisVoksen + "\tBillettpris barn: " + billettprisBarn
