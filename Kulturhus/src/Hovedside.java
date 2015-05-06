@@ -3,18 +3,20 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.net.URL;
-import java.time.LocalDateTime;
-import javax.swing.border.BevelBorder;
+import java.text.*;
+import java.time.*;
 
 public class Hovedside extends JFrame
 {
-    private final int BANNERBREDDE = 800;
-    private final int BANNERHOYDE = 100;
-    private final int MENYBREDDE = 250;
-    private final int VALGHOYDE = 3;
-    private final int SCROLLSPEED = 16;
+    private static final int BANNERBREDDE = 800;
+    private static final int BANNERHOYDE = 100;
+    private static final int MENYBREDDE = 250;
+    private static final int VALGHOYDE = 3;
+    private static final int SCROLLSPEED = 16;
     
-    private static final int ALLE = -1;
+    private static final int ALLE = -3;
+    private static final int FAGLIGE = -2;
+    private static final int UNDERHOLDNING = -1;
     private static final int DEBATT = 0;
     private static final int FOREDRAG = 1;
     private static final int POLITISK_MOTE = 2;
@@ -28,16 +30,18 @@ public class Hovedside extends JFrame
     private JScrollPane infoScroll, mainScroll;
     private JLabel menyOverskrift, arrangementer, underholdning, faglig, bForestilling, debattkveld, foredrag, kino, konsert, politiskM, teater;
     private JButton infoKnapp, kjopKnapp;
+    private JTextArea feilmeldingFelt;
     
     private int arrType = ALLE;
-    ImageIcon[] arrFrameListe;
-    Arrangement[] arrListe;
+    private Arrangement[] arrListe;
     
     private Kontaktpersonregister kpregister;
     private Lokalregister lregister;
     
     private Knappelytter knappelytter;
     private Labellytter labellytter;
+    
+    DecimalFormat krFormat;
     
     public Hovedside(Lokalregister l, Kontaktperson kp, Lokale l1, Lokale l2, Lokale l3)
     {
@@ -47,6 +51,7 @@ public class Hovedside extends JFrame
         lregister = l;
         knappelytter = new Knappelytter();
         labellytter = new Labellytter();
+        krFormat = new DecimalFormat( "0.00" );
         
         URL bildeURL = Hovedside.class.getResource("/bilder/tammy.jpg");
         ImageIcon bildeIkon = new ImageIcon(bildeURL);
@@ -56,10 +61,10 @@ public class Hovedside extends JFrame
         
         String[] dArray = {"hnifof", "jfiow"};
         Arrangement a = new Foredrag("Ting og tang", "fjiowgwjiop wnmefo p mo", l1.getNavn(), 1, 125.5, 150, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
-        Arrangement a1 = new Foredrag("Hallo", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 1, 123, 115, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
-        Arrangement a2 = new Foredrag("Det jeg gjør", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 1, 124.4, 123, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
-        Arrangement a3 = new Foredrag("Fakta og sånt", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 1, 123, 124, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
-        Arrangement a4 = new Foredrag("Foredrag om foredrag", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 1, 44.5, 98, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
+        Arrangement a1 = new Foredrag("Hallo", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 2, 123, 115, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
+        Arrangement a2 = new Foredrag("Det jeg gjør", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 4, 124.4, 123, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
+        Arrangement a3 = new Foredrag("Fakta og sånt", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 5, 123, 124, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
+        Arrangement a4 = new Foredrag("Foredrag om foredrag", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 6, 44.5, 98, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
         
         l1.settInnArr(a);
         l2.settInnArr(a1);
@@ -122,12 +127,25 @@ public class Hovedside extends JFrame
         
         infoPanel = new JPanel(new BorderLayout());
         infoPanel.setPreferredSize(new Dimension(535, 530));
+
+        ImageIcon[] aL = arrangementerListe();
+        if(aL == null)
+        {
+            aL = new ImageIcon[1];
+            visMelding("Det finnes ingen arrangementer i systemet.\nProgrammet vil starte med en tom liste.");
+        }
         
-        visArrangementer();
+        infoFelt = new JList<>(aL);
+        infoFelt.setVisibleRowCount(VALGHOYDE);
+        infoFelt.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        infoFelt.setSelectedIndex(0);
+        infoFelt.setBackground(this.getBackground());
+
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer)infoFelt.getCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
         
         infoScroll = new JScrollPane(infoFelt, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         infoScroll.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 5));
-        infoPanel.add(infoScroll, BorderLayout.CENTER);
         
         infoKnapp = new JButton("Info");
         infoKnapp.addActionListener(knappelytter);
@@ -139,6 +157,7 @@ public class Hovedside extends JFrame
         knapper.add(kjopKnapp, BorderLayout.LINE_END);
         knapper.setBorder(BorderFactory.createEmptyBorder(0, 150, 5, 150));
         
+        infoPanel.add(infoScroll, BorderLayout.CENTER);
         infoPanel.add(knapper, BorderLayout.PAGE_END);
         infoPanel.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.lightGray));
         
@@ -205,20 +224,19 @@ public class Hovedside extends JFrame
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
     
-    private void visArrangementer()
+    private ImageIcon[] arrangementerListe()
     {
-        if(arrType == ALLE)
-            arrListe = lregister.getArrangementer(ALLE);
         arrListe = lregister.getArrangementer(arrType);
         if(arrListe == null)
-            return;
-        arrFrameListe = new ImageIcon[arrListe.length];
+            return null;
+        
+        ImageIcon[] arrFrameListe = new ImageIcon[arrListe.length];
         for(int i = 0; i < arrFrameListe.length; i++)
         {
             JFrame ramme = new JFrame();
             JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             JLabel navn = new JLabel(arrListe[i].getNavn());
-            JLabel pris = new JLabel("Pris: " + arrListe[i].getBillettprisBarn() + "/" + arrListe[i].getBillettprisVoksen());
+            JLabel pris = new JLabel("Pris: " + krFormat.format(arrListe[i].getBillettprisBarn()) + ",- / " + krFormat.format(arrListe[i].getBillettprisVoksen()) + ",-");
             
             ArrbildePanel plakat = new ArrbildePanel(arrListe[i].getArrBilde());
             panel.add(plakat);
@@ -226,10 +244,8 @@ public class Hovedside extends JFrame
             JPanel info = new JPanel(new GridLayout(2, 1, 5, 5));
             info.add(navn);
             info.add(pris);
-            info.setBackground(Color.white);
             
             panel.add(info);
-            panel.setBackground(Color.white);
             panel.setPreferredSize(new Dimension(300, 160));
             
             ramme.add(panel);
@@ -245,26 +261,44 @@ public class Hovedside extends JFrame
             ImageIcon ikon = new ImageIcon(bilde);
             arrFrameListe[i] = ikon;
         }
-        infoFelt = new JList<>(arrFrameListe);
-        infoFelt.setVisibleRowCount(VALGHOYDE);
-        infoFelt.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        infoFelt.setSelectedIndex(0);
-        infoFelt.setPreferredSize(new Dimension(500, infoFelt.getPreferredSize().height));
-        
-        DefaultListCellRenderer renderer = (DefaultListCellRenderer)infoFelt.getCellRenderer();
-        renderer.setHorizontalAlignment(JLabel.CENTER);
+        return arrFrameListe;
     }
     
-    public void visInfo()
+    public void oppdaterArrangementer(int t)
+    {
+        arrType = t;
+        ImageIcon[] aL = arrangementerListe();
+        if(aL == null)
+        {
+            aL = new ImageIcon[1];
+            visMelding("Det finnes ingen arrangementer i den valgte kategorien.");
+            infoKnapp.setEnabled(false);
+            kjopKnapp.setEnabled(false);
+        }
+        else
+        {
+            infoKnapp.setEnabled(true);
+            kjopKnapp.setEnabled(true);
+        }
+        infoFelt.setListData(aL);
+        infoFelt.setSelectedIndex(0);
+    }
+    
+    private void visInfo()
     {
         JFrame infoVindu = new InfoArr(arrListe[infoFelt.getSelectedIndex()]);
         infoVindu.setLocationRelativeTo(this);
     }
     
-    public void kjopBillett()
+    private void kjopBillett()
     {
         JFrame kjopVindu = new Kjop(arrListe[infoFelt.getSelectedIndex()]);
         kjopVindu.setLocationRelativeTo(this);
+    }
+    
+    private void visMelding(String melding)
+    {
+        JOptionPane.showMessageDialog(this, melding);
     }
     
     private class Knappelytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
@@ -272,9 +306,15 @@ public class Hovedside extends JFrame
         public void actionPerformed(ActionEvent e)
         {
             if(e.getSource() == infoKnapp)
-                visInfo();
+            {
+                if(arrListe != null)
+                    visInfo();
+            }
             else if(e.getSource() == kjopKnapp)
-                kjopBillett();
+            {
+                if(arrListe != null)
+                    kjopBillett();
+            }
         }
     }
     
@@ -283,25 +323,25 @@ public class Hovedside extends JFrame
         public void mouseClicked(MouseEvent e)
         {
             if(e.getSource() == arrangementer)
-                System.out.println("Arrangement");
+                oppdaterArrangementer(ALLE);
             else if(e.getSource() == faglig)
-                System.out.println("Faglig");
+                oppdaterArrangementer(FAGLIGE);
             else if(e.getSource() == underholdning)
-                System.out.println("Underholdning");
+                oppdaterArrangementer(UNDERHOLDNING);
             else if(e.getSource() == debattkveld)
-                System.out.println("Debattkveld");
+                oppdaterArrangementer(DEBATT);
             else if(e.getSource() == foredrag)
-                System.out.println("Foredrag");
+                oppdaterArrangementer(FOREDRAG);
             else if(e.getSource() == politiskM)
-                System.out.println("Politisk møte");
+                oppdaterArrangementer(POLITISK_MOTE);
             else if(e.getSource() == bForestilling)
-                System.out.println("Barne forestilling");
+                oppdaterArrangementer(BARNE_FORESTILLING);
             else if(e.getSource() == kino)
-                System.out.println("Kino");
+                oppdaterArrangementer(KINO);
             else if(e.getSource() == konsert)
-                System.out.println("Konsert");
+                oppdaterArrangementer(KONSERT);
             else if(e.getSource() == teater)
-                System.out.println("Teater");
+                oppdaterArrangementer(TEATER);
         }
 
         public void mousePressed(MouseEvent e) { }

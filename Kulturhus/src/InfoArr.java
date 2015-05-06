@@ -1,12 +1,13 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
 public class InfoArr extends JFrame
 {
-    private JPanel vindu, infoPanel, knappePanel, bildePanel;
+    private JPanel vindu, infoPanel, knappePanel, bildePanel, tekstInnholdPanel;
     private JTextPane arrInfo;
     private JScrollPane arrInfoScroll;
     private JButton kjopKnapp, lukkKnapp;
@@ -15,12 +16,15 @@ public class InfoArr extends JFrame
     
     private Arrangement arrangement;
     
+    DecimalFormat krFormat;
+    
     public InfoArr(Arrangement a)
     {
         super("Info om " + a.getNavn());
         
         knappelytter = new Kommandolytter();
         arrangement = a;
+        krFormat = new DecimalFormat( "0.00" );
         
         vindu = new JPanel(new GridBagLayout());
         vindu.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -37,7 +41,7 @@ public class InfoArr extends JFrame
         lagInfoUtskrift("\nDato:", 14, true, false);
         lagInfoUtskrift("\t\t" + arrangement.getDatoString(), 14, false, false);
         lagInfoUtskrift("\nPris*:", 14, true, false);
-        lagInfoUtskrift("\t\t" + arrangement.getBillettprisBarn() + ",- / " + arrangement.getBillettprisVoksen() + ",-", 14, false, false);
+        lagInfoUtskrift("\t\t" + krFormat.format(arrangement.getBillettprisBarn()) + ",- / " + krFormat.format(arrangement.getBillettprisVoksen()) + ",-", 14, false, false);
         lagInfoUtskrift("\nDeltakere:", 14, true, false);
         
         String[] deltakere = arrangement.getDeltakere();
@@ -47,12 +51,15 @@ public class InfoArr extends JFrame
         lagInfoUtskrift("Ledige plasser:", 14, true, false);
         lagInfoUtskrift("\t" + arrangement.getLedigePlasser(), 14, false, false);
         lagInfoUtskrift("\n\n" + arrangement.getProgram(), 14, false, false);
-        lagInfoUtskrift("\n\n*Pris per billett skrevet på formen barn/voksen", 12, false, true);
+        lagInfoUtskrift("\n\n*Pris per billett skrevet på formen barn / voksen", 12, false, true);
         
         arrInfo.setCaretPosition(0);
         
-        arrInfoScroll = new JScrollPane(arrInfo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        arrInfoScroll.setPreferredSize(new Dimension(300, 275));
+        tekstInnholdPanel = new JPanel(new BorderLayout());
+        tekstInnholdPanel.add(arrInfo, BorderLayout.CENTER);
+        
+        arrInfoScroll = new JScrollPane(tekstInnholdPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        arrInfoScroll.setPreferredSize(new Dimension(375, 275));
         arrInfoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         
         knappePanel = new JPanel(new GridBagLayout());

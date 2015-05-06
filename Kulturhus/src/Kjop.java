@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -18,12 +19,15 @@ public class Kjop extends JFrame
     
     private Arrangement arrangement;
     
+    DecimalFormat krFormat;
+    
     public Kjop(Arrangement a)
     {
         super("Kjøp billett for " + a.getNavn());
         
         arrangement = a;
         knappelytter = new Kommandolytter();
+        krFormat = new DecimalFormat( "0.00" );
         
         vindu = new JPanel(new GridBagLayout());
         vindu.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -42,10 +46,10 @@ public class Kjop extends JFrame
         lagInfoUtskrift("\nDato:", 14, true, false);
         lagInfoUtskrift("\t\t" + arrangement.getDatoString(), 14, false, false);
         lagInfoUtskrift("\nPris*:", 14, true, false);
-        lagInfoUtskrift("\t\t" + arrangement.getBillettprisBarn() + ",- / " + arrangement.getBillettprisVoksen() + ",-", 14, false, false);
+        lagInfoUtskrift("\t\t" + krFormat.format(arrangement.getBillettprisBarn()) + ",- / " + krFormat.format(arrangement.getBillettprisVoksen()) + ",-", 14, false, false);
         lagInfoUtskrift("\nLedige plasser:", 14, true, false);
         lagInfoUtskrift("\t" + arrangement.getLedigePlasser(), 14, false, false);
-        lagInfoUtskrift("\n\n*Pris per billett skrevet på formen barn/voksen", 12, false, true);
+        lagInfoUtskrift("\n\n*Pris per billett skrevet på formen barn / voksen", 12, false, true);
         
         arrInfo.setCaretPosition(0);
         
