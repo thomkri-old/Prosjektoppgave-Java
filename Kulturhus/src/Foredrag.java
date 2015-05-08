@@ -1,10 +1,11 @@
-import java.util.*;
+import java.time.*;
+import javax.swing.*;
 
 public class Foredrag extends FagligArrangement
 {    
-    public Foredrag(String n, String p, double bpB, double bpV, String[] dt, Calendar d, Kontaktperson kP, String t)
+    public Foredrag(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP, String tm)
     {
-        super(n, p, bpB, bpV, dt, d, kP, t);
+        super(n, p, lN, t, bpB, bpV, dt, d, aB, kP, tm);
     }
     
     public String toString()

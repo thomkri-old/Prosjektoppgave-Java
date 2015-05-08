@@ -16,6 +16,11 @@ public class Kontaktperson
         idNr = ++nesteNr;
     }
     
+    public String getNavn()
+    {
+        return etternavn + ", " + fornavn;
+    }
+    
     public void setType(int t)
     {
         type = t;

@@ -1,11 +1,13 @@
-import java.util.*;
+import java.time.*;
+import javax.swing.*;
+
 public class Kino extends UnderholdningsArrangement
 {
     private int aldersgrense, lengde; //Lengde i minutter
     
-    public Kino(String n, String p, double bpB, double bpV, String[] dt, Calendar d, Kontaktperson kP, String sj, int l, int ag)
+    public Kino(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP, String sj, int l, int ag)
     {
-        super(n, p, bpB, bpV, dt, d, kP, sj);
+        super(n, p, lN, t, bpB, bpV, dt, d, aB, kP, sj);
         aldersgrense = ag;
         lengde = l;
     }

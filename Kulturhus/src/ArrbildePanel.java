@@ -9,14 +9,10 @@ public class ArrbildePanel extends JPanel
     private ImageIcon bildeIkon;
     private Image bilde;
     
-    public ArrbildePanel()
+    public ArrbildePanel(ImageIcon bI)
     {
-        URL bildeURL = null;
-        bildeURL = Hovedside.class.getResource("/bilder/tammy.jpg");
-        if(bildeURL != null)
-            bildeIkon = new ImageIcon(bildeURL);
-        else
-            bildeIkon = null;
+        bildeIkon = bI;
+        
         bilde = bildeIkon.getImage();
         setPreferredSize(new Dimension(BREDDE, HOYDE));
     }
