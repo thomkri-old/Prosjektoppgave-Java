@@ -54,7 +54,7 @@ public class Kjop extends JFrame
         arrInfo.setCaretPosition(0);
         
         infoScroll = new JScrollPane(arrInfo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        infoScroll.setPreferredSize(new Dimension(300, 150));
+        infoScroll.setPreferredSize(new Dimension(325, 150));
         infoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         
         kjopPanel = new JPanel(new GridBagLayout());
