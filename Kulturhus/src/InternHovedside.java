@@ -22,6 +22,7 @@ public class InternHovedside extends JFrame {
         vindu = new JPanel(new BorderLayout());
         vindu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         hovedPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
         BannerPanel banner = new BannerPanel();
         banner.setMinimumSize(new Dimension(BANNERBREDDE, BANNERHOYDE));
@@ -77,8 +78,15 @@ public class InternHovedside extends JFrame {
         infoScroll.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         infoPanel.add(infoScroll, BorderLayout.CENTER);
         
+        GridBagConstraints gbd = new GridBagConstraints();
+        //gbc.insets = new Insets(5, 5, 5 ,5 );
+        
         infoKnapp = new JButton("Info");
+        
         opprettKnapp = new JButton("Opprett");
+        gbc.gridx = 10;
+        gbc.gridy = 10; 
+        gbc.insets = new Insets (5, 5, 5, 5);
         slettKnapp = new JButton("Slett");
         knapper = new JPanel(new BorderLayout());
         knapper.add(infoKnapp, BorderLayout.LINE_START);
@@ -91,7 +99,7 @@ public class InternHovedside extends JFrame {
         splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, meny, infoPanel);
         splitter.setEnabled(false);
         
-        GridBagConstraints gbc = new GridBagConstraints();
+        //GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
