@@ -753,7 +753,7 @@ public class RegistreringsVinduTest extends JFrame
             if(e.getSource() == avbrytKnappA || e.getSource() == avbrytKnappKP || e.getSource() == avbrytKnappL)
                 lukkVindu();
             else if(e.getSource() == regKnappA)
-                opprett(DEBATT);
+                opprett(radioValgtType);
             else if(e.getSource() == regKnappKP)
                 opprett(KONTAKT_PERSON);
             else if(e.getSource() == regKnappL)
@@ -787,7 +787,6 @@ public class RegistreringsVinduTest extends JFrame
                 radioValgtType = KINO;
                 setTabbedPane();
                 tabbedPane.setSelectedIndex(2);
-                System.out.println(tabbedPane.getPreferredSize().height + "     " + tabbedPane.getPreferredSize().width);
             }
             else if(e.getSource() == radioKonsert)
             {

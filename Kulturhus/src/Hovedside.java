@@ -61,10 +61,10 @@ public class Hovedside extends JFrame
         
         String[] dArray = {"hnifof", "jfiow"};
         Arrangement a = new Foredrag("Ting og tang", "fjiowgwjiop wnmefo p mo", l1.getNavn(), 1, 125.5, 150, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
-        Arrangement a1 = new Foredrag("Hallo", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 2, 123, 115, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
-        Arrangement a2 = new Foredrag("Det jeg gjør", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 4, 124.4, 123, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
-        Arrangement a3 = new Foredrag("Fakta og sånt", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 5, 123, 124, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
-        Arrangement a4 = new Foredrag("Foredrag om foredrag", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 6, 44.5, 98, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
+        Arrangement a1 = new PolitiskMote("Hallo", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 2, 123, 115, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
+        Arrangement a2 = new Kino("Det jeg gjør", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 4, 124.4, 123, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho", 128, 18);
+        Arrangement a3 = new Konsert("Fakta og sånt", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 5, 123, 124, dArray, LocalDateTime.now(), bildeIkon, kp, "hgufoiho");
+        Arrangement a4 = new Teater("Foredrag om foredrag", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 6, 44.5, 98, dArray, LocalDateTime.now(), bildeIkon1, kp, "hgufoiho");
         
         l1.settInnArr(a);
         l2.settInnArr(a1);

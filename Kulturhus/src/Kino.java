@@ -12,6 +12,16 @@ public class Kino extends UnderholdningsArrangement
         lengde = l;
     }
     
+    public int getAldersgrense()
+    {
+        return aldersgrense;
+    }
+    
+    public int getLengde()
+    {
+        return lengde;
+    }
+    
     public String toString()
     {
         String tekst = super.toString();

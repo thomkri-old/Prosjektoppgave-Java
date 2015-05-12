@@ -6,6 +6,14 @@ import javax.swing.text.*;
 
 public class InfoArr extends JFrame
 {
+    private static final int DEBATT = 0;
+    private static final int FOREDRAG = 1;
+    private static final int POLITISK_MOTE = 2;
+    private static final int BARNE_FORESTILLING = 3;
+    private static final int KINO = 4;
+    private static final int KONSERT = 5;
+    private static final int TEATER = 6;
+    
     private JPanel vindu, infoPanel, knappePanel, bildePanel, tekstInnholdPanel;
     private JTextPane arrInfo;
     private JScrollPane arrInfoScroll;
@@ -43,6 +51,18 @@ public class InfoArr extends JFrame
         lagInfoUtskrift("\t\t" + arrangement.getDatoString(), 14, false, false);
         lagInfoUtskrift("\nPris*:", 14, true, false);
         lagInfoUtskrift("\t\t" + krFormat.format(arrangement.getBillettprisBarn()) + ",- / " + krFormat.format(arrangement.getBillettprisVoksen()) + ",-", 14, false, false);
+        if(arrangement.getType() == KINO)
+        {
+            Kino k = (Kino)arrangement;
+            int timer = k.getLengde() / 60;
+            int minutter = k.getLengde() % 60;            
+            
+            lagInfoUtskrift("\nAldersgrense:", 14, true, false);
+            lagInfoUtskrift("\t" + k.getAldersgrense() + " år", 14, false, false);
+            lagInfoUtskrift("\nLengde:", 14, true, false);
+            lagInfoUtskrift("\t\t" + timer + " timer og " + minutter + " minutter", 14, false, false);
+        }
+            
         lagInfoUtskrift("\nDeltakere:", 14, true, false);
         
         String[] deltakere = arrangement.getDeltakere();
