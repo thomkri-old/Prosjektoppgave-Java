@@ -30,7 +30,6 @@ public class Hovedside extends JFrame
     private JScrollPane infoScroll, mainScroll;
     private JLabel menyOverskrift, arrangementer, underholdning, faglig, bForestilling, debattkveld, foredrag, kino, konsert, politiskM, teater;
     private JButton infoKnapp, kjopKnapp;
-    private JTextArea feilmeldingFelt;
     
     private int arrType = ALLE;
     private Arrangement[] arrListe;

@@ -12,8 +12,6 @@ public class Kulturhus
 
 
         RegistreringsVindu r1 = new RegistreringsVindu("Opprett", 5, kpregister, lregister);
-        InternHovedside h1 = new InternHovedside();
-
         
         Lokale l1 = new Lokale("Lokale1", 3, 235, false);
         Lokale l2 = new Lokale("Lokale2", 1, 115, false);
@@ -37,6 +35,9 @@ public class Kulturhus
         
         RegistreringsVindu r = new RegistreringsVindu("Opprett", 1, kpregister, lregister);
         Hovedside h = new Hovedside(lregister, kp1, l1, l2, l5);
+        InternHovedside h1 = new InternHovedside(lregister);
+        RegistreringsVinduTest rvt = new RegistreringsVinduTest(lregister, kpregister);
+        InternHovedsideTest h2 = new InternHovedsideTest(lregister);
         
         h.addWindowListener(
             new WindowAdapter()
