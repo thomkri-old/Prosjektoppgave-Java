@@ -34,62 +34,81 @@ public abstract class Arrangement {
         billettListe = new HashSet<>();
     }
 
-    public String getNavn() {
+    public String getNavn()
+    {
         return navn;
     }
 
-    public double getBillettprisBarn() {
+    public double getBillettprisBarn()
+    {
         return billettprisBarn;
     }
 
-    public double getBillettprisVoksen() {
+    public double getBillettprisVoksen()
+    {
         return billettprisVoksen;
     }
 
-    public String[] getDeltakere() {
+    public String[] getDeltakere()
+    {
         return deltakere;
     }
+    
+    public LocalDateTime getDato()
+    {
+        return dato;
+    }
 
-    public String getDatoString() {
+    public String getDatoString()
+    {
         return dtf.format(dato);
     }
 
-    public int getLedigePlasser() {
+    public int getLedigePlasser()
+    {
         return plasser.length - bilSolgt;
     }
 
-    public String getProgram() {
+    public String getProgram()
+    {
         return program;
     }
 
-    public int getType() {
+    public int getType()
+    {
         return type;
     }
 
-    public ImageIcon getArrBilde() {
+    public ImageIcon getArrBilde()
+    {
         return arrBilde;
     }
 
-    public String getLokaleNavn() {
+    public String getLokaleNavn()
+    {
         return lokaleNavn;
     }
 
-    public int getPlassNr() {
+    public int getPlassNr()
+    {
         return ++bilSolgt;
     }
 
-    public void setPlasser(int antP) {
+    public void setPlasser(int antP)
+    {
         plasser = new int[antP];
         for (int i = 0; i < antP; i++) {
             plasser[i] = i + 1;
         }
     }
 
-    public void settInnBillett(Billett b) {
+    public void settInnBillett(Billett b)
+    {
         billettListe.add(b);
     }
 
-    public String toString() {
+    public String toString()
+    {
         String tekst = navn + "\n" + dtf.format(dato) + "\nDeltakere:";
         for (int i = 0; i < deltakere.length; i++) {
             tekst += " " + deltakere[i];

@@ -5,6 +5,7 @@ import java.awt.image.*;
 import java.net.URL;
 import java.text.*;
 import java.time.*;
+import java.util.Arrays;
 
 public class Hovedside extends JFrame
 {
@@ -229,23 +230,29 @@ public class Hovedside extends JFrame
         if(arrListe == null)
             return null;
         
+        Arrays.sort(arrListe, new ArrangementDatoSammenlikner());
+        
         ImageIcon[] arrFrameListe = new ImageIcon[arrListe.length];
         for(int i = 0; i < arrFrameListe.length; i++)
         {
             JFrame ramme = new JFrame();
             JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             JLabel navn = new JLabel(arrListe[i].getNavn());
+            navn.setFont(new Font(navn.getFont().getName(), Font.BOLD, 16));
+            navn.setPreferredSize(new Dimension(200, navn.getSize().height + 25));
             JLabel pris = new JLabel("Pris: " + krFormat.format(arrListe[i].getBillettprisBarn()) + ",- / " + krFormat.format(arrListe[i].getBillettprisVoksen()) + ",-");
+            JLabel dato = new JLabel("Dato: " + arrListe[i].getDatoString());
             
             ArrbildePanel plakat = new ArrbildePanel(arrListe[i].getArrBilde());
             panel.add(plakat);
             
-            JPanel info = new JPanel(new GridLayout(2, 1, 5, 5));
+            JPanel info = new JPanel(new GridLayout(3, 1, 5, 5));
             info.add(navn);
             info.add(pris);
+            info.add(dato);
             
             panel.add(info);
-            panel.setPreferredSize(new Dimension(300, 160));
+            panel.setPreferredSize(new Dimension(375, 160));
             
             ramme.add(panel);
             ramme.pack();

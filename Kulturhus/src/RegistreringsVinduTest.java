@@ -26,9 +26,9 @@ public class RegistreringsVinduTest extends JFrame
     private static final int KONSERTSAL = 15;
     
     private int type;
-    private JPanel kPPanel, lPanel, dPanel, fPanel, pMPanel, bFPanel, kPanel, konPanel, tPanel, vindu, utfylling, knapper;
+    private JPanel kPPanel, lPanel, aPanel, vindu, utfylling, knapper;
     private JTabbedPane tabbedPane;
-    private JButton avbrytKnappD, avbrytKnappF, avbrytKnappPM, avbrytKnappBF, avbrytKnappK, avbrytKnappKons, avbrytKnappT, avbrytKnappKP, avbrytKnappL, regKnappD, regKnappF, regKnappPM, regKnappBF, regKnappK, regKnappKons, regKnappT, regKnappKP, regKnappL;
+    private JButton avbrytKnappA, avbrytKnappKP, avbrytKnappL, regKnappA, regKnappKP, regKnappL;
     private Kommandolytter knappelytter;
     
     private JLabel infoTekst, arrNavn, program, bPrisBarn, bPrisVoksen, deltakere, dato, tid, kPerson, lokale, sjanger, aldersgrense, lengde, velgBilde, valgtBildeSjekk;
@@ -39,11 +39,13 @@ public class RegistreringsVinduTest extends JFrame
     private JComboBox<String> kPersonValg, lokaleValg;
     private Lokale[] lokaleArray;
     private Kontaktperson[] kPersonArray;
-    private JPanel datoPanel, tidPanel, bildeVelgerPanel;
+    private JPanel datoPanel, tidPanel, bildeVelgerPanel, radioKnapperA;
     private JFileChooser filvelger;
     private JButton filvelgerKnapp;
-    private int filvalgReturVerdi;
+    private int filvalgReturVerdi, radioValgtType = DEBATT;
     private ImageIcon arrBilde;
+    private ButtonGroup velgArrTypeGruppe;
+    private JRadioButton radioDebatt, radioForedrag, radioPolitiskM, radioBarneF, radioKino, radioKonsert, radioTeater;
     
     private JLabel fornavn, etternavn, epost, nettside, firma, opplysninger, tlfNr;
     private JTextField fornavnFelt, etternavnFelt, epostFelt, nettsideFelt, firmaFelt, tlfNrFelt;
@@ -56,7 +58,7 @@ public class RegistreringsVinduTest extends JFrame
     private final String[] lokaleTypeListe = {"", "Teatersal", "Debattsal", "Foredragssal", "Kinosal", "Konsertsal"};
     private ButtonGroup harNrPlasserGruppe;
     private JRadioButton radioJa, radioNei;
-    private JPanel radioKnapper;
+    private JPanel radioKnapperL;
     private boolean harNrPVerdi, rKnappTrykket = false;
     
     private Kontaktpersonregister kpregister;
@@ -71,26 +73,10 @@ public class RegistreringsVinduTest extends JFrame
         tabbedPane = new JTabbedPane();
         tabbedPane.setUI(new BasicTabbedPaneUI());
         tabbedPane.setBackground(this.getBackground());
+        tabbedPane.setPreferredSize(new Dimension(825, 485));
         knappelytter = new Kommandolytter();
-         
-        kPPanel = opprettVindu(KONTAKT_PERSON);
-        tabbedPane.addTab("Kontaktperson", null, kPPanel, "Opprett kontaktperson");
-        lPanel = opprettVindu(LOKALE);
-        tabbedPane.addTab("Lokale", null, lPanel, "Opprett lokale");
-        dPanel = opprettVindu(DEBATT);
-        tabbedPane.addTab("Debattkveld", null, dPanel, "Opprett debattkveld");
-        fPanel = opprettVindu(FOREDRAG);
-        tabbedPane.addTab("Foredrag", null, fPanel, "Opprett foredrag");
-        pMPanel = opprettVindu(POLITISK_MOTE);
-        tabbedPane.addTab("Politisk møte", null, pMPanel, "Opprett politisk møte");
-        bFPanel = opprettVindu(BARNE_FORESTILLING);
-        tabbedPane.addTab("Barneforestilling", null, bFPanel, "Opprett barneforestilling");
-        kPanel = opprettVindu(KINO);
-        tabbedPane.addTab("Kino", null, kPanel, "Opprett kino");
-        konPanel = opprettVindu(KONSERT);
-        tabbedPane.addTab("Konsert", null, konPanel, "Opprett konsert");
-        tPanel = opprettVindu(TEATER);
-        tabbedPane.addTab("Teater", null, tPanel, "Opprett Teater");
+        
+        setTabbedPane();
         
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -100,6 +86,17 @@ public class RegistreringsVinduTest extends JFrame
         pack();
         setResizable(false);
         setVisible(true);
+    }
+    
+    private void setTabbedPane()
+    {
+        tabbedPane.removeAll();
+        kPPanel = opprettVindu(KONTAKT_PERSON);
+        tabbedPane.addTab("Kontaktperson", null, kPPanel, "Opprett kontaktperson");
+        lPanel = opprettVindu(LOKALE);
+        tabbedPane.addTab("Lokale", null, lPanel, "Opprett lokale");
+        aPanel = opprettVindu(radioValgtType);
+        tabbedPane.addTab("Arrangement", null, aPanel, "Opprett arrangement");
     }
     
     private JPanel opprettVindu(int t)
@@ -127,6 +124,11 @@ public class RegistreringsVinduTest extends JFrame
         gbc.gridx = 0;
         gbc.gridy = 0;
         
+        if(type != KONTAKT_PERSON && type != LOKALE)
+        {
+            vindu.add(radioKnapperA);
+            gbc.gridy++;
+        }
         vindu.add(infoTekst, gbc);
         gbc.anchor = GridBagConstraints.LINE_START;
         gbc.gridy++;
@@ -148,7 +150,7 @@ public class RegistreringsVinduTest extends JFrame
         deltakere = new JLabel("Deltakere (skilles med komma \",\"):");
         dato = new JLabel("Dato:");
         tid = new JLabel("Tidspunkt:");
-        kPerson = new JLabel("Kontakt person:");
+        kPerson = new JLabel("Kontaktperson:");
         lokale = new JLabel("Lokale:");
         aldersgrense = new JLabel("Aldersgrense:");
         lengde = new JLabel("Lengde (i minutter):");
@@ -220,6 +222,39 @@ public class RegistreringsVinduTest extends JFrame
         
         kPersonValg = new JComboBox<>(navnArray(kPersonArray));
         kPersonValg.setPreferredSize(new Dimension(200, 20));
+        
+        radioDebatt = new JRadioButton("Debatt", (radioValgtType == DEBATT)?true:false);
+        radioDebatt.addActionListener(knappelytter);
+        radioForedrag = new JRadioButton("Foredrag", (radioValgtType == FOREDRAG)?true:false);
+        radioForedrag.addActionListener(knappelytter);
+        radioPolitiskM = new JRadioButton("Politisk møte", (radioValgtType == POLITISK_MOTE)?true:false);
+        radioPolitiskM.addActionListener(knappelytter);
+        radioBarneF = new JRadioButton("Barneforestilling", (radioValgtType == BARNE_FORESTILLING)?true:false);
+        radioBarneF.addActionListener(knappelytter);
+        radioKino = new JRadioButton("Kino", (radioValgtType == KINO)?true:false);
+        radioKino.addActionListener(knappelytter);
+        radioKonsert = new JRadioButton("Konsert", (radioValgtType == KONSERT)?true:false);
+        radioKonsert.addActionListener(knappelytter);
+        radioTeater = new JRadioButton("Teater", (radioValgtType == TEATER)?true:false);
+        radioTeater.addActionListener(knappelytter);
+        
+        velgArrTypeGruppe = new ButtonGroup();
+        velgArrTypeGruppe.add(radioDebatt);
+        velgArrTypeGruppe.add(radioForedrag);
+        velgArrTypeGruppe.add(radioPolitiskM);
+        velgArrTypeGruppe.add(radioBarneF);
+        velgArrTypeGruppe.add(radioKino);
+        velgArrTypeGruppe.add(radioKonsert);
+        velgArrTypeGruppe.add(radioTeater);
+        
+        radioKnapperA = new JPanel(new FlowLayout());
+        radioKnapperA.add(radioDebatt);
+        radioKnapperA.add(radioForedrag);
+        radioKnapperA.add(radioPolitiskM);
+        radioKnapperA.add(radioBarneF);
+        radioKnapperA.add(radioKino);
+        radioKnapperA.add(radioKonsert);
+        radioKnapperA.add(radioTeater);
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.LINE_START;
@@ -302,79 +337,14 @@ public class RegistreringsVinduTest extends JFrame
         gbcK.gridx = 0;
         gbcK.gridy = 0;
         
-        switch(type)
-            {
-                case BARNE_FORESTILLING:
-                    avbrytKnappBF = new JButton("Avbryt");
-                    avbrytKnappBF.addActionListener(knappelytter);
-                    regKnappBF = new JButton("Registrer");
-                    regKnappBF.addActionListener(knappelytter);
-                    knapper.add(avbrytKnappBF, gbcK);
-                    gbcK.gridx++;
-                    gbcK.anchor = GridBagConstraints.LINE_END;
-                    knapper.add(regKnappBF, gbcK);
-                    break;
-                case DEBATT:
-                    avbrytKnappD = new JButton("Avbryt");
-                    avbrytKnappD.addActionListener(knappelytter);
-                    regKnappD = new JButton("Registrer");
-                    regKnappD.addActionListener(knappelytter);
-                    knapper.add(avbrytKnappD, gbcK);
-                    gbcK.gridx++;
-                    gbcK.anchor = GridBagConstraints.LINE_END;
-                    knapper.add(regKnappD, gbcK);
-                    break;
-                case FOREDRAG:
-                    avbrytKnappF = new JButton("Avbryt");
-                    avbrytKnappF.addActionListener(knappelytter);
-                    regKnappF = new JButton("Registrer");
-                    regKnappF.addActionListener(knappelytter);
-                    knapper.add(avbrytKnappF, gbcK);
-                    gbcK.gridx++;
-                    gbcK.anchor = GridBagConstraints.LINE_END;
-                    knapper.add(regKnappF, gbcK);
-                    break;
-                case KINO:
-                    avbrytKnappK = new JButton("Avbryt");
-                    avbrytKnappK.addActionListener(knappelytter);
-                    regKnappK = new JButton("Registrer");
-                    regKnappK.addActionListener(knappelytter);
-                    knapper.add(avbrytKnappK, gbcK);
-                    gbcK.gridx++;
-                    gbcK.anchor = GridBagConstraints.LINE_END;
-                    knapper.add(regKnappK, gbcK);
-                    break;
-                case KONSERT:
-                    avbrytKnappKons = new JButton("Avbryt");
-                    avbrytKnappKons.addActionListener(knappelytter);
-                    regKnappKons = new JButton("Registrer");
-                    regKnappKons.addActionListener(knappelytter);
-                    knapper.add(avbrytKnappKons, gbcK);
-                    gbcK.gridx++;
-                    gbcK.anchor = GridBagConstraints.LINE_END;
-                    knapper.add(regKnappKons, gbcK);
-                    break;
-                case POLITISK_MOTE:
-                    avbrytKnappPM = new JButton("Avbryt");
-                    avbrytKnappPM.addActionListener(knappelytter);
-                    regKnappPM = new JButton("Registrer");
-                    regKnappPM.addActionListener(knappelytter);
-                    knapper.add(avbrytKnappPM, gbcK);
-                    gbcK.gridx++;
-                    gbcK.anchor = GridBagConstraints.LINE_END;
-                    knapper.add(regKnappPM, gbcK);
-                    break;
-                default:
-                    avbrytKnappT = new JButton("Avbryt");
-                    avbrytKnappT.addActionListener(knappelytter);
-                    regKnappT = new JButton("Registrer");
-                    regKnappT.addActionListener(knappelytter);
-                    knapper.add(avbrytKnappT, gbcK);
-                    gbcK.gridx++;
-                    gbcK.anchor = GridBagConstraints.LINE_END;
-                    knapper.add(regKnappT, gbcK);
-                    break;
-            }
+        avbrytKnappA = new JButton("Avbryt");
+        avbrytKnappA.addActionListener(knappelytter);
+        regKnappA = new JButton("Registrer");
+        regKnappA.addActionListener(knappelytter);
+        knapper.add(avbrytKnappA, gbcK);
+        gbcK.gridx++;
+        gbcK.anchor = GridBagConstraints.LINE_END;
+        knapper.add(regKnappA, gbcK);
     }
     
     private void opprettKpersonVindu()
@@ -477,9 +447,9 @@ public class RegistreringsVinduTest extends JFrame
         harNrPlasserGruppe.add(radioJa);
         harNrPlasserGruppe.add(radioNei);
         
-        radioKnapper = new JPanel(new FlowLayout());
-        radioKnapper.add(radioJa);
-        radioKnapper.add(radioNei);
+        radioKnapperL = new JPanel(new FlowLayout());
+        radioKnapperL.add(radioJa);
+        radioKnapperL.add(radioNei);
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.LINE_START;
@@ -503,7 +473,7 @@ public class RegistreringsVinduTest extends JFrame
         gbc.gridy++;
         utfylling.add(antPlasserFelt, gbc);
         gbc.gridy++;
-        utfylling.add(radioKnapper, gbc);
+        utfylling.add(radioKnapperL, gbc);
         
         avbrytKnappL = new JButton("Avbryt");
         avbrytKnappL.addActionListener(knappelytter);
@@ -558,7 +528,6 @@ public class RegistreringsVinduTest extends JFrame
             Kontaktperson k = new Kontaktperson(fn, en, ep, ns, f, o, tn);
             kpregister.settInn(k);
             visMelding("Kontaktperson opprettet.");
-            lukkVindu();
         }
         catch(NumberFormatException nfe)
         {
@@ -591,7 +560,6 @@ public class RegistreringsVinduTest extends JFrame
             Lokale l = new Lokale(n, typeValgtIndeks, antP, harNrPVerdi);
             lregister.settInn(l);
             visMelding("Lokalet opprettet.");
-            lukkVindu();
         }
         catch(NumberFormatException nfe)
         {
@@ -695,7 +663,6 @@ public class RegistreringsVinduTest extends JFrame
             
             l.settInnArr(a);
             visMelding("Arrangement opprettet.");
-            lukkVindu();
         }
         catch(NumberFormatException nfe)
         {
@@ -774,30 +741,66 @@ public class RegistreringsVinduTest extends JFrame
         }
     }
     
+    private void packVindu()
+    {
+        this.pack();
+    }
+    
     private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
     {
         public void actionPerformed(ActionEvent e)
         {
-            if(e.getSource() == avbrytKnappD || e.getSource() == avbrytKnappF || e.getSource() == avbrytKnappPM || e.getSource() == avbrytKnappBF || e.getSource() == avbrytKnappK || e.getSource() == avbrytKnappKons || e.getSource() == avbrytKnappT || e.getSource() == avbrytKnappKP || e.getSource() == avbrytKnappL)
+            if(e.getSource() == avbrytKnappA || e.getSource() == avbrytKnappKP || e.getSource() == avbrytKnappL)
                 lukkVindu();
-            else if(e.getSource() == regKnappD)
+            else if(e.getSource() == regKnappA)
                 opprett(DEBATT);
-            else if(e.getSource() == regKnappF)
-                opprett(FOREDRAG);
-            else if(e.getSource() == regKnappPM)
-                opprett(POLITISK_MOTE);
-            else if(e.getSource() == regKnappBF)
-                opprett(BARNE_FORESTILLING);
-            else if(e.getSource() == regKnappK)
-                opprett(KINO);
-            else if(e.getSource() == regKnappKons)
-                opprett(KONSERT);
-            else if(e.getSource() == regKnappT)
-                opprett(TEATER);
             else if(e.getSource() == regKnappKP)
                 opprett(KONTAKT_PERSON);
             else if(e.getSource() == regKnappL)
                 opprett(LOKALE);
+            else if(e.getSource() == radioDebatt)
+            {
+                radioValgtType = DEBATT;
+                setTabbedPane();
+                tabbedPane.setSelectedIndex(2);
+            }
+            else if(e.getSource() == radioForedrag)
+            {
+                radioValgtType = FOREDRAG;
+                setTabbedPane();
+                tabbedPane.setSelectedIndex(2);
+            }
+            else if(e.getSource() == radioPolitiskM)
+            {
+                radioValgtType = POLITISK_MOTE;
+                setTabbedPane();
+                tabbedPane.setSelectedIndex(2);
+            }
+            else if(e.getSource() == radioBarneF)
+            {
+                radioValgtType = BARNE_FORESTILLING;
+                setTabbedPane();
+                tabbedPane.setSelectedIndex(2);
+            }
+            else if(e.getSource() == radioKino)
+            {
+                radioValgtType = KINO;
+                setTabbedPane();
+                tabbedPane.setSelectedIndex(2);
+                System.out.println(tabbedPane.getPreferredSize().height + "     " + tabbedPane.getPreferredSize().width);
+            }
+            else if(e.getSource() == radioKonsert)
+            {
+                radioValgtType = KONSERT;
+                setTabbedPane();
+                tabbedPane.setSelectedIndex(2);
+            }
+            else if(e.getSource() == radioTeater)
+            {
+                radioValgtType = TEATER;
+                setTabbedPane();
+                tabbedPane.setSelectedIndex(2);
+            }
             else if(e.getSource() == radioJa)
             {
                 harNrPVerdi = true;
