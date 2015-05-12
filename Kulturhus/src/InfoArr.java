@@ -15,15 +15,17 @@ public class InfoArr extends JFrame
     
     private Arrangement arrangement;
     
-    DecimalFormat krFormat;
+    private DecimalFormat krFormat;
+    private boolean erKunde;
     
-    public InfoArr(Arrangement a)
+    public InfoArr(Arrangement a, boolean eK)
     {
         super("Info om " + a.getNavn());
         
         knappelytter = new Kommandolytter();
         arrangement = a;
         krFormat = new DecimalFormat( "0.00" );
+        erKunde = eK;
         
         vindu = new JPanel(new GridBagLayout());
         vindu.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -75,8 +77,11 @@ public class InfoArr extends JFrame
         gbcK.gridx = 0;
         gbcK.gridy = 0;
         
-        knappePanel.add(kjopKnapp, gbcK);
-        gbcK.gridx += 1;
+        if(erKunde)
+        {
+            knappePanel.add(kjopKnapp, gbcK);
+            gbcK.gridx += 1;
+        }
         knappePanel.add(lukkKnapp, gbcK);
         
         GridBagConstraints gbcI = new GridBagConstraints();

@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Lokale
+public class Lokale implements Comparable
 {
     private static final int ALLE = -3;
     private static final int FAGLIGE = -2;
@@ -126,5 +126,9 @@ public class Lokale
                 ant++;
         }
         return ant;
+    }
+
+    public int compareTo(Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 } //End of class Lokale

@@ -2,11 +2,11 @@ import java.util.*;
 
 public class Kontaktpersonregister
 {
-    private Set<Kontaktperson> register;
+    private List<Kontaktperson> register;
     
     public Kontaktpersonregister()
     {
-        register = new LinkedHashSet<>();
+        register = new LinkedList<>();
     }
     
     public void settInn(Kontaktperson k)
@@ -14,12 +14,18 @@ public class Kontaktpersonregister
         register.add(k);
     }
     
+    public void sorter()
+    {
+        Collections.sort(register, new KPersonsammenlikner());
+    }
+    
      public Kontaktperson[] getKontaktpersoner()
     {
-        Iterator<Kontaktperson> registerIter = register.iterator();
         if(register.isEmpty())
             return null;
         
+        sorter();
+        Iterator<Kontaktperson> registerIter = register.iterator();
         Kontaktperson[] kontaktpersoner = new Kontaktperson[register.size()];
         int i = 0;
         while(registerIter.hasNext())

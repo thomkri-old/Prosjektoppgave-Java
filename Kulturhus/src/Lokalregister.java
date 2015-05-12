@@ -2,11 +2,11 @@ import java.util.*;
 
 public class Lokalregister
 {   
-    private Set<Lokale> register;
+    private List<Lokale> register;
     
     public Lokalregister()
     {
-        register = new HashSet<>();
+        register = new LinkedList<>();
     }
     
     public void settInn(Lokale l)
@@ -14,11 +14,17 @@ public class Lokalregister
         register.add(l);
     }
     
+    public void sorter()
+    {
+        Collections.sort(register, new Lokalesammenlikner());
+    }
+    
     public Arrangement[] getArrangementer(int type)
     {
         if(register.isEmpty())
             return null;
         
+        sorter();
         Iterator<Lokale> registerIter = register.iterator();
         Arrangement[][] multiArr = new Arrangement[register.size()][];
         int i = 0;
@@ -54,6 +60,7 @@ public class Lokalregister
         if(register.isEmpty())
             return null;
         
+        sorter();
         Iterator<Lokale> registerIter = register.iterator();
         Lokale[] lokaler = new Lokale[register.size()];
         int i = 0;
@@ -67,6 +74,7 @@ public class Lokalregister
         if(register.isEmpty())
             return null;
         
+        sorter();
         Iterator<Lokale> registerIter = register.iterator();
         Lokale[] lokaler = new Lokale[antLokaler(type, registerIter)];
         int i = 0;

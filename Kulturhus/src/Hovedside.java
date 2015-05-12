@@ -285,7 +285,7 @@ public class Hovedside extends JFrame
     
     private void visInfo()
     {
-        JFrame infoVindu = new InfoArr(arrListe[infoFelt.getSelectedIndex()]);
+        JFrame infoVindu = new InfoArr(arrListe[infoFelt.getSelectedIndex()], true);
         infoVindu.setLocationRelativeTo(this);
     }
     

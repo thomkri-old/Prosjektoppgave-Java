@@ -263,7 +263,7 @@ public class InternHovedside extends JFrame
     
     private void visInfo()
     {
-        JFrame infoVindu = new InfoArr(arrListe[infoFelt.getSelectedIndex()]);
+        JFrame infoVindu = new InfoArr(arrListe[infoFelt.getSelectedIndex()], false);
         infoVindu.setLocationRelativeTo(this);
     }
     
