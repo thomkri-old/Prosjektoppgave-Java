@@ -6,6 +6,8 @@ import javax.swing.text.*;
 
 public class InfoArr extends JFrame
 {
+    private static final int SCROLLSPEED = 16;
+    
     private static final int DEBATT = 0;
     private static final int FOREDRAG = 1;
     private static final int POLITISK_MOTE = 2;
@@ -80,6 +82,7 @@ public class InfoArr extends JFrame
         tekstInnholdPanel.add(arrInfo, BorderLayout.CENTER);
         
         arrInfoScroll = new JScrollPane(tekstInnholdPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        arrInfoScroll.getVerticalScrollBar().setUnitIncrement(SCROLLSPEED);
         arrInfoScroll.setPreferredSize(new Dimension(375, 275));
         arrInfoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         

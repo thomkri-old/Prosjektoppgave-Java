@@ -8,11 +8,6 @@ public class Kulturhus
         Kontaktpersonregister kpregister = new Kontaktpersonregister();
         Lokalregister lregister = new Lokalregister();
         
-        RegistreringsVindu r2 = new RegistreringsVindu("Opprett", 8, kpregister, lregister);
-
-
-        RegistreringsVindu r1 = new RegistreringsVindu("Opprett", 5, kpregister, lregister);
-        
         Lokale l1 = new Lokale("Lokale1", 3, 235, false);
         Lokale l2 = new Lokale("Lokale2", 1, 115, false);
         Lokale l3 = new Lokale("Lokale3", 5, 290, true);
@@ -33,11 +28,9 @@ public class Kulturhus
         kpregister.settInn(kp2);
         kpregister.settInn(kp3);
         
-        RegistreringsVindu r = new RegistreringsVindu("Opprett", 1, kpregister, lregister);
         Hovedside h = new Hovedside(lregister, kp1, l1, l2, l5);
-        InternHovedside h1 = new InternHovedside(lregister);
-        RegistreringsVinduTest rvt = new RegistreringsVinduTest(lregister, kpregister);
-        InternHovedsideTest h2 = new InternHovedsideTest(lregister);
+        RegistreringsVindu rv = new RegistreringsVindu(lregister, kpregister);
+        InternHovedsideTest h2 = new InternHovedsideTest(lregister, kpregister);
         
         h.addWindowListener(
             new WindowAdapter()

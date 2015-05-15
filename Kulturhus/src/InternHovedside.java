@@ -205,7 +205,7 @@ public class InternHovedside extends JFrame
     
     private ImageIcon[] arrangementerListe()
     {
-        arrListe = lregister.getArrangementer(arrType);
+        //arrListe = lregister.getArrangementer(arrType);
         if(arrListe == null)
             return null;
         

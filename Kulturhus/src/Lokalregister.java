@@ -1,3 +1,4 @@
+import java.time.*;
 import java.util.*;
 
 public class Lokalregister
@@ -19,19 +20,18 @@ public class Lokalregister
         Collections.sort(register, new Lokalesammenlikner());
     }
     
-    public Arrangement[] getArrangementer(int type)
+    public Arrangement[] getArrangementer(int type, LocalDate[] dArray)
     {
         if(register.isEmpty())
             return null;
         
-        sorter();
         Iterator<Lokale> registerIter = register.iterator();
         Arrangement[][] multiArr = new Arrangement[register.size()][];
         int i = 0;
         while(registerIter.hasNext())
         {
             Lokale l = registerIter.next();
-            multiArr[i] = l.getArrangementer(type);
+            multiArr[i] = l.getArrangementer(type, dArray);
             i++;
         }
 

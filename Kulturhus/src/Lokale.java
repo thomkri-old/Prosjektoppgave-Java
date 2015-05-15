@@ -1,3 +1,4 @@
+import java.time.*;
 import java.util.*;
 
 public class Lokale implements Comparable
@@ -68,40 +69,67 @@ public class Lokale implements Comparable
         return arrangementer;
     }
     
-    public Arrangement[] getArrangementer(int t)
+    public Arrangement[] getArrangementer(int t, LocalDate[] dArray)
     {
         if(arrListe.isEmpty())
             return null;
         
-        if(t == ALLE)
-            return getArrangementer();
-        
         Iterator<Arrangement> arrIter = arrListe.iterator();
         Iterator<Arrangement> arrIter2 = arrListe.iterator();
-        Arrangement[] arrangementer = new Arrangement[getAntArr(t, arrIter2)];
+        Arrangement[] arrangementer = new Arrangement[getAntArr(t, dArray, arrIter2)];
         int i = 0;
         while(arrIter.hasNext())
         {
             Arrangement a = arrIter.next();
+            if(t == ALLE)
+            {
+                if(a.getType() == DEBATT || a.getType() == FOREDRAG || a.getType() == POLITISK_MOTE || a.getType() == BARNE_FORESTILLING || a.getType() == KINO || a.getType() == KONSERT || a.getType() == TEATER)
+                {
+                    for(int y = 0; y < dArray.length; y++)
+                    {
+                        if(a.getDato().toLocalDate().equals(dArray[y]))
+                            arrangementer[i++] = a;
+                    }
+                }
+            }
+            
             if(t == FAGLIGE)
             {
                 if(a.getType() == DEBATT || a.getType() == FOREDRAG || a.getType() == POLITISK_MOTE)
-                    arrangementer[i++] = a;
+                {
+                    for(int y = 0; y < dArray.length; y++)
+                    {
+                        if(a.getDato().toLocalDate().equals(dArray[y]))
+                            arrangementer[i++] = a;
+                    }
+                }
             }
                 
             else if(t == UNDERHOLDNING)
             {
                 if(a.getType() == BARNE_FORESTILLING || a.getType() == KINO || a.getType() == KONSERT || a.getType() == TEATER)
-                    arrangementer[i++] = a;
+                {
+                    for(int y = 0; y < dArray.length; y++)
+                    {
+                        if(a.getDato().toLocalDate().equals(dArray[y]))
+                            arrangementer[i++] = a;
+                    }
+                }
             }
             
             else if(a.getType() == t)
-                arrangementer[i++] = a;
+            {
+                for(int y = 0; y < dArray.length; y++)
+                {
+                    if(a.getDato().toLocalDate().equals(dArray[y]))
+                        arrangementer[i++] = a;
+                }
+            }
         }
         return arrangementer;
     }
     
-    private int getAntArr(int t, Iterator<Arrangement> iter)
+    private int getAntArr(int t, LocalDate[] dArray, Iterator<Arrangement> iter)
     {
         if(arrListe.isEmpty())
             return 0;
@@ -110,20 +138,50 @@ public class Lokale implements Comparable
         while(iter.hasNext())
         {
             Arrangement a = iter.next();
+            if(t == ALLE)
+            {
+                if(a.getType() == DEBATT || a.getType() == FOREDRAG || a.getType() == POLITISK_MOTE || a.getType() == BARNE_FORESTILLING || a.getType() == KINO || a.getType() == KONSERT || a.getType() == TEATER)
+                {
+                    for(int y = 0; y < dArray.length; y++)
+                    {
+                        if(a.getDato().toLocalDate().equals(dArray[y]))
+                            ant++;
+                    }
+                }
+            }
+            
             if(t == FAGLIGE)
             {
                 if(a.getType() == DEBATT || a.getType() == FOREDRAG || a.getType() == POLITISK_MOTE)
-                    ant++;
+                {
+                    for(int y = 0; y < dArray.length; y++)
+                    {
+                        if(a.getDato().toLocalDate().equals(dArray[y]))
+                            ant++;
+                    }
+                }
             }
                 
             else if(t == UNDERHOLDNING)
             {
                 if(a.getType() == BARNE_FORESTILLING || a.getType() == KINO || a.getType() == KONSERT || a.getType() == TEATER)
-                    ant++;
+                {
+                    for(int y = 0; y < dArray.length; y++)
+                    {
+                        if(a.getDato().toLocalDate().equals(dArray[y]))
+                            ant++;
+                    }
+                }
             }
                 
             else if(a.getType() == t)
-                ant++;
+            {
+                for(int y = 0; y < dArray.length; y++)
+                {
+                    if(a.getDato().toLocalDate().equals(dArray[y]))
+                        ant++;
+                }
+            }
         }
         return ant;
     }
