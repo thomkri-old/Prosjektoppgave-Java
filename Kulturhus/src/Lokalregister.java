@@ -30,9 +30,7 @@ public class Lokalregister
         int i = 0;
         while(registerIter.hasNext())
         {
-            Lokale l = registerIter.next();
-            multiArr[i] = l.getArrangementer(type, dArray);
-            i++;
+            multiArr[i++] = registerIter.next().getArrangementer(type, dArray);
         }
 
         int antArr = 0;
@@ -53,6 +51,39 @@ public class Lokalregister
                     arrangementer[teller++] = multiArr[x][z];
 
         return arrangementer;
+    }
+    
+    public Arrangement[] getMestInntektArr()
+    {
+        if(register.isEmpty())
+            return null;
+        
+        Arrangement[] mestInntektArray = new Arrangement[10];
+        Iterator<Lokale> registerIter = register.iterator();
+        while(registerIter.hasNext())
+        {
+            Arrangement[] arrArray = registerIter.next().getMestInntektArr();
+            if(arrArray != null)
+            {
+                for(int i = 0; i < arrArray.length; i++)
+                {
+                    Arrangement a = arrArray[i];
+                    for(int y = 0; y < mestInntektArray.length; y++)
+                    {
+                        if(mestInntektArray[y] == null || (a != null && mestInntektArray[y].getTotalInntekt() < a.getTotalInntekt()))
+                        {
+                            for(int z = mestInntektArray.length - 1; z > y; z--)
+                            {
+                                mestInntektArray[z] = mestInntektArray[z-1];
+                            }
+                            mestInntektArray[y] = a;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return mestInntektArray;
     }
     
     public Lokale[] getLokaler()

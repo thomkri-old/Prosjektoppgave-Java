@@ -1,17 +1,14 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
-import java.net.URL;
-import java.text.*;
 import java.time.*;
+import java.time.format.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.table.*;
 
 public class InternHovedside extends JFrame
 {
-    private static final int BANNERBREDDE = 800;
-    private static final int BANNERHOYDE = 100;
     private static final int MENYBREDDE = 250;
-    private static final int VALGHOYDE = 3;
     private static final int SCROLLSPEED = 16;
     
     private static final int ALLE = -3;
@@ -24,124 +21,203 @@ public class InternHovedside extends JFrame
     private static final int KINO = 4;
     private static final int KONSERT = 5;
     private static final int TEATER = 6;
+    private static final int KONTAKTPERSON = 7;
+    private static final int LOKALE = 8;
     
-    private JPanel vindu, meny, hovedPanel, infoPanel, knapper;
-    private JList<ImageIcon> infoFelt;
-    private JScrollPane infoScroll, mainScroll;
-    private JLabel menyOverskrift, arrangementer, underholdning, faglig, bForestilling, debattkveld, foredrag, kino, konsert, politiskM, teater;
-    private JButton infoKnapp, opprettKnapp;
-    
-    private int arrType = ALLE;
+    private JPanel vindu, meny, hovedPanel, infoPanel, datoPanel, fraPanel, tilPanel, knapper;
+    private JTable infoTabell;
+    private AbstractTableModel tabellmodell;
+    private JScrollPane tabellScroll, mainScroll;
+    private String[] kolNavn;
+    private String[] kolArr = {"Arrangement navn", "Dato", "Pris barn", "Pris Voksen", "Lokale", "Ledig plasser"};
+    private String[] kolKPerson = {"Etternavn", "Fornavn", "Firma", "Telefon", "E-post", "Nettside"};
+    private String[] kolLokale = {"Navn", "Type lokale", "Antall plasser", "Nummererte plasser"};
+    private String[][] infoListe;
+    private JLabel menyOverskrift, arrangementer, underholdning, faglig, bForestilling, debattkveld, foredrag, kino, konsert, politiskM, teater, kPersoner, lokaler, fra, til;
+    private JTextField fraFelt, tilFelt;
     private Arrangement[] arrListe;
+    private Kontaktperson[] kPersonListe;
+    private Lokale[] lokaleListe;
+    private JButton infoKnapp, avlysKnapp;
+    private JMenuBar menylinje;
+    private JMenu opprettMeny, statistikkMeny;
+    private JMenuItem opprettValgK, opprettValgL, opprettValgA, statistikkValgP, statistikkValgH;
+    private int type = ALLE;
     
-    private Kontaktpersonregister kpregister;
-    private Lokalregister lregister;
+    private DateTimeFormatter dtfDato = DateTimeFormatter.ofPattern("d-M-uuuu");
+    private DateTimeFormatter dtfTid = DateTimeFormatter.ofPattern("d-M-uuuu-HH-mm");
     
     private Knappelytter knappelytter;
     private Labellytter labellytter;
     
-    DecimalFormat krFormat;
+    private Lokalregister lregister;
+    private Kontaktpersonregister kpregister;
     
-    public InternHovedside(Lokalregister l)
+    public InternHovedside(Lokalregister l, Kontaktpersonregister k)
     {
-        super("Målselv Kommune");
+        super("Målselv Kommune - For ansatte");
         
         lregister = l;
+        kpregister = k;
         knappelytter = new Knappelytter();
         labellytter = new Labellytter();
-        krFormat = new DecimalFormat( "0.00" );
         
-        vindu = new JPanel(new GridBagLayout());
+        opprettMeny = new JMenu("Opprett");
+        opprettMeny.setMnemonic('O');
+        
+        opprettValgK = new JMenuItem("Kontaktperson");
+        opprettValgK.setMnemonic('K');
+        opprettValgK.addActionListener(knappelytter);
+        opprettMeny.add(opprettValgK);
+        
+        opprettValgL = new JMenuItem("Lokale");
+        opprettValgL.setMnemonic('L');
+        opprettValgL.addActionListener(knappelytter);
+        opprettMeny.add(opprettValgL);
+        
+        opprettValgA = new JMenuItem("Arrangement");
+        opprettValgA.setMnemonic('A');
+        opprettValgA.addActionListener(knappelytter);
+        opprettMeny.add(opprettValgA);
+        
+        statistikkMeny = new JMenu("Statistikk");
+        statistikkMeny.setMnemonic('S');
+        
+        statistikkValgP = new JMenuItem("Arr. per lokale");
+        statistikkValgP.setMnemonic('P');
+        statistikkValgP.addActionListener(knappelytter);
+        statistikkMeny.add(statistikkValgP);
+        
+        statistikkValgH = new JMenuItem("Arr. med høyest inntekt");
+        statistikkValgH.setMnemonic('H');
+        statistikkValgH.addActionListener(knappelytter);
+        statistikkMeny.add(statistikkValgH);
+        
+        menylinje = new JMenuBar();
+        setJMenuBar(menylinje);
+        menylinje.add(opprettMeny);
+        menylinje.add(statistikkMeny);
+        
+        vindu = new JPanel(new FlowLayout());
         vindu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
-        BannerPanel banner = new BannerPanel();
-        banner.setMinimumSize(new Dimension(BANNERBREDDE, BANNERHOYDE));
-        banner.setMaximumSize(new Dimension(BANNERBREDDE, BANNERHOYDE));
+        hovedPanel = new JPanel(new GridBagLayout());
+        hovedPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
         
         meny = new JPanel(new GridBagLayout());
-        meny.setPreferredSize(new Dimension(MENYBREDDE, 350));
+        meny.setPreferredSize(new Dimension(MENYBREDDE, 425));
+        
+        infoPanel = new JPanel(new BorderLayout());
+        infoPanel.setPreferredSize(new Dimension(700, 530));
+        infoPanel.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.lightGray));
         
         menyOverskrift = new JLabel("Meny");
         menyOverskrift.setFont(new Font(menyOverskrift.getFont().getName(), Font.BOLD, 20));
+        menyOverskrift.setPreferredSize(new Dimension(MENYBREDDE - 60, menyOverskrift.getPreferredSize().height));
         arrangementer = new JLabel("Arrangement");
-        arrangementer.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 18));
+        arrangementer.setFont(new Font(arrangementer.getFont().getName(), Font.BOLD, 18));
         arrangementer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         arrangementer.addMouseListener(labellytter);
         underholdning = new JLabel("Underholdning");
-        underholdning.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 16));
+        underholdning.setFont(new Font(underholdning.getFont().getName(), Font.PLAIN, 16));
         underholdning.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         underholdning.addMouseListener(labellytter);
-        faglig = new JLabel("Faglige arrangement");
-        faglig.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 16));
+        faglig = new JLabel("Faglig arrangement");
+        faglig.setFont(new Font(faglig.getFont().getName(), Font.PLAIN, 16));
         faglig.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         faglig.addMouseListener(labellytter);
-        bForestilling = new JLabel("Barne forestilling");
-        bForestilling.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        bForestilling = new JLabel("Barneforestilling");
+        bForestilling.setFont(new Font(bForestilling.getFont().getName(), Font.PLAIN, 14));
         bForestilling.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bForestilling.addMouseListener(labellytter);
         debattkveld = new JLabel("Debattkveld");
-        debattkveld.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        debattkveld.setFont(new Font(debattkveld.getFont().getName(), Font.PLAIN, 14));
         debattkveld.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         debattkveld.addMouseListener(labellytter);
         foredrag = new JLabel("Foredrag");
-        foredrag.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        foredrag.setFont(new Font(foredrag.getFont().getName(), Font.PLAIN, 14));
         foredrag.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         foredrag.addMouseListener(labellytter);
         kino = new JLabel("Kino");
-        kino.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        kino.setFont(new Font(kino.getFont().getName(), Font.PLAIN, 14));
         kino.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         kino.addMouseListener(labellytter);
         konsert = new JLabel("Konsert");
-        konsert.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        konsert.setFont(new Font(konsert.getFont().getName(), Font.PLAIN, 14));
         konsert.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         konsert.addMouseListener(labellytter);
         politiskM = new JLabel("Politisk møte");
-        politiskM.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        politiskM.setFont(new Font(politiskM.getFont().getName(), Font.PLAIN, 14));
         politiskM.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         politiskM.addMouseListener(labellytter);
         teater = new JLabel("Teater");
-        teater.setFont(new Font(menyOverskrift.getFont().getName(), Font.PLAIN, 14));
+        teater.setFont(new Font(teater.getFont().getName(), Font.PLAIN, 14));
         teater.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         teater.addMouseListener(labellytter);
+        kPersoner = new JLabel("Kontaktpersoner");
+        kPersoner.setFont(new Font(kPersoner.getFont().getName(), Font.PLAIN, 18));
+        kPersoner.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        kPersoner.addMouseListener(labellytter);
+        lokaler = new JLabel("Lokaler");
+        lokaler.setFont(new Font(lokaler.getFont().getName(), Font.PLAIN, 18));
+        lokaler.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lokaler.addMouseListener(labellytter);
         
-        infoPanel = new JPanel(new BorderLayout());
-        infoPanel.setPreferredSize(new Dimension(535, 530));
-
-        ImageIcon[] aL = arrangementerListe();
-        if(aL == null)
-        {
-            aL = new ImageIcon[1];
-            visMelding("Det finnes ingen arrangementer i systemet.\nProgrammet vil starte med en tom liste.");
-        }
+        fra = new JLabel("Fra: ");
+        til = new JLabel("Til: ");
         
-        infoFelt = new JList<>(aL);
-        infoFelt.setVisibleRowCount(VALGHOYDE);
-        infoFelt.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        infoFelt.setSelectedIndex(0);
-        infoFelt.setBackground(this.getBackground());
-
-        DefaultListCellRenderer renderer = (DefaultListCellRenderer)infoFelt.getCellRenderer();
-        renderer.setHorizontalAlignment(JLabel.CENTER);
+        fraFelt = new JTextField(10);
+        fraFelt.setText(dtfDato.format(LocalDate.now()));
+        tilFelt = new JTextField(10);
+        tilFelt.setText(dtfDato.format(LocalDate.now()));
         
-        infoScroll = new JScrollPane(infoFelt, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        infoScroll.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 5));
+        fraPanel = new JPanel(new FlowLayout());
+        fraPanel.add(fra);
+        fraPanel.add(fraFelt);
+        
+        tilPanel = new JPanel(new FlowLayout());
+        tilPanel.add(til);
+        tilPanel.add(tilFelt);
+        
+        datoPanel = new JPanel(new FlowLayout());
+        datoPanel.add(fraPanel);
+        datoPanel.add(tilPanel);
+        
+        infoListe = arrInfoListe();
+        
+        tabellmodell = new Tabellmodell();
+        infoTabell = new JTable(tabellmodell);
+        infoTabell.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        infoTabell.setRowSelectionAllowed(true);
+        infoTabell.setColumnSelectionAllowed(false);
+        infoTabell.setRowSelectionInterval(0, 0);
+        infoTabell.getTableHeader().setReorderingAllowed(false);
+        infoTabell.getColumnModel().getColumn(0).setPreferredWidth(150);
+        infoTabell.getColumnModel().getColumn(1).setPreferredWidth(200);
+        infoTabell.getColumnModel().getColumn(2).setPreferredWidth(75);
+        infoTabell.getColumnModel().getColumn(3).setPreferredWidth(75);
+        infoTabell.getColumnModel().getColumn(4).setPreferredWidth(100);
+        infoTabell.getColumnModel().getColumn(5).setPreferredWidth(100);
+        
+        tabellScroll = new JScrollPane(infoTabell, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        tabellScroll.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 5));
         
         infoKnapp = new JButton("Info");
         infoKnapp.addActionListener(knappelytter);
-        opprettKnapp = new JButton("Opprett");
-        opprettKnapp.addActionListener(knappelytter);
+        avlysKnapp = new JButton("Avlys");
+        avlysKnapp.addActionListener(knappelytter);
         
         knapper = new JPanel(new BorderLayout());
         knapper.add(infoKnapp, BorderLayout.LINE_START);
-        knapper.add(opprettKnapp, BorderLayout.LINE_END);
-        knapper.setBorder(BorderFactory.createEmptyBorder(0, 150, 5, 150));
+        knapper.add(avlysKnapp, BorderLayout.LINE_END);
+        knapper.setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
         
-        infoPanel.add(infoScroll, BorderLayout.CENTER);
+        infoPanel.add(datoPanel, BorderLayout.PAGE_START);
+        infoPanel.add(tabellScroll, BorderLayout.CENTER);
         infoPanel.add(knapper, BorderLayout.PAGE_END);
-        infoPanel.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.lightGray));
         
         GridBagConstraints gbcM = new GridBagConstraints();
-        gbcM.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbcM.anchor = GridBagConstraints.LINE_START;
         gbcM.insets = new Insets(5, 0, 5, 5);
         gbcM.gridx = 0;
         gbcM.gridy = 0;
@@ -171,9 +247,11 @@ public class InternHovedside extends JFrame
         meny.add(konsert, gbcM);
         gbcM.gridy++;
         meny.add(teater, gbcM);
-        
-        hovedPanel = new JPanel(new GridBagLayout());
-        hovedPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
+        gbcM.gridy++;
+        gbcM.insets = new Insets(5, 0, 5, 5);
+        meny.add(kPersoner, gbcM);
+        gbcM.gridy++;
+        meny.add(lokaler, gbcM);
         
         GridBagConstraints gbcH = new GridBagConstraints();
         gbcH.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -184,93 +262,271 @@ public class InternHovedside extends JFrame
         gbcH.gridx++;
         hovedPanel.add(infoPanel, gbcH);
         
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-
-        vindu.add(banner, gbc);
-        gbc.gridy++;
-        vindu.add(hovedPanel, gbc);
+        vindu.add(hovedPanel);
         
         mainScroll = new JScrollPane(vindu, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         mainScroll.getVerticalScrollBar().setUnitIncrement(SCROLLSPEED);
         
-        setContentPane(mainScroll);
+        add(hovedPanel);
         
         pack();
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
     
-    private ImageIcon[] arrangementerListe()
+    private String[][] arrInfoListe()
     {
-        //arrListe = lregister.getArrangementer(arrType);
+        kolNavn = kolArr;
+        LocalDate[] datoArray;
+        try
+        {
+            LocalDateTime ldtFra = LocalDateTime.parse(fraFelt.getText().replaceAll("\\s", "") + "-00-00", dtfTid);
+            LocalDateTime ldtTil = LocalDateTime.parse(tilFelt.getText().replaceAll("\\s", "") + "-23-59", dtfTid);
+            int antD = (int)Duration.between(ldtFra, ldtTil).toDays();
+            
+            if(antD <= 0 && ldtFra.isAfter(ldtTil))
+            {
+                visMelding("Til-dato må være større enn fra-dato.");
+                return null;
+            }
+            
+            datoArray = new LocalDate[antD + 1];
+            datoArray[0] = ldtFra.toLocalDate();
+            for(int i = 1; i < datoArray.length; i++)
+            {
+                ldtFra = ldtFra.plusDays(1);
+                datoArray[i] = ldtFra.toLocalDate();
+            }
+        }
+        catch(DateTimeParseException dtpe)
+        {
+            visMelding("Du har valgt en ugyldig dato.");
+            return null;
+        }
+        
+        arrListe = lregister.getArrangementer(type, datoArray);
         if(arrListe == null)
             return null;
         
-        ImageIcon[] arrFrameListe = new ImageIcon[arrListe.length];
-        for(int i = 0; i < arrFrameListe.length; i++)
+        Arrays.sort(arrListe, new ArrangementDatoSammenlikner());
+        
+        int antRader = arrListe.length;
+        if(antRader < 28)
+            antRader = 27;
+        String[][] arrInfoArray = new String[antRader][kolNavn.length];
+        for(int i = 0; i < arrListe.length; i++)
         {
-            JFrame ramme = new JFrame();
-            JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            JLabel navn = new JLabel(arrListe[i].getNavn());
-            JLabel pris = new JLabel("Pris: " + krFormat.format(arrListe[i].getBillettprisBarn()) + ",- / " + krFormat.format(arrListe[i].getBillettprisVoksen()) + ",-");
-            
-            ArrbildePanel plakat = new ArrbildePanel(arrListe[i].getArrBilde());
-            panel.add(plakat);
-            
-            JPanel info = new JPanel(new GridLayout(2, 1, 5, 5));
-            info.add(navn);
-            info.add(pris);
-            
-            panel.add(info);
-            panel.setPreferredSize(new Dimension(300, 160));
-            
-            ramme.add(panel);
-            ramme.pack();
-            ramme.setVisible(false);
-            
-            BufferedImage bilde = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
-            Graphics2D graphics = bilde.createGraphics();
-            panel.print(graphics);
-            graphics.dispose();
-            ramme.dispose();
-            
-            ImageIcon ikon = new ImageIcon(bilde);
-            arrFrameListe[i] = ikon;
+            arrInfoArray[i][0] = arrListe[i].getNavn();
+            arrInfoArray[i][1] = arrListe[i].getDatoString();
+            arrInfoArray[i][2] = "" + arrListe[i].getBillettprisBarn();
+            arrInfoArray[i][3] = "" + arrListe[i].getBillettprisVoksen();
+            arrInfoArray[i][4] = arrListe[i].getLokaleNavn();
+            arrInfoArray[i][5] = "" + arrListe[i].getLedigePlasser();
         }
-        return arrFrameListe;
+        return arrInfoArray;
     }
     
-    public void oppdaterArrangementer(int t)
+    private String[][] lokaleInfoListe()
     {
-        arrType = t;
-        ImageIcon[] aL = arrangementerListe();
-        if(aL == null)
+        kolNavn = kolLokale;
+        lokaleListe = lregister.getLokaler();
+        if(lokaleListe == null)
+            return null;
+        
+        Arrays.sort(lokaleListe, new Lokalesammenlikner());
+        
+        int antRader = lokaleListe.length;
+        if(antRader < 28)
+            antRader = 27;
+        String[][] lokaleInfoArray = new String[antRader][kolNavn.length];
+        for(int i = 0; i < lokaleListe.length; i++)
         {
-            aL = new ImageIcon[1];
-            visMelding("Det finnes ingen arrangementer i den valgte kategorien.");
-            infoKnapp.setEnabled(false);
+            lokaleInfoArray[i][0] = lokaleListe[i].getNavn();
+            lokaleInfoArray[i][1] = lokaleListe[i].getTypeTekst();
+            lokaleInfoArray[i][2] = "" + lokaleListe[i].getAntPlasser();
+            lokaleInfoArray[i][3] = (lokaleListe[i].getHarNrPlasser() == true)?"Ja":"Nei";
         }
-        else
+        return lokaleInfoArray;
+    }
+    
+    private String[][] kPersonInfoListe()
+    {
+        kolNavn = kolKPerson;
+        kPersonListe = kpregister.getKontaktpersoner();
+        if(kPersonListe == null)
+            return null;
+        
+        Arrays.sort(kPersonListe, new KPersonsammenlikner());
+        
+        int antRader = kPersonListe.length;
+        if(antRader < 28)
+            antRader = 27;
+        String[][] kPersonInfoArray = new String[antRader][kolNavn.length];
+        for(int i = 0; i < kPersonListe.length; i++)
         {
-            infoKnapp.setEnabled(true);
+            kPersonInfoArray[i][0] = kPersonListe[i].getEtternavn();
+            kPersonInfoArray[i][1] = kPersonListe[i].getFornavn();
+            kPersonInfoArray[i][2] = kPersonListe[i].getFirma();
+            kPersonInfoArray[i][3] = "" + kPersonListe[i].getTlfNr();
+            kPersonInfoArray[i][4] = kPersonListe[i].getEpost();
+            kPersonInfoArray[i][5] = kPersonListe[i].getNettside();
         }
-        infoFelt.setListData(aL);
-        infoFelt.setSelectedIndex(0);
+        return kPersonInfoArray;
     }
     
     private void visInfo()
     {
-        JFrame infoVindu = new InfoArr(arrListe[infoFelt.getSelectedIndex()], false);
+        JFrame infoVindu;
+        if(type == KONTAKTPERSON)
+        {
+            if(infoTabell.getSelectedRow() >= kPersonListe.length)
+            {
+                visMelding("Du må velge en kontaktperson for å se info.");
+                return;
+            }
+            infoVindu = new InfoKPerson(kPersonListe[infoTabell.getSelectedRow()]);
+        }
+        else
+        {
+            if(infoTabell.getSelectedRow() >= arrListe.length)
+            {
+                visMelding("Du må velge et arrangement for å se info.");
+                return;
+            }
+            infoVindu = new InfoArr(arrListe[infoTabell.getSelectedRow()], false);
+        }
         infoVindu.setLocationRelativeTo(this);
     }
     
-    private void opprett()
+    private void avlysArr()
     {
-        JFrame kjopVindu = new Kjop(arrListe[infoFelt.getSelectedIndex()]);
-        kjopVindu.setLocationRelativeTo(this);
+        if(infoTabell.getSelectedRow() >= arrListe.length)
+        {
+            visMelding("Du må velge et arrangement for å avlyset det.");
+            return;
+        }
+        Arrangement a = arrListe[infoTabell.getSelectedRow()];
+        String svar = JOptionPane.showInputDialog(this, "Du holder på å avlyse \"" + a.getNavn() + "\"\nHvis du er sikker på å avlyse arrangementet, skriv inn \"AVLYS\" under:", "Avlys arrangement", JOptionPane.PLAIN_MESSAGE);
+        if(svar == null)
+            return;
+        
+        if(svar.equals("AVLYS"))
+        {
+            if(!lregister.avlysArr(a))
+            {
+                visMelding("Arrangementet du prøver å slette eksisterer ikke i registeret.");
+                return;
+            }
+            visMelding("Arrangementet \"" + a.getNavn() + "\" er avlyst.\nTrykk OK for info om kjøpte billetter");
+            BilKjoperInfoVindu bkiVindu = new BilKjoperInfoVindu(a);
+            bkiVindu.setLocationRelativeTo(this);
+            oppdaterTabell(type, null);
+        }
+        else
+        {
+            visMelding("Feil kode skrevet inn. Arrangement ikke slettet.");
+            avlysArr();
+        }
+    }
+    
+    private void oppdaterTabell(int t, JLabel knapp)
+    {
+        type = t;
+        if(type == KONTAKTPERSON)
+            infoListe = kPersonInfoListe();
+        else if(type == LOKALE)
+            infoListe = lokaleInfoListe();
+        else
+            infoListe = arrInfoListe();
+        
+        if(infoListe == null)
+        {
+            infoListe = new String[27][kolNavn.length];
+            if(type == KONTAKTPERSON || type == LOKALE)
+                visMelding("Det finnes ingen " + ((type == KONTAKTPERSON)?"kontaktpersoner":"lokaler") + " i systemet");
+            else
+                visMelding("Det finnes ingen arrangementer i den valgte kategorien og perioden.");
+            infoKnapp.setEnabled(false);
+            avlysKnapp.setEnabled(false);
+        }
+        else
+        {
+            infoKnapp.setEnabled(true);
+            avlysKnapp.setEnabled(true);
+        }
+        tabellmodell.fireTableDataChanged();
+        tabellmodell.fireTableStructureChanged();
+        if(type == KONTAKTPERSON)
+        {
+            infoTabell.getColumnModel().getColumn(0).setPreferredWidth(100);
+            infoTabell.getColumnModel().getColumn(1).setPreferredWidth(100);
+            infoTabell.getColumnModel().getColumn(2).setPreferredWidth(100);
+            infoTabell.getColumnModel().getColumn(3).setPreferredWidth(100);
+            infoTabell.getColumnModel().getColumn(4).setPreferredWidth(200);
+            infoTabell.getColumnModel().getColumn(5).setPreferredWidth(200);
+            fraFelt.setEnabled(false);
+            tilFelt.setEnabled(false);
+            avlysKnapp.setEnabled(false);
+            infoKnapp.setEnabled(true);
+        }
+        else if(type == LOKALE)
+        {
+            infoTabell.getColumnModel().getColumn(0).setPreferredWidth(200);
+            infoTabell.getColumnModel().getColumn(1).setPreferredWidth(200);
+            infoTabell.getColumnModel().getColumn(2).setPreferredWidth(100);
+            infoTabell.getColumnModel().getColumn(3).setPreferredWidth(200);
+            fraFelt.setEnabled(false);
+            tilFelt.setEnabled(false);
+            avlysKnapp.setEnabled(false);
+            infoKnapp.setEnabled(false);
+        }
+        else
+        {
+            infoTabell.getColumnModel().getColumn(0).setPreferredWidth(150);
+            infoTabell.getColumnModel().getColumn(1).setPreferredWidth(200);
+            infoTabell.getColumnModel().getColumn(2).setPreferredWidth(75);
+            infoTabell.getColumnModel().getColumn(3).setPreferredWidth(75);
+            infoTabell.getColumnModel().getColumn(4).setPreferredWidth(100);
+            infoTabell.getColumnModel().getColumn(5).setPreferredWidth(100);
+            fraFelt.setEnabled(true);
+            tilFelt.setEnabled(true);
+            avlysKnapp.setEnabled(true);
+            infoKnapp.setEnabled(true);
+        }
+        infoTabell.setRowSelectionInterval(0, 0);
+        if(knapp != null)
+            setValgtKnapp(knapp);
+    }
+    
+    private void setValgtKnapp(JLabel knapp)
+    {
+        arrangementer.setFont(new Font(arrangementer.getFont().getName(), Font.PLAIN, arrangementer.getFont().getSize()));
+        underholdning.setFont(new Font(underholdning.getFont().getName(), Font.PLAIN, underholdning.getFont().getSize()));
+        faglig.setFont(new Font(faglig.getFont().getName(), Font.PLAIN, faglig.getFont().getSize()));
+        bForestilling.setFont(new Font(bForestilling.getFont().getName(), Font.PLAIN, bForestilling.getFont().getSize()));
+        debattkveld.setFont(new Font(debattkveld.getFont().getName(), Font.PLAIN, debattkveld.getFont().getSize()));
+        foredrag.setFont(new Font(foredrag.getFont().getName(), Font.PLAIN, foredrag.getFont().getSize()));
+        kino.setFont(new Font(kino.getFont().getName(), Font.PLAIN, kino.getFont().getSize()));
+        konsert.setFont(new Font(konsert.getFont().getName(), Font.PLAIN, konsert.getFont().getSize()));
+        politiskM.setFont(new Font(politiskM.getFont().getName(), Font.PLAIN, politiskM.getFont().getSize()));
+        teater.setFont(new Font(teater.getFont().getName(), Font.PLAIN, teater.getFont().getSize()));
+        kPersoner.setFont(new Font(kPersoner.getFont().getName(), Font.PLAIN, kPersoner.getFont().getSize()));
+        lokaler.setFont(new Font(lokaler.getFont().getName(), Font.PLAIN, lokaler.getFont().getSize()));
+        
+        knapp.setFont(new Font(knapp.getFont().getName(), Font.BOLD, knapp.getFont().getSize()));
+    }
+    
+    private void visRegVindu(int indeks)
+    {
+        JFrame regVindu = new RegistreringsVindu(lregister, kpregister, indeks);
+        regVindu.setLocationRelativeTo(this);
+    }
+    
+    private void visStatistikkVindu(int indeks)
+    {
+        JFrame statVindu = new StatistikkVindu(lregister, indeks);
+        statVindu.setLocationRelativeTo(this);
     }
     
     private void visMelding(String melding)
@@ -278,8 +534,36 @@ public class InternHovedside extends JFrame
         JOptionPane.showMessageDialog(this, melding);
     }
     
+    public class Tabellmodell extends AbstractTableModel
+    {       
+        public boolean isCellEditable(int rad, int kolonne)
+        {  
+            return false;  
+        }
+        
+        public String getColumnName(int kolonne)
+        {
+            return kolNavn[ kolonne];
+        }
+
+        public int getRowCount()
+        {
+            return infoListe.length;
+        }
+
+        public int getColumnCount()
+        {
+            return infoListe[0].length;
+        }
+
+        public String getValueAt(int rad, int kolonne)
+        {
+            return infoListe[rad][kolonne];
+        }
+    }
+    
     private class Knappelytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
-    {
+    {       
         public void actionPerformed(ActionEvent e)
         {
             if(e.getSource() == infoKnapp)
@@ -287,10 +571,21 @@ public class InternHovedside extends JFrame
                 if(arrListe != null)
                     visInfo();
             }
-            else if(e.getSource() == opprettKnapp)
+            else if(e.getSource() == avlysKnapp)
             {
-                opprett();
+                if(arrListe != null)
+                   avlysArr();
             }
+            else if(e.getSource() == opprettValgK)
+                visRegVindu(0);
+            else if(e.getSource() == opprettValgL)
+                visRegVindu(1);
+            else if(e.getSource() == opprettValgA)
+                visRegVindu(2);
+            else if(e.getSource() == statistikkValgP)
+                visStatistikkVindu(0);
+            else if(e.getSource() == statistikkValgH)
+                visStatistikkVindu(1);
         }
     }
     
@@ -299,25 +594,29 @@ public class InternHovedside extends JFrame
         public void mouseClicked(MouseEvent e)
         {
             if(e.getSource() == arrangementer)
-                oppdaterArrangementer(ALLE);
+                oppdaterTabell(ALLE, arrangementer);
             else if(e.getSource() == faglig)
-                oppdaterArrangementer(FAGLIGE);
+                oppdaterTabell(FAGLIGE, faglig);
             else if(e.getSource() == underholdning)
-                oppdaterArrangementer(UNDERHOLDNING);
+                oppdaterTabell(UNDERHOLDNING, underholdning);
             else if(e.getSource() == debattkveld)
-                oppdaterArrangementer(DEBATT);
+                oppdaterTabell(DEBATT, debattkveld);
             else if(e.getSource() == foredrag)
-                oppdaterArrangementer(FOREDRAG);
+                oppdaterTabell(FOREDRAG, foredrag);
             else if(e.getSource() == politiskM)
-                oppdaterArrangementer(POLITISK_MOTE);
+                oppdaterTabell(POLITISK_MOTE, politiskM);
             else if(e.getSource() == bForestilling)
-                oppdaterArrangementer(BARNE_FORESTILLING);
+                oppdaterTabell(BARNE_FORESTILLING, bForestilling);
             else if(e.getSource() == kino)
-                oppdaterArrangementer(KINO);
+                oppdaterTabell(KINO, kino);
             else if(e.getSource() == konsert)
-                oppdaterArrangementer(KONSERT);
+                oppdaterTabell(KONSERT, konsert);
             else if(e.getSource() == teater)
-                oppdaterArrangementer(TEATER);
+                oppdaterTabell(TEATER, teater);
+            else if(e.getSource() == kPersoner)
+                oppdaterTabell(KONTAKTPERSON, kPersoner);
+            else if(e.getSource() == lokaler)
+                oppdaterTabell(LOKALE, lokaler);
         }
 
         public void mousePressed(MouseEvent e) { }
@@ -328,4 +627,4 @@ public class InternHovedside extends JFrame
 
         public void mouseExited(MouseEvent e) { }
     }
-} //End of class Hovedside
+}

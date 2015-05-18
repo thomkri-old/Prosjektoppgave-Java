@@ -6,7 +6,7 @@ import java.util.*;
 import javax.imageio.*;
 import javax.swing.*;
 import javax.swing.filechooser.*;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import javax.swing.plaf.basic.*;
 
 public class RegistreringsVindu extends JFrame
 {
@@ -62,7 +62,7 @@ public class RegistreringsVindu extends JFrame
     
     public RegistreringsVindu(Lokalregister l, Kontaktpersonregister kp, int valgtFane)
     {
-        super("Registrerings vindu - test");
+        super("Opprett");
 
         lregister = l;
         kpregister = kp;

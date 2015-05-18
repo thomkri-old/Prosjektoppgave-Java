@@ -1,17 +1,17 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
 public class BilKjoperInfoVindu extends JFrame
 {
-    private JPanel vindu;
+    private JPanel vindu, lagrePanel;
     private JTextPane info;
     private JScrollPane infoScroll;
     private JButton lukkKnapp, lagreKnapp;
     private JFileChooser filvelger;
+    private JLabel lagreTekst;
     private int filvalgReturVerdi;
     
     private Arrangement arrangement;
@@ -27,13 +27,14 @@ public class BilKjoperInfoVindu extends JFrame
         billettListe = arrangement.getBilettListe();
         knappelytter = new Kommandolytter();
         
-        vindu = new JPanel(new FlowLayout());
+        vindu = new JPanel(new GridBagLayout());
+        vindu.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         info = new JTextPane();
         info.setBackground(vindu.getBackground());
         info.setEditable(false);
         
-        lagInfoUtskrift(a.getNavn() +  " har blitt avlyst. Her er info om alle kjøpte billetter:", 20, true, false);
+        lagInfoUtskrift("\"" + a.getNavn() +  "\" har blitt avlyst.\nHer er info om alle kjøpte billetter:", 20, true, false);
         
         if(billettListe == null)
             lagInfoUtskrift("\n\nArrangementet har ingen kjøpte billetter.", 16, false, false);
@@ -49,7 +50,7 @@ public class BilKjoperInfoVindu extends JFrame
         }
         
         infoScroll = new JScrollPane(info, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        infoScroll.setPreferredSize(new Dimension(500, 500));
+        infoScroll.setPreferredSize(new Dimension(700, 500));
         infoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         
         lukkKnapp = new JButton("Lukk");
@@ -57,9 +58,24 @@ public class BilKjoperInfoVindu extends JFrame
         lagreKnapp = new JButton("Lagre fil");
         lagreKnapp.addActionListener(knappelytter);
         
-        vindu.add(infoScroll);
-        vindu.add(lukkKnapp);
-        vindu.add(lagreKnapp);
+        lagreTekst = new JLabel("Lagre info som en tekstfil: ");
+        lagreTekst.setFont(new Font(lagreTekst.getFont().getName(), Font.PLAIN, 16));
+        
+        lagrePanel = new JPanel(new FlowLayout());
+        lagrePanel.add(lagreTekst);
+        lagrePanel.add(lagreKnapp);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        
+        vindu.add(infoScroll, gbc);
+        gbc.gridy++;
+        vindu.add(lagrePanel, gbc);
+        gbc.gridy++;
+        vindu.add(lukkKnapp, gbc);
         
         add(vindu);
         pack();
@@ -109,6 +125,11 @@ public class BilKjoperInfoVindu extends JFrame
         }
     }
     
+    private void lukkVindu()
+    {
+        this.dispose();
+    }
+    
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
@@ -119,7 +140,7 @@ public class BilKjoperInfoVindu extends JFrame
         public void actionPerformed(ActionEvent e)
         {
             if(e.getSource() == lukkKnapp)
-                return;
+                lukkVindu();
             else if(e.getSource() == lagreKnapp)
                 kjorFilLagrer();
         }

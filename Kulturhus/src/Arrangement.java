@@ -121,6 +121,17 @@ public abstract class Arrangement {
         }
         return billettArray;
     }
+    
+    public double getTotalInntekt()
+    {
+        Iterator<Billett> billettIter = billettListe.iterator();
+        double inntekt = 0;
+        while(billettIter.hasNext())
+        {
+            inntekt += billettIter.next().getPris();
+        }
+        return inntekt;
+    }
 
     public String toString()
     {

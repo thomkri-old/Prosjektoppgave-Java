@@ -25,7 +25,7 @@ public class InfoArr extends JFrame
     
     private Arrangement arrangement;
     
-    private DecimalFormat krFormat;
+    private DecimalFormat krFormat = new DecimalFormat( "0.00" );
     private boolean erKunde;
     
     public InfoArr(Arrangement a, boolean eK)
@@ -34,7 +34,6 @@ public class InfoArr extends JFrame
         
         knappelytter = new Kommandolytter();
         arrangement = a;
-        krFormat = new DecimalFormat( "0.00" );
         erKunde = eK;
         
         vindu = new JPanel(new GridBagLayout());

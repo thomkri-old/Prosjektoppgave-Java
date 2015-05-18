@@ -33,6 +33,9 @@ public class Hovedside extends JFrame
     private JScrollPane infoScroll, mainScroll;
     private JLabel menyOverskrift, arrangementer, underholdning, faglig, bForestilling, debattkveld, foredrag, kino, konsert, politiskM, teater, fra, til;
     private JButton infoKnapp, kjopKnapp;
+    private JMenuBar menylinje;
+    private JMenu ansattMeny;
+    private JMenuItem loggInnValg;
     
     private int arrType = ALLE;
     private Arrangement[] arrListe;
@@ -45,12 +48,13 @@ public class Hovedside extends JFrame
     
     DecimalFormat krFormat;
     
-    public Hovedside(Lokalregister l, Kontaktperson kp, Lokale l1, Lokale l2, Lokale l3)
+    public Hovedside(Lokalregister l, Kontaktpersonregister k, Kontaktperson kp, Lokale l1, Lokale l2, Lokale l3)
     {
         
         super("Målselv Kommune");
         
         lregister = l;
+        kpregister = k;
         knappelytter = new Knappelytter();
         labellytter = new Labellytter();
         krFormat = new DecimalFormat( "0.00" );
@@ -76,7 +80,17 @@ public class Hovedside extends JFrame
         l2.settInnArr(a2);
         l3.settInnArr(a4);
         
-        new BilKjoperInfoVindu(a);
+        ansattMeny = new JMenu("Ansatt");
+        ansattMeny.setMnemonic('A');
+        
+        loggInnValg = new JMenuItem("Logg inn");
+        loggInnValg.setMnemonic('L');
+        loggInnValg.addActionListener(knappelytter);
+        ansattMeny.add(loggInnValg);
+        
+        menylinje = new JMenuBar();
+        setJMenuBar(menylinje);
+        menylinje.add(ansattMeny);
         
         vindu = new JPanel(new GridBagLayout());
         vindu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -397,6 +411,36 @@ public class Hovedside extends JFrame
         kjopVindu.setLocationRelativeTo(this);
     }
     
+    private void loggInn()
+    {
+        JPanel loggInnInfo = new JPanel(new FlowLayout());
+        JLabel brukernavnLabel = new JLabel("Brukernavn: ");
+        JLabel passordLabel = new JLabel("Passord: ");
+        JTextField brukernavnFelt = new JTextField(10);
+        JPasswordField passordFelt = new JPasswordField(10);
+        
+        loggInnInfo.add(brukernavnLabel);
+        loggInnInfo.add(brukernavnFelt);
+        loggInnInfo.add(passordLabel);
+        loggInnInfo.add(passordFelt);
+        
+        int svar = JOptionPane.showConfirmDialog(this, loggInnInfo, "Logg inn", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if(svar == JOptionPane.OK_OPTION)
+        {
+            String passord = new String(passordFelt.getPassword());
+            if(brukernavnFelt.getText().equals("admin") && passord.equals("admin123"))
+            {
+                InternHovedside internHVindu = new InternHovedside(lregister, kpregister);
+                internHVindu.setLocationRelativeTo(this);
+            }
+            else
+            {
+                visMelding("Du har skrevet inn et feil brukernavn eller passord.\nTrykk OK for å prøve igjen.");
+                loggInn();
+            }
+        }
+    }
+    
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
@@ -443,6 +487,8 @@ public class Hovedside extends JFrame
                 if(arrListe != null)
                     kjopBillett();
             }
+            else if(e.getSource() == loggInnValg)
+                loggInn();
         }
     }
     

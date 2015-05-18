@@ -28,8 +28,8 @@ public class Kulturhus
         kpregister.settInn(kp2);
         kpregister.settInn(kp3);
         
-        Hovedside h = new Hovedside(lregister, kp1, l1, l2, l5);
-        InternHovedsideTest h2 = new InternHovedsideTest(lregister, kpregister);
+        Hovedside h = new Hovedside(lregister, kpregister, kp1, l1, l2, l5);
+        InternHovedside h2 = new InternHovedside(lregister, kpregister);
         
         h.addWindowListener(
             new WindowAdapter()

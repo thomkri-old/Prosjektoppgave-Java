@@ -153,6 +153,32 @@ public class Lokale
         return arrangementer;
     }
     
+    public Arrangement[] getMestInntektArr()
+    {
+        if(arrListe.isEmpty())
+            return null;
+        
+        Arrangement[] mestInntektArray = new Arrangement[10];
+        Iterator<Arrangement> arrIter = arrListe.iterator();
+        while(arrIter.hasNext())
+        {
+            Arrangement a = arrIter.next();
+            for(int i = 0; i < mestInntektArray.length; i++)
+            {
+                if(mestInntektArray[i] == null || mestInntektArray[i].getTotalInntekt() < a.getTotalInntekt())
+                {
+                    for(int y = mestInntektArray.length - 1; y > i; y--)
+                    {
+                        mestInntektArray[y] = mestInntektArray[y-1];
+                    }
+                    mestInntektArray[i] = a;
+                    break;
+                }
+            }
+        }
+        return mestInntektArray;
+    }
+    
     private int getAntArr(int t, LocalDate[] dArray, Iterator<Arrangement> iter)
     {
         if(arrListe.isEmpty())
