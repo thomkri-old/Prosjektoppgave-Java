@@ -29,7 +29,6 @@ public class Kulturhus
         kpregister.settInn(kp3);
         
         Hovedside h = new Hovedside(lregister, kp1, l1, l2, l5);
-        RegistreringsVindu rv = new RegistreringsVindu(lregister, kpregister);
         InternHovedsideTest h2 = new InternHovedsideTest(lregister, kpregister);
         
         h.addWindowListener(

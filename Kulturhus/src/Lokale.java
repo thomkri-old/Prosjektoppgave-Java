@@ -1,7 +1,7 @@
 import java.time.*;
 import java.util.*;
 
-public class Lokale implements Comparable
+public class Lokale
 {
     private static final int ALLE = -3;
     private static final int FAGLIGE = -2;
@@ -13,6 +13,11 @@ public class Lokale implements Comparable
     private static final int KINO = 4;
     private static final int KONSERT = 5;
     private static final int TEATER = 6;
+    private static final int TEATERSAL = 11;
+    private static final int DEBATTSAL = 12;
+    private static final int FOREDRAGSSAL = 13;
+    private static final int KINOSAL = 14;
+    private static final int KONSERTSAL = 15;
     
     private String navn;
     private int type, lokaleNr, antPlasser;
@@ -48,6 +53,25 @@ public class Lokale implements Comparable
     public int getType()
     {
         return type;
+    }
+    
+    public String getTypeTekst()
+    {
+        if(type == TEATERSAL)
+            return "Teatersal";
+        else if(type == DEBATTSAL)
+            return "Debattsal";
+        else if(type == FOREDRAGSSAL)
+            return "Foredragssal";
+        else if(type == KINOSAL)
+            return "Kinosal";
+        else
+            return "Konsertsal";
+    }
+    
+    public boolean getHarNrPlasser()
+    {
+        return harNrPlasser;
     }
     
     public void settInnArr(Arrangement a)
@@ -185,8 +209,22 @@ public class Lokale implements Comparable
         }
         return ant;
     }
-
-    public int compareTo(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public boolean avlysArr(Arrangement avlysA)
+    {
+        if(arrListe.isEmpty())
+            return false;
+        
+        Iterator<Arrangement> arrIter = arrListe.iterator();
+        while(arrIter.hasNext())
+        {
+            Arrangement a = arrIter.next();
+            if(a.equals(avlysA))
+            {
+                arrListe.remove(a);
+                return true;
+            }
+        }
+        return false;
     }
 } //End of class Lokale

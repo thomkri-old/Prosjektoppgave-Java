@@ -31,6 +31,31 @@ public class Kontaktperson
         return etternavn + ", " + fornavn;
     }
     
+    public String getEpost()
+    {
+        return epost;
+    }
+    
+    public String getNettside()
+    {
+        return nettside;
+    }
+    
+    public String getFirma()
+    {
+        return firma;
+    }
+    
+    public String getOpplysninger()
+    {
+        return opplysninger;
+    }
+    
+    public int getTlfNr()
+    {
+        return tlfNr;
+    }
+    
     public void setType(int t)
     {
         type = t;

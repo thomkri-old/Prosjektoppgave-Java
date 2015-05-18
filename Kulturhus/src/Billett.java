@@ -15,4 +15,29 @@ public class Billett
         tlf = t;
         pris = p;
     }
+    
+    public String getFornavn()
+    {
+        return fornavn;
+    }
+    
+    public String getEtternavn()
+    {
+        return etternavn;
+    }
+    
+    public String getEpost()
+    {
+        return epost;
+    }
+    
+    public int getTlf()
+    {
+        return tlf;
+    }
+    
+    public double getPris()
+    {
+        return pris;
+    }
 } //End of class Billett

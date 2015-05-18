@@ -100,4 +100,19 @@ public class Lokalregister
         }
         return ant;
     }
+    
+    public boolean avlysArr(Arrangement avlysA)
+    {
+        if(register.isEmpty())
+            return false;
+        
+        Iterator<Lokale> registerIter = register.iterator();
+        while(registerIter.hasNext())
+        {
+            Lokale l = registerIter.next();
+            if(l.avlysArr(avlysA))
+                return true;
+        }
+        return false;
+    }
 } //End of class Lokalregister

@@ -19,11 +19,6 @@ public class RegistreringsVindu extends JFrame
     private static final int TEATER = 6;
     private static final int KONTAKT_PERSON = 7;
     private static final int LOKALE = 8;
-    private static final int TEATERSAL = 11;
-    private static final int DEBATTSAL = 12;
-    private static final int FOREDRAGSSAL = 13;
-    private static final int KINOSAL = 14;
-    private static final int KONSERTSAL = 15;
     
     private int type;
     private JPanel kPPanel, lPanel, aPanel, vindu, utfylling, knapper;
@@ -65,7 +60,7 @@ public class RegistreringsVindu extends JFrame
     private Kontaktpersonregister kpregister;
     private Lokalregister lregister;
     
-    public RegistreringsVindu(Lokalregister l, Kontaktpersonregister kp)
+    public RegistreringsVindu(Lokalregister l, Kontaktpersonregister kp, int valgtFane)
     {
         super("Registrerings vindu - test");
 
@@ -81,6 +76,7 @@ public class RegistreringsVindu extends JFrame
         tabbedPane.setPreferredSize(new Dimension(825, 485));
         
         setTabbedPane();
+        tabbedPane.setSelectedIndex(valgtFane);
         
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -532,6 +528,8 @@ public class RegistreringsVindu extends JFrame
             Kontaktperson k = new Kontaktperson(fn, en, ep, ns, f, o, tn);
             kpregister.settInn(k);
             visMelding("Kontaktperson opprettet.");
+            setTabbedPane();
+            tabbedPane.setSelectedIndex(0);
         }
         catch(NumberFormatException nfe)
         {
@@ -564,6 +562,8 @@ public class RegistreringsVindu extends JFrame
             Lokale l = new Lokale(n, typeValgtIndeks, antP, harNrPVerdi);
             lregister.settInn(l);
             visMelding("Lokalet opprettet.");
+            setTabbedPane();
+            tabbedPane.setSelectedIndex(1);
         }
         catch(NumberFormatException nfe)
         {
@@ -667,6 +667,8 @@ public class RegistreringsVindu extends JFrame
             
             l.settInnArr(a);
             visMelding("Arrangement opprettet.");
+            setTabbedPane();
+            tabbedPane.setSelectedIndex(2);
         }
         catch(NumberFormatException nfe)
         {

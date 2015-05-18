@@ -1,4 +1,3 @@
-
 import java.util.*;
 import java.time.*;
 import java.time.format.*;
@@ -19,7 +18,8 @@ public abstract class Arrangement {
     private ImageIcon arrBilde;
     private Set<Billett> billettListe;
 
-    public Arrangement(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP) {
+    public Arrangement(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP)
+    {
         navn = n;
         program = p;
         lokaleNavn = lN;
@@ -105,6 +105,21 @@ public abstract class Arrangement {
     public void settInnBillett(Billett b)
     {
         billettListe.add(b);
+    }
+    
+    public Billett[] getBilettListe()
+    {
+        if(billettListe.isEmpty())
+            return null;
+        
+        Iterator<Billett> billettIter = billettListe.iterator();
+        Billett[] billettArray = new Billett[billettListe.size()];
+        int i = 0;
+        while(billettIter.hasNext())
+        {
+            billettArray[i++] = billettIter.next();
+        }
+        return billettArray;
     }
 
     public String toString()
