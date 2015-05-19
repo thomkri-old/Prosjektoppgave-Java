@@ -1,4 +1,4 @@
-/*Opprettet av: Thomas Kristiansen
+/*Opprettet av: Sara Torp Myhre
 Sist endret: 18.05.2015
 
 Filen inneholder klassen Lokaleregister.*/
@@ -40,9 +40,7 @@ public class Lokalregister implements Serializable
         Arrangement[][] multiArr = new Arrangement[register.size()][];
         int i = 0;
         while(registerIter.hasNext())
-        {
             multiArr[i++] = registerIter.next().getArrangementer(type, dArray);
-        }
 
         int antArr = 0;
         for(int y = 0; y < multiArr.length; y++)
@@ -57,10 +55,13 @@ public class Lokalregister implements Serializable
         Arrangement[] arrangementer = new Arrangement[antArr];
         int teller = 0;
         for(int x = 0; x < multiArr.length; x++)
+        {
             if(multiArr[x] != null)
+            {
                 for(int z = 0; z < multiArr[x].length; z++)
                     arrangementer[teller++] = multiArr[x][z];
-
+            }
+        }
         return arrangementer;
     }
     
@@ -110,6 +111,7 @@ public class Lokalregister implements Serializable
         int i = 0;
         while(registerIter.hasNext())
             lokaler[i++] = registerIter.next();
+        
         return lokaler;
     }
     
@@ -121,7 +123,8 @@ public class Lokalregister implements Serializable
         
         sorter();
         Iterator<Lokale> registerIter = register.iterator();
-        Lokale[] lokaler = new Lokale[antLokaler(type, registerIter)];
+        Iterator<Lokale> registerIter2 = register.iterator();
+        Lokale[] lokaler = new Lokale[antLokaler(type, registerIter2)];
         int i = 0;
         while(registerIter.hasNext())
         {

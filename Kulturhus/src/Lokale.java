@@ -9,26 +9,11 @@ import java.util.*;
 
 //Klassen er en klasse for alle lokaler, og den implementerer Serializable.
 public class Lokale implements Serializable
-{
-    private static final int ALLE = -3;
-    private static final int FAGLIGE = -2;
-    private static final int UNDERHOLDNING = -1;
-    private static final int DEBATT = 0;
-    private static final int FOREDRAG = 1;
-    private static final int POLITISK_MOTE = 2;
-    private static final int BARNE_FORESTILLING = 3;
-    private static final int KINO = 4;
-    private static final int KONSERT = 5;
-    private static final int TEATER = 6;
-    private static final int TEATERSAL = 11;
-    private static final int DEBATTSAL = 12;
-    private static final int FOREDRAGSSAL = 13;
-    private static final int KINOSAL = 14;
-    private static final int KONSERTSAL = 15;
-    
+{    
     private String navn;
     private int type, antPlasser;
     private boolean harNrPlasser;
+    private String[] typeTekst = {"Debattsal", "Foredragssal", "Kinosal", "Konsertsal", "Teatersal"};
     private Set<Arrangement> arrListe;
     
     /*Metoden er konstruktøren til klassen Lokale. Paramtrenes betydning:
@@ -67,16 +52,7 @@ public class Lokale implements Serializable
     
     public String getTypeTekst() //Get-metode for hva slags type lokale det er som et tekst objekt
     {
-        if(type == TEATERSAL)
-            return "Teatersal";
-        else if(type == DEBATTSAL)
-            return "Debattsal";
-        else if(type == FOREDRAGSSAL)
-            return "Foredragssal";
-        else if(type == KINOSAL)
-            return "Kinosal";
-        else
-            return "Konsertsal";
+        return typeTekst[type - 11];
     }
     
     public boolean getHarNrPlasser() //Get-metode for om lokalet har nummererte plasser eller ikk
@@ -105,9 +81,9 @@ public class Lokale implements Serializable
         while(arrIter.hasNext())
         {
             Arrangement a = arrIter.next();
-            if(t == ALLE)
+            if(t == Kulturhus.ALLE)
             {
-                if(a.getType() == DEBATT || a.getType() == FOREDRAG || a.getType() == POLITISK_MOTE || a.getType() == BARNE_FORESTILLING || a.getType() == KINO || a.getType() == KONSERT || a.getType() == TEATER)
+                if(a.getType() == Kulturhus.DEBATT || a.getType() == Kulturhus.FOREDRAG || a.getType() == Kulturhus.POLITISK_MOTE || a.getType() == Kulturhus.BARNE_FORESTILLING || a.getType() == Kulturhus.KINO || a.getType() == Kulturhus.KONSERT || a.getType() == Kulturhus.TEATER)
                 {
                     for(int y = 0; y < dArray.length; y++)
                     {
@@ -117,9 +93,9 @@ public class Lokale implements Serializable
                 }
             }
             
-            if(t == FAGLIGE)
+            if(t == Kulturhus.FAGLIGE)
             {
-                if(a.getType() == DEBATT || a.getType() == FOREDRAG || a.getType() == POLITISK_MOTE)
+                if(a.getType() == Kulturhus.DEBATT || a.getType() == Kulturhus.FOREDRAG || a.getType() == Kulturhus.POLITISK_MOTE)
                 {
                     for(int y = 0; y < dArray.length; y++)
                     {
@@ -129,9 +105,9 @@ public class Lokale implements Serializable
                 }
             }
                 
-            else if(t == UNDERHOLDNING)
+            else if(t == Kulturhus.UNDERHOLDNING)
             {
-                if(a.getType() == BARNE_FORESTILLING || a.getType() == KINO || a.getType() == KONSERT || a.getType() == TEATER)
+                if(a.getType() == Kulturhus.BARNE_FORESTILLING || a.getType() == Kulturhus.KINO || a.getType() == Kulturhus.KONSERT || a.getType() == Kulturhus.TEATER)
                 {
                     for(int y = 0; y < dArray.length; y++)
                     {
@@ -192,9 +168,9 @@ public class Lokale implements Serializable
         while(iter.hasNext())
         {
             Arrangement a = iter.next();
-            if(t == ALLE)
+            if(t == Kulturhus.ALLE)
             {
-                if(a.getType() == DEBATT || a.getType() == FOREDRAG || a.getType() == POLITISK_MOTE || a.getType() == BARNE_FORESTILLING || a.getType() == KINO || a.getType() == KONSERT || a.getType() == TEATER)
+                if(a.getType() == Kulturhus.DEBATT || a.getType() == Kulturhus.FOREDRAG || a.getType() == Kulturhus.POLITISK_MOTE || a.getType() == Kulturhus.BARNE_FORESTILLING || a.getType() == Kulturhus.KINO || a.getType() == Kulturhus.KONSERT || a.getType() == Kulturhus.TEATER)
                 {
                     for(int y = 0; y < dArray.length; y++)
                     {
@@ -204,9 +180,9 @@ public class Lokale implements Serializable
                 }
             }
             
-            if(t == FAGLIGE)
+            if(t == Kulturhus.FAGLIGE)
             {
-                if(a.getType() == DEBATT || a.getType() == FOREDRAG || a.getType() == POLITISK_MOTE)
+                if(a.getType() == Kulturhus.DEBATT || a.getType() == Kulturhus.FOREDRAG || a.getType() == Kulturhus.POLITISK_MOTE)
                 {
                     for(int y = 0; y < dArray.length; y++)
                     {
@@ -216,9 +192,9 @@ public class Lokale implements Serializable
                 }
             }
                 
-            else if(t == UNDERHOLDNING)
+            else if(t == Kulturhus.UNDERHOLDNING)
             {
-                if(a.getType() == BARNE_FORESTILLING || a.getType() == KINO || a.getType() == KONSERT || a.getType() == TEATER)
+                if(a.getType() == Kulturhus.BARNE_FORESTILLING || a.getType() == Kulturhus.KINO || a.getType() == Kulturhus.KONSERT || a.getType() == Kulturhus.TEATER)
                 {
                     for(int y = 0; y < dArray.length; y++)
                     {

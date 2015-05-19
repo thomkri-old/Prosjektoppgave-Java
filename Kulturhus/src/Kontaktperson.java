@@ -10,12 +10,14 @@ public class Kontaktperson implements Serializable
 {
     private String fornavn, etternavn, epost, nettside, firma, opplysninger;
     private int tlfNr, type, idNr;
+    private String[] typeTekst = {"Debatt", "Foredrag", "Politisk møte", "Barneforestilling", "Kino", "Konsert", "Teater"};
     private static int nesteNr = 0;
     
     /*Metoden er konstruktøren til klassen Kontaktperson. Paramtrenes betydning:
     fn = kontaktpersonens fornavn, en = kontaktpersonens etternavn, e = kontaktpersonenes e-post, n = kontaktpersonens nettside
-    f = firmaet kontaktpersonen er knyttet til, o = ekstra opplysninger om kontaktpersonnen, tN = kontaktpersonens telefonnummer.*/
-    public Kontaktperson(String fn, String en, String e, String n, String f, String o, int tN)
+    f = firmaet kontaktpersonen er knyttet til, o = ekstra opplysninger om kontaktpersonnen, tN = kontaktpersonens telefonnummer,
+    t = hvordan type arrangement kontaktpersonen er knyttet til.*/
+    public Kontaktperson(String fn, String en, String e, String n, String f, String o, int tN, int t)
     {
         fornavn = fn;
         etternavn = en;
@@ -24,6 +26,7 @@ public class Kontaktperson implements Serializable
         firma = f;
         opplysninger = o;
         tlfNr = tN;
+        type = t;
         idNr = ++nesteNr;
     }
     
@@ -67,9 +70,19 @@ public class Kontaktperson implements Serializable
         return tlfNr;
     }
     
-    public void setType(int t) //Set-metode for kontaktpersonens type
+    public int getType() //Get-metode for type arrangement kontaktpersonen er knyttet til
     {
-        type = t;
+        return type;
+    }
+    
+    public String getTypeTekst()
+    {
+        return typeTekst[type];
+    }
+    
+    public int getIdNr() //Get-metode for ID nummere til kontaktpersonen
+    {
+        return idNr;
     }
     
     public static int getNesteNr() //Statisk get-metode som returnerer verdien til variabelen nesteId

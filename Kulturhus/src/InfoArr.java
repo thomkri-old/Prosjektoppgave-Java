@@ -15,14 +15,6 @@ public class InfoArr extends JFrame
 {
     private static final int SCROLLSPEED = 16;
     
-    private static final int DEBATT = 0;
-    private static final int FOREDRAG = 1;
-    private static final int POLITISK_MOTE = 2;
-    private static final int BARNE_FORESTILLING = 3;
-    private static final int KINO = 4;
-    private static final int KONSERT = 5;
-    private static final int TEATER = 6;
-    
     private JPanel vindu, infoPanel, knappePanel, bildePanel, tekstInnholdPanel;
     private JTextPane arrInfo;
     private JScrollPane arrInfoScroll;
@@ -64,7 +56,7 @@ public class InfoArr extends JFrame
         lagInfoUtskrift("\t\t" + dtf.format(arrangement.getDato()), 14, false, false);
         lagInfoUtskrift("\nPris*:", 14, true, false);
         lagInfoUtskrift("\t\t" + krFormat.format(arrangement.getBillettprisBarn()) + ",- / " + krFormat.format(arrangement.getBillettprisVoksen()) + ",-", 14, false, false);
-        if(arrangement.getType() == KINO)
+        if(arrangement.getType() == Kulturhus.KINO)
         {
             Kino k = (Kino)arrangement;
             int timer = k.getLengde() / 60;

@@ -20,7 +20,7 @@ public class BannerPanel extends JPanel
     public BannerPanel()
     {
         URL bildeURL = null;
-        bildeURL = Hovedside.class.getResource("/bilder/piano.jpg");
+        bildeURL = Hovedside.class.getResource("/bilder/banner1.png");
         if(bildeURL != null)
             bannerIkon = new ImageIcon(bildeURL);
         else

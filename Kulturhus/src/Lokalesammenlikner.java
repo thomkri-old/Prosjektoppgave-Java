@@ -31,8 +31,13 @@ public class Lokalesammenlikner implements Comparator<Lokale>, Serializable
     Metoden tar så å sammenlikner disse to objektene alfabetisk etter navn.*/
     public int compare(Lokale l1, Lokale l2)
     {
+        String typeNavn1 = l1.getTypeTekst();
+        String typeNavn2 = l2.getTypeTekst();
         String lNavn1 = l1.getNavn();
         String lNavn2 = l2.getNavn();
+        int d = kollator.compare(typeNavn1, typeNavn2);
+        if(d != 0)
+            return d;
         return kollator.compare(lNavn1, lNavn2);
     }
 }

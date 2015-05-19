@@ -16,17 +16,7 @@ import javax.swing.plaf.basic.*;
 /*Klassen er en subklasse av JFrame. Klassen er et vindu hvor ansatte kan oppprette
 Kontaktpersoner, lokaler og arrangementer.*/
 public class RegistreringsVindu extends JFrame
-{
-    private static final int DEBATT = 0;
-    private static final int FOREDRAG = 1;
-    private static final int POLITISK_MOTE = 2;
-    private static final int BARNE_FORESTILLING = 3;
-    private static final int KINO = 4;
-    private static final int KONSERT = 5;
-    private static final int TEATER = 6;
-    private static final int KONTAKT_PERSON = 7;
-    private static final int LOKALE = 8;
-    
+{    
     private int type;
     private JPanel kPPanel, lPanel, aPanel, vindu, utfylling, knapper;
     private JTabbedPane tabbedPane;
@@ -44,20 +34,22 @@ public class RegistreringsVindu extends JFrame
     private JPanel datoPanel, tidPanel, bildeVelgerPanel, radioKnapperA;
     private JFileChooser filvelger;
     private JButton filvelgerKnapp;
-    private int filvalgReturVerdi, radioValgtType = DEBATT;
+    private int filvalgReturVerdi, radioValgtType = Kulturhus.DEBATT;
     private ImageIcon arrBilde;
     private ButtonGroup velgArrTypeGruppe;
     private JRadioButton radioDebatt, radioForedrag, radioPolitiskM, radioBarneF, radioKino, radioKonsert, radioTeater;
     
-    private JLabel fornavn, etternavn, epost, nettside, firma, opplysninger, tlfNr;
+    private JLabel fornavn, etternavn, epost, nettside, firma, opplysninger, tlfNr, typeKP;
     private JTextField fornavnFelt, etternavnFelt, epostFelt, nettsideFelt, firmaFelt, tlfNrFelt;
+    private JComboBox<String> typeKPValg;
+    private final String[] typeKPListe = {"", "Debatt", "Foredrag", "Politisk møte", "Barneforestilling", "Kino", "Konsert", "Teater"};
     private JTextArea opplysningerFelt;
     private JScrollPane opplysningerScroll;
     
     private JLabel lokaleNavn, lokaleType, antPlasser, harNrPlasser;
     private JTextField lokaleNavnFelt, antPlasserFelt;
     private JComboBox<String> lokaleTypeValg;
-    private final String[] lokaleTypeListe = {"", "Teatersal", "Debattsal", "Foredragssal", "Kinosal", "Konsertsal"};
+    private final String[] lokaleTypeListe = {"", "Debattsal", "Foredragssal", "Kinosal", "Konsertsal", "Teatersal"};
     private ButtonGroup harNrPlasserGruppe;
     private JRadioButton radioJa, radioNei;
     private JPanel radioKnapperL;
@@ -101,9 +93,9 @@ public class RegistreringsVindu extends JFrame
     private void setTabbedPane()
     {
         tabbedPane.removeAll();
-        kPPanel = opprettVindu(KONTAKT_PERSON);
+        kPPanel = opprettVindu(Kulturhus.KONTAKTPERSON);
         tabbedPane.addTab("Kontaktperson", null, kPPanel, "Opprett kontaktperson");
-        lPanel = opprettVindu(LOKALE);
+        lPanel = opprettVindu(Kulturhus.LOKALE);
         tabbedPane.addTab("Lokale", null, lPanel, "Opprett lokale");
         aPanel = opprettVindu(radioValgtType);
         tabbedPane.addTab("Arrangement", null, aPanel, "Opprett arrangement");
@@ -120,9 +112,9 @@ public class RegistreringsVindu extends JFrame
         
         knapper = new JPanel(new GridBagLayout());
         
-        if(type == KONTAKT_PERSON)
+        if(type == Kulturhus.KONTAKTPERSON)
             opprettKpersonVindu();
-        else if(type == LOKALE)
+        else if(type == Kulturhus.LOKALE)
             opprettLokaleVindu();
         else
             opprettArrVindu();
@@ -135,7 +127,7 @@ public class RegistreringsVindu extends JFrame
         gbc.gridx = 0;
         gbc.gridy = 0;
         
-        if(type != KONTAKT_PERSON && type != LOKALE)
+        if(type != Kulturhus.KONTAKTPERSON && type != Kulturhus.LOKALE)
         {
             vindu.add(radioKnapperA);
             gbc.gridy++;
@@ -170,7 +162,7 @@ public class RegistreringsVindu extends JFrame
         valgtBildeSjekk = new JLabel("Bilde ikke valgt");
         valgtBildeSjekk.setForeground(Color.red);
         
-        if(type == DEBATT || type == FOREDRAG || type == POLITISK_MOTE)
+        if(type == Kulturhus.DEBATT || type == Kulturhus.FOREDRAG || type == Kulturhus.POLITISK_MOTE)
             sjanger = new JLabel("Tema:");
         else
             sjanger = new JLabel("Sjanger:");
@@ -201,8 +193,31 @@ public class RegistreringsVindu extends JFrame
         bildeVelgerPanel.add(filvelgerKnapp);
         bildeVelgerPanel.add(valgtBildeSjekk);
         
-        lokaleArray = lregister.getLokaler();
-        kPersonArray = kpregister.getKontaktpersoner();
+        switch(type)
+        {
+            case Kulturhus.BARNE_FORESTILLING:
+                lokaleArray = lregister.getLokaler(Kulturhus.TEATERSAL);
+                break;
+            case Kulturhus.DEBATT:
+                lokaleArray = lregister.getLokaler(Kulturhus.DEBATTSAL);
+                break;
+            case Kulturhus.FOREDRAG:
+                lokaleArray = lregister.getLokaler(Kulturhus.FOREDRAGSSAL);
+                break;
+            case Kulturhus.KINO:
+                lokaleArray = lregister.getLokaler(Kulturhus.KINOSAL);
+                break;
+            case Kulturhus.KONSERT:
+                lokaleArray = lregister.getLokaler(Kulturhus.KONSERTSAL);
+                break;
+            case Kulturhus.POLITISK_MOTE:
+                lokaleArray = lregister.getLokaler(Kulturhus.FOREDRAGSSAL);
+                break;
+            default:
+                lokaleArray = lregister.getLokaler(Kulturhus.TEATERSAL);
+                break;
+        }
+        kPersonArray = kpregister.getKontaktpersoner(type);
         
         dagValg = new JComboBox<>(tallArray("Dag", 1, 31));
         dagValg.setPreferredSize(new Dimension(50, 20));
@@ -235,19 +250,19 @@ public class RegistreringsVindu extends JFrame
         kPersonValg = new JComboBox<>(navnArray(kPersonArray));
         kPersonValg.setPreferredSize(new Dimension(200, 20));
         
-        radioDebatt = new JRadioButton("Debatt", (radioValgtType == DEBATT)?true:false);
+        radioDebatt = new JRadioButton("Debatt", (radioValgtType == Kulturhus.DEBATT)?true:false);
         radioDebatt.addActionListener(knappelytter);
-        radioForedrag = new JRadioButton("Foredrag", (radioValgtType == FOREDRAG)?true:false);
+        radioForedrag = new JRadioButton("Foredrag", (radioValgtType == Kulturhus.FOREDRAG)?true:false);
         radioForedrag.addActionListener(knappelytter);
-        radioPolitiskM = new JRadioButton("Politisk møte", (radioValgtType == POLITISK_MOTE)?true:false);
+        radioPolitiskM = new JRadioButton("Politisk møte", (radioValgtType == Kulturhus.POLITISK_MOTE)?true:false);
         radioPolitiskM.addActionListener(knappelytter);
-        radioBarneF = new JRadioButton("Barneforestilling", (radioValgtType == BARNE_FORESTILLING)?true:false);
+        radioBarneF = new JRadioButton("Barneforestilling", (radioValgtType == Kulturhus.BARNE_FORESTILLING)?true:false);
         radioBarneF.addActionListener(knappelytter);
-        radioKino = new JRadioButton("Kino", (radioValgtType == KINO)?true:false);
+        radioKino = new JRadioButton("Kino", (radioValgtType == Kulturhus.KINO)?true:false);
         radioKino.addActionListener(knappelytter);
-        radioKonsert = new JRadioButton("Konsert", (radioValgtType == KONSERT)?true:false);
+        radioKonsert = new JRadioButton("Konsert", (radioValgtType == Kulturhus.KONSERT)?true:false);
         radioKonsert.addActionListener(knappelytter);
-        radioTeater = new JRadioButton("Teater", (radioValgtType == TEATER)?true:false);
+        radioTeater = new JRadioButton("Teater", (radioValgtType == Kulturhus.TEATER)?true:false);
         radioTeater.addActionListener(knappelytter);
         
         velgArrTypeGruppe = new ButtonGroup();
@@ -305,7 +320,7 @@ public class RegistreringsVindu extends JFrame
         gbc.gridx++;
         gbc.gridy = 0;
         gbc.insets = new Insets(5, 5, 5, 5);
-        if(type == KINO)
+        if(type == Kulturhus.KINO)
         {
             utfylling.add(aldersgrense, gbc);
             gbc.gridy++;
@@ -324,7 +339,7 @@ public class RegistreringsVindu extends JFrame
         
         gbc.gridx++;
         gbc.gridy = 0;
-        if(type == KINO)
+        if(type == Kulturhus.KINO)
         {
             utfylling.add(alderFelt, gbc);
             gbc.gridy++;
@@ -370,6 +385,7 @@ public class RegistreringsVindu extends JFrame
         firma = new JLabel("Firma:");
         opplysninger = new JLabel("Opplysninger:");
         tlfNr = new JLabel("Telefonnummer:");
+        typeKP = new JLabel("Knyttet til arrangementtype:");
         
         fornavnFelt = new JTextField(10);
         etternavnFelt = new JTextField(10);
@@ -377,6 +393,9 @@ public class RegistreringsVindu extends JFrame
         nettsideFelt = new JTextField(15);
         firmaFelt = new JTextField(10);
         tlfNrFelt = new JTextField(8);
+        
+        typeKPValg = new JComboBox<>(typeKPListe);
+        typeKPValg.setPreferredSize(new Dimension(200, 20));
         
         opplysningerFelt = new JTextArea(5, 15);
         opplysningerFelt.setLineWrap(true);
@@ -402,6 +421,8 @@ public class RegistreringsVindu extends JFrame
         gbc.gridy++;
         utfylling.add(firma, gbc);
         gbc.gridy++;
+        utfylling.add(typeKP, gbc);
+        gbc.gridy++;
         utfylling.add(opplysninger, gbc);
         
         gbc.gridx++;
@@ -417,6 +438,8 @@ public class RegistreringsVindu extends JFrame
         utfylling.add(nettsideFelt, gbc);
         gbc.gridy++;
         utfylling.add(firmaFelt, gbc);
+        gbc.gridy++;
+        utfylling.add(typeKPValg, gbc);
         gbc.gridy++;
         utfylling.add(opplysningerScroll, gbc);
         
@@ -509,9 +532,9 @@ public class RegistreringsVindu extends JFrame
     private void opprett(int t)
     {
         type = t;
-        if(type == KONTAKT_PERSON)
+        if(type == Kulturhus.KONTAKTPERSON)
             opprettKontaktperson();
-        else if(type == LOKALE)
+        else if(type == Kulturhus.LOKALE)
             opprettLokale();
         else
             opprettArrangement();
@@ -526,9 +549,15 @@ public class RegistreringsVindu extends JFrame
         String ns = nettsideFelt.getText();
         String f = firma.getText();
         String o = opplysningerFelt.getText();
+        int typeValgtIndeks = typeKPValg.getSelectedIndex() - 1;
         if(fn.equals("") || en.equals("") || ep.equals("") || ns.equals("") || f.equals("") || o.equals(""))
         {
             visMelding("Du må fylle ut info i alle feltene.");
+        }
+        if(typeValgtIndeks == -1)
+        {
+            visMelding("Du må velge type arrangement kontaktpersonen er knyttet til.");
+            return;
         }
         if(!ep.matches(".+@[a-zA-ZæÆøØåÅöÖäÄàÀèÈëËüÜûÛâÂêÊãÃõÕïÏ\\d]+\\.[a-zA-ZæÆøØåÅöÖäÄàÀèÈëËüÜûÛâÂêÊãÃõÕïÏ\\d]+"))
         {
@@ -538,7 +567,7 @@ public class RegistreringsVindu extends JFrame
         try
         {
             int tn = Integer.parseInt(tlfNrFelt.getText());
-            Kontaktperson k = new Kontaktperson(fn, en, ep, ns, f, o, tn);
+            Kontaktperson k = new Kontaktperson(fn, en, ep, ns, f, o, tn, typeValgtIndeks);
             kpregister.settInn(k);
             visMelding("Kontaktperson opprettet.");
             setTabbedPane();
@@ -554,7 +583,7 @@ public class RegistreringsVindu extends JFrame
     private void opprettLokale()
     {
         String n = lokaleNavnFelt.getText();
-        int typeValgtIndeks = lokaleTypeValg.getSelectedIndex();
+        int typeValgtIndeks = lokaleTypeValg.getSelectedIndex() + 10;
         if(!rKnappTrykket)
         {
             visMelding("Du må velge om lokalet har nummererte plasser eller ikke.");
@@ -634,7 +663,7 @@ public class RegistreringsVindu extends JFrame
         {
             int kinoL = 0;
             int kinoAg = 0;
-            if(type == KINO)
+            if(type == Kulturhus.KINO)
             {
                 kinoL = Integer.parseInt(lengdeFelt.getText());
                 kinoAg = Integer.parseInt(alderFelt.getText());
@@ -657,22 +686,22 @@ public class RegistreringsVindu extends JFrame
             
             switch(type)
             {
-                case BARNE_FORESTILLING:
+                case Kulturhus.BARNE_FORESTILLING:
                     a = new Barneforestilling(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
-                case DEBATT:
+                case Kulturhus.DEBATT:
                     a = new Debattkveld(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
-                case FOREDRAG:
+                case Kulturhus.FOREDRAG:
                     a = new Foredrag(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
-                case KINO:
+                case Kulturhus.KINO:
                     a = new Kino(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s, kinoL, kinoAg);
                     break;
-                case KONSERT:
+                case Kulturhus.KONSERT:
                     a = new Konsert(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
-                case POLITISK_MOTE:
+                case Kulturhus.POLITISK_MOTE:
                     a = new PolitiskMote(n, p, l.getNavn(), type, bpBarn, bpVoksen, dArray, ldt, arrBilde, kp, s);
                     break;
                 default:
@@ -732,7 +761,7 @@ public class RegistreringsVindu extends JFrame
         String[] navn = new String[kpArray.length + 1];
         navn[0] = "";
         for(int i = 0; i < kpArray.length; i++)
-            navn[i + 1] = kpArray[i].getNavn();
+            navn[i + 1] = kpArray[i].getIdNr() + ".  " + kpArray[i].getNavn();
         return navn;
     }
     
@@ -783,48 +812,48 @@ public class RegistreringsVindu extends JFrame
             else if(e.getSource() == regKnappA)
                 opprett(radioValgtType);
             else if(e.getSource() == regKnappKP)
-                opprett(KONTAKT_PERSON);
+                opprett(Kulturhus.KONTAKTPERSON);
             else if(e.getSource() == regKnappL)
-                opprett(LOKALE);
+                opprett(Kulturhus.LOKALE);
             else if(e.getSource() == radioDebatt)
             {
-                radioValgtType = DEBATT;
+                radioValgtType = Kulturhus.DEBATT;
                 setTabbedPane();
                 tabbedPane.setSelectedIndex(2);
             }
             else if(e.getSource() == radioForedrag)
             {
-                radioValgtType = FOREDRAG;
+                radioValgtType = Kulturhus.FOREDRAG;
                 setTabbedPane();
                 tabbedPane.setSelectedIndex(2);
             }
             else if(e.getSource() == radioPolitiskM)
             {
-                radioValgtType = POLITISK_MOTE;
+                radioValgtType = Kulturhus.POLITISK_MOTE;
                 setTabbedPane();
                 tabbedPane.setSelectedIndex(2);
             }
             else if(e.getSource() == radioBarneF)
             {
-                radioValgtType = BARNE_FORESTILLING;
+                radioValgtType = Kulturhus.BARNE_FORESTILLING;
                 setTabbedPane();
                 tabbedPane.setSelectedIndex(2);
             }
             else if(e.getSource() == radioKino)
             {
-                radioValgtType = KINO;
+                radioValgtType = Kulturhus.KINO;
                 setTabbedPane();
                 tabbedPane.setSelectedIndex(2);
             }
             else if(e.getSource() == radioKonsert)
             {
-                radioValgtType = KONSERT;
+                radioValgtType = Kulturhus.KONSERT;
                 setTabbedPane();
                 tabbedPane.setSelectedIndex(2);
             }
             else if(e.getSource() == radioTeater)
             {
-                radioValgtType = TEATER;
+                radioValgtType = Kulturhus.TEATER;
                 setTabbedPane();
                 tabbedPane.setSelectedIndex(2);
             }

@@ -1,4 +1,4 @@
-/*Opprettet av: Thomas Kristiansen
+/*Opprettet av: Sara Torp Myhre
 Sist endret: 15.05.2015
 
 Filen inneholder klassen Kino.*/

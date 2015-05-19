@@ -1,4 +1,4 @@
-/*Opprettet av: Sara Torp Myhre
+/*Opprettet av: Thomas Kristiansen
 Sist endret: 16.05.2015
 
 Filen inneholder klassen InfoKPerson.*/
@@ -39,15 +39,17 @@ public class InfoKPerson extends JFrame
         info.setBackground(this.getBackground());
         info.setEditable(false);
         
-        lagInfoUtskrift(kPerson.getNavn() + "\n", 20, true, false);
+        lagInfoUtskrift(kPerson.getIdNr() + ". " + kPerson.getNavn() + "\n", 20, true, false);
         lagInfoUtskrift("\nFirma:", 14, true, false);
-        lagInfoUtskrift("\t" + kPerson.getFirma(), 14, false, false);
+        lagInfoUtskrift("\t\t" + kPerson.getFirma(), 14, false, false);
         lagInfoUtskrift("\nTelefon:", 14, true, false);
-        lagInfoUtskrift("\t" + kPerson.getTlfNr(), 14, false, false);
+        lagInfoUtskrift("\t\t" + kPerson.getTlfNr(), 14, false, false);
         lagInfoUtskrift("\nE-post:", 14, true, false);
-        lagInfoUtskrift("\t" + kPerson.getEpost(), 14, false, false);
+        lagInfoUtskrift("\t\t" + kPerson.getEpost(), 14, false, false);
         lagInfoUtskrift("\nNettside:", 14, true, false);
-        lagInfoUtskrift("\t" + kPerson.getNettside(), 14, false, false);
+        lagInfoUtskrift("\t\t" + kPerson.getNettside(), 14, false, false);
+        lagInfoUtskrift("\nType arrangement:", 14, true, false);
+        lagInfoUtskrift("\t" + kPerson.getTypeTekst(), 14, false, false);
         lagInfoUtskrift("\n\n" + kPerson.getOpplysninger(), 14, false, false);
         
         info.setCaretPosition(0);

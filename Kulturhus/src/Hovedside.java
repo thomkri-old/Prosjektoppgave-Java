@@ -24,17 +24,6 @@ public class Hovedside extends JFrame implements Serializable
     private static final int VALGHOYDE = 3;
     private static final int SCROLLSPEED = 16;
     
-    private static final int ALLE = -3;
-    private static final int FAGLIGE = -2;
-    private static final int UNDERHOLDNING = -1;
-    private static final int DEBATT = 0;
-    private static final int FOREDRAG = 1;
-    private static final int POLITISK_MOTE = 2;
-    private static final int BARNE_FORESTILLING = 3;
-    private static final int KINO = 4;
-    private static final int KONSERT = 5;
-    private static final int TEATER = 6;
-    
     private JPanel vindu, meny, hovedPanel, infoPanel, datoPanel, fraPanel, tilPanel, knapper;
     private BannerPanel banner;
     private JList<ImageIcon> infoFelt;
@@ -46,7 +35,7 @@ public class Hovedside extends JFrame implements Serializable
     private JMenu ansattMeny;
     private JMenuItem loggInnValg;
     
-    private int arrType = ALLE;
+    private int arrType = Kulturhus.ALLE;
     private String filnavn = "Registre.data";
     private Arrangement[] arrListe;
     
@@ -440,7 +429,7 @@ public class Hovedside extends JFrame implements Serializable
             lregister = new Lokalregister();
             kpregister = new Kontaktpersonregister();
         }
-        oppdaterArrangementer(ALLE, arrangementer);
+        oppdaterArrangementer(Kulturhus.ALLE, arrangementer);
     }
     
     private void visInfo() //Metode som åpner et info vindu for arrangementet som er markert i listen
@@ -551,25 +540,25 @@ public class Hovedside extends JFrame implements Serializable
         public void mouseClicked(MouseEvent e)
         {
             if(e.getSource() == arrangementer)
-                oppdaterArrangementer(ALLE, arrangementer);
+                oppdaterArrangementer(Kulturhus.ALLE, arrangementer);
             else if(e.getSource() == faglig)
-                oppdaterArrangementer(FAGLIGE, faglig);
+                oppdaterArrangementer(Kulturhus.FAGLIGE, faglig);
             else if(e.getSource() == underholdning)
-                oppdaterArrangementer(UNDERHOLDNING, underholdning);
+                oppdaterArrangementer(Kulturhus.UNDERHOLDNING, underholdning);
             else if(e.getSource() == debattkveld)
-                oppdaterArrangementer(DEBATT, debattkveld);
+                oppdaterArrangementer(Kulturhus.DEBATT, debattkveld);
             else if(e.getSource() == foredrag)
-                oppdaterArrangementer(FOREDRAG, foredrag);
+                oppdaterArrangementer(Kulturhus.FOREDRAG, foredrag);
             else if(e.getSource() == politiskM)
-                oppdaterArrangementer(POLITISK_MOTE, politiskM);
+                oppdaterArrangementer(Kulturhus.POLITISK_MOTE, politiskM);
             else if(e.getSource() == bForestilling)
-                oppdaterArrangementer(BARNE_FORESTILLING, bForestilling);
+                oppdaterArrangementer(Kulturhus.BARNE_FORESTILLING, bForestilling);
             else if(e.getSource() == kino)
-                oppdaterArrangementer(KINO, kino);
+                oppdaterArrangementer(Kulturhus.KINO, kino);
             else if(e.getSource() == konsert)
-                oppdaterArrangementer(KONSERT, konsert);
+                oppdaterArrangementer(Kulturhus.KONSERT, konsert);
             else if(e.getSource() == teater)
-                oppdaterArrangementer(TEATER, teater);
+                oppdaterArrangementer(Kulturhus.TEATER, teater);
         }
 
         public void mousePressed(MouseEvent e) { }

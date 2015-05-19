@@ -20,26 +20,13 @@ public class InternHovedside extends JFrame
     private static final int MENYBREDDE = 250;
     private static final int SCROLLSPEED = 16;
     
-    private static final int ALLE = -3;
-    private static final int FAGLIGE = -2;
-    private static final int UNDERHOLDNING = -1;
-    private static final int DEBATT = 0;
-    private static final int FOREDRAG = 1;
-    private static final int POLITISK_MOTE = 2;
-    private static final int BARNE_FORESTILLING = 3;
-    private static final int KINO = 4;
-    private static final int KONSERT = 5;
-    private static final int TEATER = 6;
-    private static final int KONTAKTPERSON = 7;
-    private static final int LOKALE = 8;
-    
     private JPanel vindu, meny, hovedPanel, infoPanel, datoPanel, fraPanel, tilPanel, knapper;
     private JTable infoTabell;
     private AbstractTableModel tabellmodell;
     private JScrollPane tabellScroll, mainScroll;
     private String[] kolNavn;
     private String[] kolArr = {"Arrangement navn", "Dato", "Pris barn", "Pris Voksen", "Lokale", "Ledig plasser"};
-    private String[] kolKPerson = {"Etternavn", "Fornavn", "Firma", "Telefon", "E-post", "Nettside"};
+    private String[] kolKPerson = {"ID", "Etternavn", "Fornavn", "Firma", "Telefon", "E-post", "Nettside"};
     private String[] kolLokale = {"Navn", "Type lokale", "Antall plasser", "Nummererte plasser"};
     private String[][] infoListe;
     private JLabel menyOverskrift, arrangementer, underholdning, faglig, bForestilling, debattkveld, foredrag, kino, konsert, politiskM, teater, kPersoner, lokaler, fra, til;
@@ -51,7 +38,7 @@ public class InternHovedside extends JFrame
     private JMenuBar menylinje;
     private JMenu opprettMeny, statistikkMeny;
     private JMenuItem opprettValgK, opprettValgL, opprettValgA, statistikkValgP, statistikkValgH;
-    private int type = ALLE;
+    private int type = Kulturhus.ALLE;
     
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu  'kl.' HH:mm");
     private DateTimeFormatter dtfDato = DateTimeFormatter.ofPattern("d-M-uuuu");
@@ -198,6 +185,11 @@ public class InternHovedside extends JFrame
         datoPanel.add(tilPanel);
         
         infoListe = arrInfoListe();
+        if(infoListe == null)
+        {
+            infoListe = new String[27][kolNavn.length];
+            visMelding("Det finnes ingen arrangementer i den valgte kategorien og perioden.");
+        }
         
         tabellmodell = new Tabellmodell();
         infoTabell = new JTable(tabellmodell);
@@ -323,7 +315,7 @@ public class InternHovedside extends JFrame
         
         arrListe = lregister.getArrangementer(type, datoArray);
         if(arrListe == null)
-            return new String[27][kolNavn.length];
+            return null;
         
         Arrays.sort(arrListe, new ArrangementDatoSammenlikner());
         
@@ -383,12 +375,13 @@ public class InternHovedside extends JFrame
         String[][] kPersonInfoArray = new String[antRader][kolNavn.length];
         for(int i = 0; i < kPersonListe.length; i++)
         {
-            kPersonInfoArray[i][0] = kPersonListe[i].getEtternavn();
-            kPersonInfoArray[i][1] = kPersonListe[i].getFornavn();
-            kPersonInfoArray[i][2] = kPersonListe[i].getFirma();
-            kPersonInfoArray[i][3] = "" + kPersonListe[i].getTlfNr();
-            kPersonInfoArray[i][4] = kPersonListe[i].getEpost();
-            kPersonInfoArray[i][5] = kPersonListe[i].getNettside();
+            kPersonInfoArray[i][0] = kPersonListe[i].getIdNr() + ".";
+            kPersonInfoArray[i][1] = kPersonListe[i].getEtternavn();
+            kPersonInfoArray[i][2] = kPersonListe[i].getFornavn();
+            kPersonInfoArray[i][3] = kPersonListe[i].getFirma();
+            kPersonInfoArray[i][4] = "" + kPersonListe[i].getTlfNr();
+            kPersonInfoArray[i][5] = kPersonListe[i].getEpost();
+            kPersonInfoArray[i][6] = kPersonListe[i].getNettside();
         }
         return kPersonInfoArray;
     }
@@ -397,7 +390,7 @@ public class InternHovedside extends JFrame
     private void visInfo()
     {
         JFrame infoVindu;
-        if(type == KONTAKTPERSON)
+        if(type == Kulturhus.KONTAKTPERSON)
         {
             if(kPersonListe == null)
             {
@@ -466,9 +459,9 @@ public class InternHovedside extends JFrame
     private void oppdaterTabell(int t, JLabel knapp)
     {
         type = t;
-        if(type == KONTAKTPERSON)
+        if(type == Kulturhus.KONTAKTPERSON)
             infoListe = kPersonInfoListe();
-        else if(type == LOKALE)
+        else if(type == Kulturhus.LOKALE)
             infoListe = lokaleInfoListe();
         else
             infoListe = arrInfoListe();
@@ -476,8 +469,8 @@ public class InternHovedside extends JFrame
         if(infoListe == null)
         {
             infoListe = new String[27][kolNavn.length];
-            if(type == KONTAKTPERSON || type == LOKALE)
-                visMelding("Det finnes ingen " + ((type == KONTAKTPERSON)?"kontaktpersoner":"lokaler") + " i systemet");
+            if(type == Kulturhus.KONTAKTPERSON || type == Kulturhus.LOKALE)
+                visMelding("Det finnes ingen " + ((type == Kulturhus.KONTAKTPERSON)?"kontaktpersoner":"lokaler") + " i systemet");
             else
                 visMelding("Det finnes ingen arrangementer i den valgte kategorien og perioden.");
             infoKnapp.setEnabled(false);
@@ -490,20 +483,21 @@ public class InternHovedside extends JFrame
         }
         tabellmodell.fireTableDataChanged();
         tabellmodell.fireTableStructureChanged();
-        if(type == KONTAKTPERSON)
+        if(type == Kulturhus.KONTAKTPERSON)
         {
-            infoTabell.getColumnModel().getColumn(0).setPreferredWidth(100);
+            infoTabell.getColumnModel().getColumn(0).setPreferredWidth(20);
             infoTabell.getColumnModel().getColumn(1).setPreferredWidth(100);
             infoTabell.getColumnModel().getColumn(2).setPreferredWidth(100);
             infoTabell.getColumnModel().getColumn(3).setPreferredWidth(100);
-            infoTabell.getColumnModel().getColumn(4).setPreferredWidth(200);
-            infoTabell.getColumnModel().getColumn(5).setPreferredWidth(200);
+            infoTabell.getColumnModel().getColumn(4).setPreferredWidth(100);
+            infoTabell.getColumnModel().getColumn(5).setPreferredWidth(190);
+            infoTabell.getColumnModel().getColumn(6).setPreferredWidth(190);
             fraFelt.setEnabled(false);
             tilFelt.setEnabled(false);
             avlysKnapp.setEnabled(false);
             infoKnapp.setEnabled(true);
         }
-        else if(type == LOKALE)
+        else if(type == Kulturhus.LOKALE)
         {
             infoTabell.getColumnModel().getColumn(0).setPreferredWidth(200);
             infoTabell.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -636,29 +630,29 @@ public class InternHovedside extends JFrame
         public void mouseClicked(MouseEvent e)
         {
             if(e.getSource() == arrangementer)
-                oppdaterTabell(ALLE, arrangementer);
+                oppdaterTabell(Kulturhus.ALLE, arrangementer);
             else if(e.getSource() == faglig)
-                oppdaterTabell(FAGLIGE, faglig);
+                oppdaterTabell(Kulturhus.FAGLIGE, faglig);
             else if(e.getSource() == underholdning)
-                oppdaterTabell(UNDERHOLDNING, underholdning);
+                oppdaterTabell(Kulturhus.UNDERHOLDNING, underholdning);
             else if(e.getSource() == debattkveld)
-                oppdaterTabell(DEBATT, debattkveld);
+                oppdaterTabell(Kulturhus.DEBATT, debattkveld);
             else if(e.getSource() == foredrag)
-                oppdaterTabell(FOREDRAG, foredrag);
+                oppdaterTabell(Kulturhus.FOREDRAG, foredrag);
             else if(e.getSource() == politiskM)
-                oppdaterTabell(POLITISK_MOTE, politiskM);
+                oppdaterTabell(Kulturhus.POLITISK_MOTE, politiskM);
             else if(e.getSource() == bForestilling)
-                oppdaterTabell(BARNE_FORESTILLING, bForestilling);
+                oppdaterTabell(Kulturhus.BARNE_FORESTILLING, bForestilling);
             else if(e.getSource() == kino)
-                oppdaterTabell(KINO, kino);
+                oppdaterTabell(Kulturhus.KINO, kino);
             else if(e.getSource() == konsert)
-                oppdaterTabell(KONSERT, konsert);
+                oppdaterTabell(Kulturhus.KONSERT, konsert);
             else if(e.getSource() == teater)
-                oppdaterTabell(TEATER, teater);
+                oppdaterTabell(Kulturhus.TEATER, teater);
             else if(e.getSource() == kPersoner)
-                oppdaterTabell(KONTAKTPERSON, kPersoner);
+                oppdaterTabell(Kulturhus.KONTAKTPERSON, kPersoner);
             else if(e.getSource() == lokaler)
-                oppdaterTabell(LOKALE, lokaler);
+                oppdaterTabell(Kulturhus.LOKALE, lokaler);
         }
 
         public void mousePressed(MouseEvent e) { }
