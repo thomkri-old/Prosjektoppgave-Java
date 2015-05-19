@@ -44,6 +44,7 @@ public class InternHovedside extends JFrame
     private JMenuItem opprettValgK, opprettValgL, opprettValgA, statistikkValgP, statistikkValgH;
     private int type = ALLE;
     
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu  'kl.' HH:mm");
     private DateTimeFormatter dtfDato = DateTimeFormatter.ofPattern("d-M-uuuu");
     private DateTimeFormatter dtfTid = DateTimeFormatter.ofPattern("d-M-uuuu-HH-mm");
     
@@ -307,7 +308,7 @@ public class InternHovedside extends JFrame
         
         arrListe = lregister.getArrangementer(type, datoArray);
         if(arrListe == null)
-            return null;
+            return new String[27][kolNavn.length];
         
         Arrays.sort(arrListe, new ArrangementDatoSammenlikner());
         
@@ -318,7 +319,7 @@ public class InternHovedside extends JFrame
         for(int i = 0; i < arrListe.length; i++)
         {
             arrInfoArray[i][0] = arrListe[i].getNavn();
-            arrInfoArray[i][1] = arrListe[i].getDatoString();
+            arrInfoArray[i][1] = dtf.format(arrListe[i].getDato());
             arrInfoArray[i][2] = "" + arrListe[i].getBillettprisBarn();
             arrInfoArray[i][3] = "" + arrListe[i].getBillettprisVoksen();
             arrInfoArray[i][4] = arrListe[i].getLokaleNavn();
@@ -380,6 +381,11 @@ public class InternHovedside extends JFrame
         JFrame infoVindu;
         if(type == KONTAKTPERSON)
         {
+            if(kPersonListe == null)
+            {
+                visMelding("Kontaktperson liste tom.");
+                return;
+            }
             if(infoTabell.getSelectedRow() >= kPersonListe.length)
             {
                 visMelding("Du må velge en kontaktperson for å se info.");
@@ -389,6 +395,11 @@ public class InternHovedside extends JFrame
         }
         else
         {
+            if(arrListe == null)
+            {
+                visMelding("Arrangement liste tom.");
+                return;
+            }   
             if(infoTabell.getSelectedRow() >= arrListe.length)
             {
                 visMelding("Du må velge et arrangement for å se info.");
@@ -543,7 +554,7 @@ public class InternHovedside extends JFrame
         
         public String getColumnName(int kolonne)
         {
-            return kolNavn[ kolonne];
+            return kolNavn[kolonne];
         }
 
         public int getRowCount()
@@ -568,8 +579,7 @@ public class InternHovedside extends JFrame
         {
             if(e.getSource() == infoKnapp)
             {
-                if(arrListe != null)
-                    visInfo();
+                visInfo();
             }
             else if(e.getSource() == avlysKnapp)
             {

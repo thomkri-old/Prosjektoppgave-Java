@@ -1,7 +1,8 @@
+import java.io.*;
 import java.time.*;
 import java.util.*;
 
-public class Lokale
+public class Lokale implements Serializable
 {
     private static final int ALLE = -3;
     private static final int FAGLIGE = -2;
@@ -20,8 +21,7 @@ public class Lokale
     private static final int KONSERTSAL = 15;
     
     private String navn;
-    private int type, lokaleNr, antPlasser;
-    private static int nesteNr = 0;
+    private int type, antPlasser;
     private boolean harNrPlasser;
     private Set<Arrangement> arrListe;
     
@@ -30,7 +30,6 @@ public class Lokale
         navn = n;
         type = t;
         harNrPlasser = hNP;
-        lokaleNr = ++nesteNr;
         antPlasser = aP;
         arrListe = new LinkedHashSet<>();
     }

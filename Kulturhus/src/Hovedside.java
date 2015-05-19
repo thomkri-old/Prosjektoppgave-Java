@@ -2,12 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.net.URL;
+import java.io.*;
 import java.text.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Hovedside extends JFrame
+public class Hovedside extends JFrame implements Serializable
 {
     private static final int BANNERBREDDE = 800;
     private static final int BANNERHOYDE = 100;
@@ -38,6 +39,7 @@ public class Hovedside extends JFrame
     private JMenuItem loggInnValg;
     
     private int arrType = ALLE;
+    private String filnavn = "Registre.data";
     private Arrangement[] arrListe;
     
     private Kontaktpersonregister kpregister;
@@ -46,39 +48,17 @@ public class Hovedside extends JFrame
     private Knappelytter knappelytter;
     private Labellytter labellytter;
     
-    DecimalFormat krFormat;
+    private DecimalFormat krFormat;
+    private DateTimeFormatter dtf;
     
-    public Hovedside(Lokalregister l, Kontaktpersonregister k, Kontaktperson kp, Lokale l1, Lokale l2, Lokale l3)
+    public Hovedside()
     {
-        
         super("Målselv Kommune");
         
-        lregister = l;
-        kpregister = k;
         knappelytter = new Knappelytter();
         labellytter = new Labellytter();
         krFormat = new DecimalFormat( "0.00" );
-        
-        URL bildeURL = Hovedside.class.getResource("/bilder/tammy.jpg");
-        ImageIcon bildeIkon = new ImageIcon(bildeURL);
-        
-        URL bildeURL1 = Hovedside.class.getResource("/bilder/lfc.jpeg");
-        ImageIcon bildeIkon1 = new ImageIcon(bildeURL1);
-        
-        LocalDateTime ldtN = LocalDateTime.now();
-        
-        String[] dArray = {"hnifof", "jfiow"};
-        Arrangement a = new Foredrag("Ting og tang", "fjiowgwjiop wnmefo p mo", l1.getNavn(), 1, 125.5, 150, dArray, ldtN, bildeIkon, kp, "hgufoiho");
-        Arrangement a1 = new PolitiskMote("Hallo", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 2, 123, 115, dArray, ldtN, bildeIkon1, kp, "hgufoiho");
-        Arrangement a2 = new Kino("Det jeg gjør", "fjiowgwjiop wnmefo p mo", l2.getNavn(), 4, 124.4, 123, dArray, ldtN, bildeIkon, kp, "hgufoiho", 128, 18);
-        Arrangement a3 = new Konsert("Fakta og sånt", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 5, 123, 124, dArray, ldtN, bildeIkon, kp, "hgufoiho");
-        Arrangement a4 = new Teater("Foredrag om foredrag", "fjiowgwjiop wnmefo p mo", l3.getNavn(), 6, 44.5, 98, dArray, ldtN, bildeIkon1, kp, "hgufoiho");
-        
-        l1.settInnArr(a);
-        l2.settInnArr(a1);
-        l3.settInnArr(a3);
-        l2.settInnArr(a2);
-        l3.settInnArr(a4);
+        dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu  'kl.' HH:mm");
         
         ansattMeny = new JMenu("Ansatt");
         ansattMeny.setMnemonic('A');
@@ -204,7 +184,6 @@ public class Hovedside extends JFrame
         if(aL == null)
         {
             aL = new ImageIcon[1];
-            visMelding("Det finnes ingen arrangementer i dag.");
         }
         
         infoFelt = new JList<>(aL);
@@ -296,6 +275,9 @@ public class Hovedside extends JFrame
     
     private ImageIcon[] arrangementerListe()
     {
+        if(lregister == null)
+            return null;
+        
         LocalDate[] datoArray;
         try
         {
@@ -349,7 +331,7 @@ public class Hovedside extends JFrame
             navn.setFont(new Font(navn.getFont().getName(), Font.BOLD, 16));
             navn.setPreferredSize(new Dimension(200, navn.getSize().height + 25));
             JLabel pris = new JLabel("Pris: " + krFormat.format(arrListe[i].getBillettprisBarn()) + ",- / " + krFormat.format(arrListe[i].getBillettprisVoksen()) + ",-");
-            JLabel dato = new JLabel("Dato: " + arrListe[i].getDatoString());
+            JLabel dato = new JLabel("Dato: " + dtf.format(arrListe[i].getDato()));
 
             ArrbildePanel plakat = new ArrbildePanel(arrListe[i].getArrBilde());
             panel.add(plakat);
@@ -398,6 +380,55 @@ public class Hovedside extends JFrame
         infoFelt.setSelectedIndex(0);
         setValgtKnapp(knapp);
     }
+    
+    public void skrivTilFil() //Metode som skriver registrene til en fil
+	{
+            try(ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filnavn)))
+            {
+                output.writeObject(lregister);
+                output.writeObject(kpregister);
+                output.writeInt(Arrangement.getNesteId());
+                output.writeInt(Kontaktperson.getNesteNr());
+            }
+            catch (NotSerializableException nse)
+            {
+                visMelding("En eller flere av objektene er ikke serialiserbare!\nIngen registrering på fil!");
+            }
+            catch (IOException ioe)
+            {
+                visMelding("Det oppstod en feil ved skriving til fil.");
+            }
+	}
+
+	public void lesFraFil() //Metode som leser registrene fra en fil
+	{
+            try(ObjectInputStream input = new ObjectInputStream(new FileInputStream(filnavn)))
+            {
+                lregister = (Lokalregister) input.readObject();
+                kpregister = (Kontaktpersonregister) input.readObject();
+                Arrangement.setNesteId(input.readInt());
+                Kontaktperson.setNesteNr(input.readInt());
+            }
+            catch(ClassNotFoundException cnfe)
+            {
+                visMelding("Fant ikke definisjon av objektene.\nOppretter tomme registre.");
+                lregister = new Lokalregister();
+                kpregister = new Kontaktpersonregister();
+            }
+            catch(FileNotFoundException fnfe)
+            {
+                visMelding("Finner ikke angitt fil.\nOppretter tomme registre.");
+                lregister = new Lokalregister();
+                kpregister = new Kontaktpersonregister();
+            }
+            catch(IOException ioe)
+            {
+                visMelding("Fikk ikke lest fra fila.\nOppretter tomme registre.");
+                lregister = new Lokalregister();
+                kpregister = new Kontaktpersonregister();
+            }
+            oppdaterArrangementer(ALLE, arrangementer);
+	}
     
     private void visInfo()
     {

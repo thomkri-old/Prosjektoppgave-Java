@@ -1,7 +1,8 @@
+import java.io.*;
 import java.time.*;
 import java.util.*;
 
-public class Lokalregister
+public class Lokalregister implements Serializable
 {   
     private List<Lokale> register;
     

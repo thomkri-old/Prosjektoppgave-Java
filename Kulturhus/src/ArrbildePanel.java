@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.net.*;
 import javax.swing.*;
 
 public class ArrbildePanel extends JPanel

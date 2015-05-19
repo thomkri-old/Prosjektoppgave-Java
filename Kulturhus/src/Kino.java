@@ -1,7 +1,8 @@
+import java.io.*;
 import java.time.*;
 import javax.swing.*;
 
-public class Kino extends UnderholdningsArrangement
+public class Kino extends UnderholdningsArrangement implements Serializable
 {
     private int aldersgrense, lengde; //Lengde i minutter
     

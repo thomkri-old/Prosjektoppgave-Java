@@ -1,4 +1,6 @@
-public class Kontaktperson
+import java.io.*;
+
+public class Kontaktperson implements Serializable
 {
     private String fornavn, etternavn, epost, nettside, firma, opplysninger;
     private int tlfNr, type, idNr;
@@ -59,6 +61,16 @@ public class Kontaktperson
     public void setType(int t)
     {
         type = t;
+    }
+    
+    public static int getNesteNr()
+    {
+        return nesteNr;
+    }
+    
+    public static void setNesteNr(int nNr)
+    {
+        nesteNr = nNr;
     }
     
     public String toString()

@@ -1,8 +1,8 @@
+import java.io.*;
 import java.time.*;
 import javax.swing.*;
 
-
-public abstract class FagligArrangement extends Arrangement
+public abstract class FagligArrangement extends Arrangement implements Serializable
 {
     String tema;
     

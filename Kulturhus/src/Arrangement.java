@@ -1,9 +1,12 @@
+import java.io.*;
 import java.util.*;
 import java.time.*;
-import java.time.format.*;
+import java.time.format.DateTimeFormatter;
+
 import javax.swing.*;
 
-public abstract class Arrangement {
+public abstract class Arrangement implements Serializable
+{
 
     private String navn, program, lokaleNavn;
     private int arrId, bilSolgt = 0;
@@ -13,7 +16,6 @@ public abstract class Arrangement {
     private int[] plasser;
     private String[] deltakere;
     private LocalDateTime dato;
-    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu  'kl.' HH:mm");
     private Kontaktperson kPerson;
     private ImageIcon arrBilde;
     private Set<Billett> billettListe;
@@ -59,11 +61,6 @@ public abstract class Arrangement {
         return dato;
     }
 
-    public String getDatoString()
-    {
-        return dtf.format(dato);
-    }
-
     public int getLedigePlasser()
     {
         return plasser.length - bilSolgt;
@@ -92,6 +89,16 @@ public abstract class Arrangement {
     public int getPlassNr()
     {
         return ++bilSolgt;
+    }
+    
+    public static int getNesteId()
+    {
+        return nesteId;
+    }
+    
+    public static void setNesteId(int nId)
+    {
+        nesteId = nId;
     }
 
     public void setPlasser(int antP)
@@ -135,7 +142,7 @@ public abstract class Arrangement {
 
     public String toString()
     {
-        String tekst = navn + "\n" + dtf.format(dato) + "\nDeltakere:";
+        String tekst = navn + "\n" + dato.toString() + "\nDeltakere:";
         for (int i = 0; i < deltakere.length; i++) {
             tekst += " " + deltakere[i];
             if (i != deltakere.length - 1) {

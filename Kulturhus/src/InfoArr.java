@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
+import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -26,6 +27,7 @@ public class InfoArr extends JFrame
     private Arrangement arrangement;
     
     private DecimalFormat krFormat = new DecimalFormat( "0.00" );
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu  'kl.' HH:mm");
     private boolean erKunde;
     
     public InfoArr(Arrangement a, boolean eK)
@@ -49,7 +51,7 @@ public class InfoArr extends JFrame
         
         lagInfoUtskrift(arrangement.getNavn() + "\n", 20, true, false);
         lagInfoUtskrift("\nDato:", 14, true, false);
-        lagInfoUtskrift("\t\t" + arrangement.getDatoString(), 14, false, false);
+        lagInfoUtskrift("\t\t" + dtf.format(arrangement.getDato()), 14, false, false);
         lagInfoUtskrift("\nPris*:", 14, true, false);
         lagInfoUtskrift("\t\t" + krFormat.format(arrangement.getBillettprisBarn()) + ",- / " + krFormat.format(arrangement.getBillettprisVoksen()) + ",-", 14, false, false);
         if(arrangement.getType() == KINO)

@@ -1,7 +1,8 @@
+import java.io.*;
 import java.time.*;
 import javax.swing.*;
 
-public abstract class UnderholdningsArrangement extends Arrangement
+public abstract class UnderholdningsArrangement extends Arrangement implements Serializable
 {
     private String sjanger;
     

@@ -1,6 +1,7 @@
+import java.io.*;
 import java.util.*;
 
-public class Kontaktpersonregister
+public class Kontaktpersonregister implements Serializable
 {
     private List<Kontaktperson> register;
     

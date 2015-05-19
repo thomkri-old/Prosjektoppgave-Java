@@ -1,7 +1,8 @@
+import java.io.*;
 import java.time.*;
 import javax.swing.*;
 
-public class Debattkveld extends FagligArrangement
+public class Debattkveld extends FagligArrangement implements Serializable
 {
     public Debattkveld(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP, String tm)
     {

@@ -1,7 +1,8 @@
+import java.io.*;
 import java.time.*;
 import javax.swing.*;
 
-public class Barneforestilling extends UnderholdningsArrangement
+public class Barneforestilling extends UnderholdningsArrangement implements Serializable
 {
     public Barneforestilling(String n, String p, String lN, int t, double bpB , double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP, String sj)
     {

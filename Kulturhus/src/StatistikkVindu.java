@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.*;
 import java.text.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.*;
@@ -9,12 +10,14 @@ public class StatistikkVindu extends JFrame
     private static final int BREDDE = 600;
     private static final int HOYDE = 300;
     
-    private JPanel antArrPanel, mestInntektArrPanel, vindu, infoPanel;
+    private JPanel antArrPanel, mestInntektArrPanel, vindu, knappePanel;
     private JTabbedPane tabbedPane;
     private JTextPane aAPPane, mIAPPane;
     private JScrollPane aAPScroll, mIAPScroll;
+    private JButton lukkAAPKnapp, lukkMIAPKnapp, oppdaterAAPKnapp, oppdaterMIAPKnapp;
     
     private Lokalregister lregister;
+    private Kommandolytter knappelytter;
     
     private DecimalFormat krFormat = new DecimalFormat( "0.00" );
     
@@ -23,6 +26,7 @@ public class StatistikkVindu extends JFrame
         super("Statistikk");
         
         lregister = l;
+        knappelytter = new Kommandolytter();
         
         tabbedPane = new JTabbedPane();
         tabbedPane.setUI(new BasicTabbedPaneUI());
@@ -72,12 +76,23 @@ public class StatistikkVindu extends JFrame
         aAPScroll.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         aAPScroll.setPreferredSize(new Dimension(BREDDE, HOYDE));
         
+        oppdaterAAPKnapp = new JButton("Oppdater");
+        oppdaterAAPKnapp.addActionListener(knappelytter);
+        lukkAAPKnapp = new JButton("Lukk");
+        lukkAAPKnapp.addActionListener(knappelytter);
+        
+        knappePanel = new JPanel(new FlowLayout());
+        knappePanel.add(oppdaterAAPKnapp);
+        knappePanel.add(lukkAAPKnapp);
+        
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.gridx = 0;
         gbc.gridy = 0;
         
         vindu.add(aAPScroll, gbc);
+        gbc.gridy++;
+        vindu.add(knappePanel, gbc);
         
         return vindu;
     }
@@ -106,12 +121,23 @@ public class StatistikkVindu extends JFrame
         mIAPScroll.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         mIAPScroll.setPreferredSize(new Dimension(BREDDE, HOYDE));
         
+        oppdaterMIAPKnapp = new JButton("Oppdater");
+        oppdaterMIAPKnapp.addActionListener(knappelytter);
+        lukkMIAPKnapp = new JButton("Lukk");
+        lukkMIAPKnapp.addActionListener(knappelytter);
+        
+        knappePanel = new JPanel(new FlowLayout());
+        knappePanel.add(oppdaterMIAPKnapp);
+        knappePanel.add(lukkMIAPKnapp);
+        
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.gridx = 0;
         gbc.gridy = 0;
         
         vindu.add(mIAPScroll, gbc);
+        gbc.gridy++;
+        vindu.add(knappePanel, gbc);
         
         return vindu;
     }
@@ -142,5 +168,26 @@ public class StatistikkVindu extends JFrame
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
+    }
+    
+    private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            if(e.getSource() == oppdaterAAPKnapp)
+            {
+                setTabbedPane();
+                tabbedPane.setSelectedIndex(0);
+            }
+            else if(e.getSource() == oppdaterMIAPKnapp)
+            {
+                setTabbedPane();
+                tabbedPane.setSelectedIndex(1);
+            }
+            else if(e.getSource() == lukkAAPKnapp)
+                lukkVindu();
+            else if(e.getSource() == lukkMIAPKnapp)
+                lukkVindu();
+        }
     }
 }

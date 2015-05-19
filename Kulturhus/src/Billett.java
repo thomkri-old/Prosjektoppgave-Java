@@ -1,4 +1,6 @@
-public class Billett
+import java.io.*;
+
+public class Billett implements Serializable
 {
     private String fornavn, etternavn, epost, arrNavn, lokaleNavn;
     private int plassNr, tlf;

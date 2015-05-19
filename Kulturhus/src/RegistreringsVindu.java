@@ -331,20 +331,21 @@ public class RegistreringsVindu extends JFrame
         gbc.gridy++;
         utfylling.add(kPersonValg, gbc);
         
+        avbrytKnappA = new JButton("Avbryt");
+        avbrytKnappA.addActionListener(knappelytter);
+        regKnappA = new JButton("Registrer");
+        regKnappA.addActionListener(knappelytter);
+        
         GridBagConstraints gbcK = new GridBagConstraints();
         gbcK.anchor = GridBagConstraints.LINE_START;
         gbcK.insets = new Insets(5, 5, 5, 5);
         gbcK.gridx = 0;
         gbcK.gridy = 0;
         
-        avbrytKnappA = new JButton("Avbryt");
-        avbrytKnappA.addActionListener(knappelytter);
-        regKnappA = new JButton("Registrer");
-        regKnappA.addActionListener(knappelytter);
-        knapper.add(avbrytKnappA, gbcK);
+        knapper.add(regKnappA, gbcK);
         gbcK.gridx++;
         gbcK.anchor = GridBagConstraints.LINE_END;
-        knapper.add(regKnappA, gbcK);
+        knapper.add(avbrytKnappA, gbcK);
     }
     
     private void opprettKpersonVindu()
@@ -417,12 +418,10 @@ public class RegistreringsVindu extends JFrame
         gbcK.gridx = 0;
         gbcK.gridy = 0;
         
-        knapper.add(avbrytKnappKP, gbcK);
-        
+        knapper.add(regKnappKP, gbcK);
         gbcK.gridx++;
         gbcK.anchor = GridBagConstraints.LINE_END;
-        
-        knapper.add(regKnappKP, gbcK);
+        knapper.add(avbrytKnappKP, gbcK);
     }
     
     private void opprettLokaleVindu()
@@ -486,12 +485,10 @@ public class RegistreringsVindu extends JFrame
         gbcK.gridx = 0;
         gbcK.gridy = 0;
         
-        knapper.add(avbrytKnappL, gbcK);
-        
+        knapper.add(regKnappL, gbcK);
         gbcK.gridx++;
         gbcK.anchor = GridBagConstraints.LINE_END;
-        
-        knapper.add(regKnappL, gbcK);
+        knapper.add(avbrytKnappL, gbcK);
     }
     
     private void opprett(int t)

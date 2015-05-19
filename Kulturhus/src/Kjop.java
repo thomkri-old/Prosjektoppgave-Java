@@ -1,10 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.text.*;
+import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.text.*;
 
-public class Kjop extends JFrame
+public class Kjop extends JFrame implements Serializable
 {
     private JPanel vindu, infoPanel, hoyrePanel, kjopPanel, knappePanel, bildePanel, valgPanel;
     private JTextPane arrInfo;
@@ -20,6 +22,7 @@ public class Kjop extends JFrame
     private Arrangement arrangement;
     
     DecimalFormat krFormat;
+    private DateTimeFormatter dtf;
     
     public Kjop(Arrangement a)
     {
@@ -28,6 +31,7 @@ public class Kjop extends JFrame
         arrangement = a;
         knappelytter = new Kommandolytter();
         krFormat = new DecimalFormat( "0.00" );
+        dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu  'kl.' HH:mm");
         
         vindu = new JPanel(new GridBagLayout());
         vindu.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -44,7 +48,7 @@ public class Kjop extends JFrame
         
         lagInfoUtskrift(arrangement.getNavn() + "\n", 20, true, false);
         lagInfoUtskrift("\nDato:", 14, true, false);
-        lagInfoUtskrift("\t\t" + arrangement.getDatoString(), 14, false, false);
+        lagInfoUtskrift("\t\t" + dtf.format(arrangement.getDato()), 14, false, false);
         lagInfoUtskrift("\nPris*:", 14, true, false);
         lagInfoUtskrift("\t\t" + krFormat.format(arrangement.getBillettprisBarn()) + ",- / " + krFormat.format(arrangement.getBillettprisVoksen()) + ",-", 14, false, false);
         lagInfoUtskrift("\nLedige plasser:", 14, true, false);
