@@ -1,3 +1,8 @@
+/*Opprettet av: Sara Torp Myhre
+Sist endret: 16.05.2015
+
+Filen inneholder klassen InfoArr.*/
+
 import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
@@ -5,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.text.*;
 
+//Klassen er en subklasse av JFrame. Klassen er Info vindu som viser info om et bestemt arrangement
 public class InfoArr extends JFrame
 {
     private static final int SCROLLSPEED = 16;
@@ -30,6 +36,10 @@ public class InfoArr extends JFrame
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d. MMMM uuuu  'kl.' HH:mm");
     private boolean erKunde;
     
+    /*Metoden er konstruktøren til klassen InfoArr.
+    Konstruktøren oppretter og setter sammen objektene som utgjør utseendet til vinduet.
+    Parametrenes betydning: a = Arrangement objektet det skal vises info om,
+    eK = variabel som tilsier om vinduet skal vises for kunder eller ansatte(hvis true så er det for kunder)*/
     public InfoArr(Arrangement a, boolean eK)
     {
         super("Info om " + a.getNavn());
@@ -135,6 +145,9 @@ public class InfoArr extends JFrame
         setVisible(true);
     }
     
+    /*Metode som tar parametrene og skriver tekst på JTextPane-objektet arrInfo. Parameterets betydning: 
+    tekst = teksten som skal skrives, fontStr = størrelsen på skriften som skal skrives, fetSkrift = true hvis teksten skal
+    ha fet skrift og false hvis ikke, kursivSkrift = true hvis teksten skal ha kursiv skrift og false hvis ikke*/
     private void lagInfoUtskrift(String tekst, int fontStr, boolean fetSkrift, boolean kursivSkrift)
     {
         SimpleAttributeSet style = new SimpleAttributeSet();
@@ -153,23 +166,25 @@ public class InfoArr extends JFrame
         }
     }
     
-    private void lukkVindu()
+    private void lukkVindu() //Metode som lukker vinduet
     {
         this.dispose();
     }
     
-    public void kjopBillett()
+    public void kjopBillett() //Metode som åpner et kjøp vindu for arrangementet som er sendt med til klassen
     {
         JFrame kjopVindu = new Kjop(arrangement);
         kjopVindu.setLocationRelativeTo(this);
     }
     
+    //Metode som tar parameteret og oppretter en popup-boks. Parameterets betydning: melding = teksten som skal skrives på popup-boksen.
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
     }
     
-    private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    //Klasse som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    private class Kommandolytter implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
         {

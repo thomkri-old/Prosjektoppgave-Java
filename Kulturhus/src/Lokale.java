@@ -1,7 +1,13 @@
+/*Opprettet av: Sara Torp Myhre
+Sist endret: 15.05.2015
+
+Filen inneholder klassen Lokale.*/
+
 import java.io.*;
 import java.time.*;
 import java.util.*;
 
+//Klassen er en klasse for alle lokaler, og den implementerer Serializable.
 public class Lokale implements Serializable
 {
     private static final int ALLE = -3;
@@ -25,6 +31,10 @@ public class Lokale implements Serializable
     private boolean harNrPlasser;
     private Set<Arrangement> arrListe;
     
+    /*Metoden er konstruktøren til klassen Lokale. Paramtrenes betydning:
+    n = lokalets navn, t = lokalets type i form av et heltall(se Kulturhus.java),
+    aP = antall plasser i lokalet, hNP = variabel som angir om lokalet har
+    nummererte plasser eller ikke(true hvis lokalet har det, false hvis ikke)*/
     public Lokale(String n, int t, int aP, boolean hNP)
     {
         navn = n;
@@ -34,27 +44,28 @@ public class Lokale implements Serializable
         arrListe = new LinkedHashSet<>();
     }
     
-    public String getNavn()
+    public String getNavn() //Get-metode for lokalets navn
     {
         return navn;
     }
     
-    public int getAntPlasser()
+    public int getAntPlasser() //Get-metode for antall plasser i lokalet
     {
         return antPlasser;
     }
     
+    //Get-metode for antall arrangementer i arrListe objektet som inneholder alle arrangementer koblet til lokalet
     public int getAntArr()
     {
         return arrListe.size();
     }
     
-    public int getType()
+    public int getType() //Get-metode for hva slags type lokalet det er
     {
         return type;
     }
     
-    public String getTypeTekst()
+    public String getTypeTekst() //Get-metode for hva slags type lokale det er som et tekst objekt
     {
         if(type == TEATERSAL)
             return "Teatersal";
@@ -68,30 +79,20 @@ public class Lokale implements Serializable
             return "Konsertsal";
     }
     
-    public boolean getHarNrPlasser()
+    public boolean getHarNrPlasser() //Get-metode for om lokalet har nummererte plasser eller ikk
     {
         return harNrPlasser;
     }
     
+    //Metode som setter inn arrangementet, gitt i parameteret, inn i lokalets arrangement liste
     public void settInnArr(Arrangement a)
     {
         a.setPlasser(antPlasser);
         arrListe.add(a);
     }
     
-    public Arrangement[] getArrangementer()
-    {
-        if(arrListe.isEmpty())
-            return null;
-        
-        Iterator<Arrangement> arrIter = arrListe.iterator();        
-        Arrangement[] arrangementer = new Arrangement[arrListe.size()];
-        int i = 0;
-        while(arrIter.hasNext())
-            arrangementer[i++] = arrIter.next();
-        return arrangementer;
-    }
-    
+    /*Metode som returnerer en array av alle arrangementer fra lokalets arrangement liste av typen t,
+    sendt med i parameteret, og som holdes på en av datoene i dArray, sendt med i parameteret*/
     public Arrangement[] getArrangementer(int t, LocalDate[] dArray)
     {
         if(arrListe.isEmpty())
@@ -152,6 +153,7 @@ public class Lokale implements Serializable
         return arrangementer;
     }
     
+    //Metode som returnerer en array av de 10 arrangementene, fra lokalets arrangement liste, som har mest inntekt
     public Arrangement[] getMestInntektArr()
     {
         if(arrListe.isEmpty())
@@ -178,6 +180,9 @@ public class Lokale implements Serializable
         return mestInntektArray;
     }
     
+    /*Metode som returnerer antall arrangementer fra lokalets arrangement liste av typen t,
+    sendt med i parameteret, og som holdes på en av datoene i dArray, sendt med i parameteret,
+    ved hjelp av Iterator<Arrangement> objektet iter, sendt med i parameteret.*/
     private int getAntArr(int t, LocalDate[] dArray, Iterator<Arrangement> iter)
     {
         if(arrListe.isEmpty())
@@ -235,6 +240,8 @@ public class Lokale implements Serializable
         return ant;
     }
     
+    /*Metode som fjerner Arrangementet avlysA, sendt med i parameteret, og returnerer true 
+    hvis den finner avlysA i lokalets arrangement liste og sletter det, ellers false*/
     public boolean avlysArr(Arrangement avlysA)
     {
         if(arrListe.isEmpty())

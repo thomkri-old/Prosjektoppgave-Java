@@ -1,8 +1,14 @@
+/*Opprettet av: Sara Torp Myhre
+Sist endret: 16.05.2015
+
+Filen inneholder klassen InfoKPerson.*/
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
+//Klassen er en subklasse av JFrame. Klassen er Info vindu som viser info om en bestemt Kontaktperson
 public class InfoKPerson extends JFrame
 {
     private static final int SCROLLSPEED = 16;
@@ -16,6 +22,9 @@ public class InfoKPerson extends JFrame
     
     private Kontaktperson kPerson;
     
+    /*Metoden er konstruktøren til klassen InfoKPerson.
+    Konstruktøren oppretter og setter sammen objektene som utgjør utseendet til vinduet.
+    Parametrenes betydning: k = Kontaktperson objektet det skal vises info om.*/
     public InfoKPerson(Kontaktperson k)
     {
         super("Info om " + k.getNavn());
@@ -70,6 +79,9 @@ public class InfoKPerson extends JFrame
         setVisible(true);
     }
     
+    /*Metode som tar parametrene og skriver tekst på JTextPane-objektet info. Parameterets betydning: 
+    tekst = teksten som skal skrives, fontStr = størrelsen på skriften som skal skrives, fetSkrift = true hvis teksten skal
+    ha fet skrift og false hvis ikke, kursivSkrift = true hvis teksten skal ha kursiv skrift og false hvis ikke*/
     private void lagInfoUtskrift(String tekst, int fontStr, boolean fetSkrift, boolean kursivSkrift)
     {
         SimpleAttributeSet style = new SimpleAttributeSet();
@@ -88,17 +100,19 @@ public class InfoKPerson extends JFrame
         }
     }
     
-    private void lukkVindu()
+    private void lukkVindu() //Metode som lukker vinduet
     {
         this.dispose();
     }
     
+    //Metode som tar parameteret og oppretter en popup-boks. Parameterets betydning: melding = teksten som skal skrives på popup-boksen.
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
     }
     
-    private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    //Klasse som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    private class Kommandolytter implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
         {
@@ -106,4 +120,4 @@ public class InfoKPerson extends JFrame
                 lukkVindu();
         }
     }
-}
+} //End of class InfoKPerson

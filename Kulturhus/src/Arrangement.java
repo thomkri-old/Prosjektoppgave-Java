@@ -8,7 +8,7 @@ import java.util.*;
 import java.time.*;
 import javax.swing.*;
 
-//Klassen er en abstrakt superklasse for alle arrangementer som implementerer Serializable.
+//Klassen er en abstrakt superklasse for alle arrangementer, og den implementerer Serializable.
 public abstract class Arrangement implements Serializable
 {
 
@@ -27,7 +27,7 @@ public abstract class Arrangement implements Serializable
     /*Metoden er konstruktøren til klassen Arrangement. Paramtrenes betydning:
     n = navn, p = program, lN = navnet på lokalet arrangementet holdes i, t = et heltatll som tilsier hvordan type arrangement det er(se Kulturhus.java),
     bpB = billettpris for barn, bpV = billettpris for voksne, dt = en array med navn over alle deltakere i arrangementet, d = Objekt med dato og tidspunkt for arrangementet,
-    ab = ImageIcon som innneholder arrangemntets bilde(plakat), kP = Kontaktperson objekt av kontaktpersonen som er knyttet til arrangementet.*/
+    aB = ImageIcon som innneholder arrangemntets bilde(plakat), kP = Kontaktperson objekt av kontaktpersonen som er knyttet til arrangementet.*/
     public Arrangement(String n, String p, String lN, int t, double bpB, double bpV, String[] dt, LocalDateTime d, ImageIcon aB, Kontaktperson kP)
     {
         navn = n;

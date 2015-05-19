@@ -1,3 +1,8 @@
+/*Opprettet av: Sara Torp Myhre
+Sist endret: 18.05.2015
+
+Filen inneholder klassen StatistikkVindu.*/
+
 import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
@@ -5,6 +10,8 @@ import javax.swing.*;
 import javax.swing.plaf.basic.*;
 import javax.swing.text.*;
 
+/*Klassen er en subklasse av JFrame. Klassen er et vindu hvor ansatte kan se
+forskjellig statistikk for systemet.*/
 public class StatistikkVindu extends JFrame
 {
     private static final int BREDDE = 600;
@@ -21,6 +28,10 @@ public class StatistikkVindu extends JFrame
     
     private DecimalFormat krFormat = new DecimalFormat( "0.00" );
     
+    /*Metoden er konstruktøren til klassen StatistikkVindu.
+    Konstruktøren oppretter og setter sammen objektene som utgjør utseendet til vinduet.
+    Parametrenes betydning: l = Lokalregister objektet som brukes felles for hele programmet,
+    valgtFane = indeksen på fanen som skal være valgt når vinduet blir laget.*/
     public StatistikkVindu(Lokalregister l, int valgtFane)
     {
         super("Statistikk");
@@ -45,6 +56,7 @@ public class StatistikkVindu extends JFrame
         setVisible(true);
     }
     
+    //Metode som resetter JTabbedPane objektet tabbedpane, og legger til alle JPanels til fanene på nytt
     private void setTabbedPane()
     {
         tabbedPane.removeAll();
@@ -54,6 +66,8 @@ public class StatistikkVindu extends JFrame
         tabbedPane.addTab("Arr. med høyest inntekt", null, mestInntektArrPanel, "De 10 mest inntektsbrinngende arrangementene");
     }
     
+    /*Metode som oppretter alle objektene som skal vises i fanen for opprettelse av JPanel'en i fanen for
+    Arr. per Lokale og returnerer et JPanel objekt med alle disse objektene i seg.*/
     private JPanel opprettAAPVindu()
     {
         vindu = new JPanel(new GridBagLayout());
@@ -97,6 +111,8 @@ public class StatistikkVindu extends JFrame
         return vindu;
     }
     
+    /*Metode som oppretter alle objektene som skal vises i fanen for opprettelse av JPanel'en i fanen for
+    Arr. med høyest inntekt og returnerer et JPanel objekt med alle disse objektene i seg.*/
     private JPanel opprettMIAPVindu()
     {
         vindu = new JPanel(new GridBagLayout());
@@ -142,6 +158,10 @@ public class StatistikkVindu extends JFrame
         return vindu;
     }
     
+    /*Metode som tar parametrene og skriver tekst på JTextPane-objektet pane, gitt i parameteret. Parameterets betydning: 
+    tekst = teksten som skal skrives, fontStr = størrelsen på skriften som skal skrives, fetSkrift = true hvis teksten skal
+    ha fet skrift og false hvis ikke, kursivSkrift = true hvis teksten skal ha kursiv skrift og false hvis ikke,
+    pane = JTextPane-objektet teksten skal skrives på.*/
     private void lagInfoUtskrift(String tekst, int fontStr, boolean fetSkrift, boolean kursivSkrift, JTextPane pane)
     {
         SimpleAttributeSet style = new SimpleAttributeSet();
@@ -160,17 +180,19 @@ public class StatistikkVindu extends JFrame
         }
     }
     
-    private void lukkVindu()
+    private void lukkVindu() //Metode som lukker vinduet
     {
         this.dispose();
     }
     
+    //Metode som tar parameteret og oppretter en popup-boks. Parameterets betydning: melding = teksten som skal skrives på popup-boksen.
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
     }
     
-    private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    //Klasse som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    private class Kommandolytter implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
         {

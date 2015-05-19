@@ -1,9 +1,16 @@
+/*Opprettet av: Thomas Kristiansen
+Sist endret: 18.05.2015
+
+Filen inneholder klassen BilKjoperInfoVindu.*/
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
+/*Klassen er en subklasse av JFrame. Klassen er et vindu som skal vise info
+om alle som har kjøpt billetter til et gitt arrangement etter det er avlyst.*/
 public class BilKjoperInfoVindu extends JFrame
 {
     private JPanel vindu, lagrePanel;
@@ -19,6 +26,8 @@ public class BilKjoperInfoVindu extends JFrame
     
     private Kommandolytter knappelytter;
     
+    /*Metoden er konstruktøren til klassen Barneforestilling. Parameterets betydning: a = Arrangement objektet som har blitt avlyst.
+    Konstruktøren oppretter og setter sammen objektene som utgjør utseendet til vinduet.*/
     public BilKjoperInfoVindu(Arrangement a)
     {
         super("Solgte biletter til " + a.getNavn());
@@ -82,6 +91,8 @@ public class BilKjoperInfoVindu extends JFrame
         setVisible(true);
     }
     
+    /*Metode som starter et filvelger vindu, som gjør at brukeren kan lagre teksten
+    om alle kjøpte billetter som tekst fil lokalt på PCen sin*/
     private void kjorFilLagrer()
     {       
         filvelger = new JFileChooser();
@@ -107,6 +118,9 @@ public class BilKjoperInfoVindu extends JFrame
         }
     }
     
+    /*Metode som tar parametrene og skriver tekst på JTextPane-objektet info. Parameterets betydning: 
+    tekst = teksten som skal skrives, fontStr = størrelsen på skriften som skal skrives, fetSkrift = true hvis teksten skal
+    ha fet skrift og false hvis ikke, kursivSkrift = true hvis teksten skal ha kursiv skrift og false hvis ikke*/
     private void lagInfoUtskrift(String tekst, int fontStr, boolean fetSkrift, boolean kursivSkrift)
     {
         SimpleAttributeSet style = new SimpleAttributeSet();
@@ -125,17 +139,19 @@ public class BilKjoperInfoVindu extends JFrame
         }
     }
     
-    private void lukkVindu()
+    private void lukkVindu() //Metode som lukker vinduet
     {
         this.dispose();
     }
     
+    //Metode som tar parameteret og oppretter en popup-boks. Parameterets betydning: melding = teksten som skal skrives på popup-boksen.
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
     }
     
-    private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    //Klasse som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    private class Kommandolytter implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
         {
@@ -145,4 +161,4 @@ public class BilKjoperInfoVindu extends JFrame
                 kjorFilLagrer();
         }
     }
-}
+} //End of class BilKjoperInfoVindu

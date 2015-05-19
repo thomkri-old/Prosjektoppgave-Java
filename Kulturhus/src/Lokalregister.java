@@ -1,26 +1,36 @@
+/*Opprettet av: Thomas Kristiansen
+Sist endret: 18.05.2015
+
+Filen inneholder klassen Lokaleregister.*/
+
 import java.io.*;
 import java.time.*;
 import java.util.*;
 
+//Klassen er et register for alle lokaler i systemet. Klassen implementerer Serializable
 public class Lokalregister implements Serializable
 {   
     private List<Lokale> register;
     
+    //Metoden er konstruktøren til klassen Lokaleregister.
     public Lokalregister()
     {
         register = new LinkedList<>();
     }
     
+    //Metode som setter parameteret l inn i registeret
     public void settInn(Lokale l)
     {
         register.add(l);
     }
     
-    public void sorter()
+    public void sorter() //Metode som sorterer registeret ved hjelp av KPersonsammenlikner klassen
     {
         Collections.sort(register, new Lokalesammenlikner());
     }
     
+    /*Metode som returnerer en array av alle arrangementer fra alle lokaler i registeret av typen t,
+    sendt med i parameteret, og som holdes på en av datoene i dArray, sendt med i parameteret*/
     public Arrangement[] getArrangementer(int type, LocalDate[] dArray)
     {
         if(register.isEmpty())
@@ -54,6 +64,7 @@ public class Lokalregister implements Serializable
         return arrangementer;
     }
     
+    //Metode som returnerer en array av de 10 arrangementene, fra alle lokalene i registeret, som har mest inntekt
     public Arrangement[] getMestInntektArr()
     {
         if(register.isEmpty())
@@ -87,6 +98,7 @@ public class Lokalregister implements Serializable
         return mestInntektArray;
     }
     
+    //Metode som returnerer alle lokaler i registeret i form av en array
     public Lokale[] getLokaler()
     {
         if(register.isEmpty())
@@ -101,6 +113,7 @@ public class Lokalregister implements Serializable
         return lokaler;
     }
     
+    //Metode som returnerer alle lokaler av typen type, sendt med i paramteteret, som en array
     public Lokale[] getLokaler(int type)
     {
         if(register.isEmpty())
@@ -119,6 +132,7 @@ public class Lokalregister implements Serializable
         return lokaler;
     }
     
+    //Metode som returnerer antall lokaler av typen type, sendt med i paramteteret, ved hjelp av Itertator<Lokale> objektet iter
     private int antLokaler(int type, Iterator<Lokale> iter)
     {
         if(register.isEmpty())
@@ -133,6 +147,8 @@ public class Lokalregister implements Serializable
         return ant;
     }
     
+    /*Metode som fjerner Arrangementet avlysA, sendt med i parameteret, og returnerer true 
+    hvis den finner avlysA ,i ett av arrangement listene til lokalene i registeret, og sletter det, ellers false*/
     public boolean avlysArr(Arrangement avlysA)
     {
         if(register.isEmpty())

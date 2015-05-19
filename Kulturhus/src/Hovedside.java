@@ -1,3 +1,8 @@
+/*Opprettet av: Sara Torp Myhre
+Sist endret: 18.05.2015
+
+Filen inneholder klassen Hovedside.*/
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -5,9 +10,12 @@ import java.awt.image.*;
 import java.io.*;
 import java.text.*;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
+import java.time.format.*;
 import java.util.*;
 
+/*Klassen er en subklasse av JFrame. Klassen er hovedvinduet for kundene. Vinduet viser en liste over alle arrangementer
+innenfor en valgt tidsperiode, hvor kunden kan se mer info om arrangementene eller kjøpe billetter til de.
+I menyen øverst på siden kan også ansatte logge inn for å komme til hovedsiden for ansatte.*/
 public class Hovedside extends JFrame implements Serializable
 {
     private static final int BANNERBREDDE = 800;
@@ -51,6 +59,8 @@ public class Hovedside extends JFrame implements Serializable
     private DecimalFormat krFormat;
     private DateTimeFormatter dtf;
     
+    /*Metoden er konstruktøren til klassen Hovedside.
+    Konstruktøren oppretter og setter sammen objektene som utgjør utseendet til vinduet.*/
     public Hovedside()
     {
         super("Målselv Kommune");
@@ -273,6 +283,8 @@ public class Hovedside extends JFrame implements Serializable
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
     
+    /*Metode som finner alle arrangementer innen for den valgt tidsperioden og typen ut ifra variabelen arrType,
+    og returnerer en array av ImageIcon objekter som er "screeshots" av JPanels med info om hvert arrangement.*/
     private ImageIcon[] arrangementerListe()
     {
         if(lregister == null)
@@ -323,7 +335,7 @@ public class Hovedside extends JFrame implements Serializable
         Arrays.sort(arrListe, new ArrangementDatoSammenlikner());
         
         ImageIcon[] arrFrameListe = new ImageIcon[arrListe.length];
-        for(int i = 0; i < arrListe.length; i++)
+        for(int i = 0; i < arrListe.length; i++)  //Er i denne for-løkka ImageIcon objektene blir opprettet
         {
             JFrame ramme = new JFrame();
             JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -360,6 +372,7 @@ public class Hovedside extends JFrame implements Serializable
         return arrFrameListe;
     }
     
+    //Metode som oppdaterer arrangement listen som vises i vinduet
     public void oppdaterArrangementer(int t, JLabel knapp)
     {
         arrType = t;
@@ -381,67 +394,68 @@ public class Hovedside extends JFrame implements Serializable
         setValgtKnapp(knapp);
     }
     
-    public void skrivTilFil() //Metode som skriver registrene til en fil
-	{
-            try(ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filnavn)))
-            {
-                output.writeObject(lregister);
-                output.writeObject(kpregister);
-                output.writeInt(Arrangement.getNesteId());
-                output.writeInt(Kontaktperson.getNesteNr());
-            }
-            catch (NotSerializableException nse)
-            {
-                visMelding("En eller flere av objektene er ikke serialiserbare!\nIngen registrering på fil!");
-            }
-            catch (IOException ioe)
-            {
-                visMelding("Det oppstod en feil ved skriving til fil.");
-            }
-	}
+    public void skrivTilFil() //Metode som skriver registrene til en fil med navn lik variabelen filnavn
+    {
+        try(ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filnavn)))
+        {
+            output.writeObject(lregister);
+            output.writeObject(kpregister);
+            output.writeInt(Arrangement.getNesteId());
+            output.writeInt(Kontaktperson.getNesteNr());
+        }
+        catch (NotSerializableException nse)
+        {
+            visMelding("En eller flere av objektene er ikke serialiserbare!\nIngen registrering på fil!");
+        }
+        catch (IOException ioe)
+        {
+            visMelding("Det oppstod en feil ved skriving til fil.");
+        }
+    }
 
-	public void lesFraFil() //Metode som leser registrene fra en fil
-	{
-            try(ObjectInputStream input = new ObjectInputStream(new FileInputStream(filnavn)))
-            {
-                lregister = (Lokalregister) input.readObject();
-                kpregister = (Kontaktpersonregister) input.readObject();
-                Arrangement.setNesteId(input.readInt());
-                Kontaktperson.setNesteNr(input.readInt());
-            }
-            catch(ClassNotFoundException cnfe)
-            {
-                visMelding("Fant ikke definisjon av objektene.\nOppretter tomme registre.");
-                lregister = new Lokalregister();
-                kpregister = new Kontaktpersonregister();
-            }
-            catch(FileNotFoundException fnfe)
-            {
-                visMelding("Finner ikke angitt fil.\nOppretter tomme registre.");
-                lregister = new Lokalregister();
-                kpregister = new Kontaktpersonregister();
-            }
-            catch(IOException ioe)
-            {
-                visMelding("Fikk ikke lest fra fila.\nOppretter tomme registre.");
-                lregister = new Lokalregister();
-                kpregister = new Kontaktpersonregister();
-            }
-            oppdaterArrangementer(ALLE, arrangementer);
-	}
+    public void lesFraFil() //Metode som leser registrene fra en fil med navn lik variabelen filnavn
+    {
+        try(ObjectInputStream input = new ObjectInputStream(new FileInputStream(filnavn)))
+        {
+            lregister = (Lokalregister) input.readObject();
+            kpregister = (Kontaktpersonregister) input.readObject();
+            Arrangement.setNesteId(input.readInt());
+            Kontaktperson.setNesteNr(input.readInt());
+        }
+        catch(ClassNotFoundException cnfe)
+        {
+            visMelding("Fant ikke definisjon av objektene.\nOppretter tomme registre.");
+            lregister = new Lokalregister();
+            kpregister = new Kontaktpersonregister();
+        }
+        catch(FileNotFoundException fnfe)
+        {
+            visMelding("Finner ikke angitt fil.\nOppretter tomme registre.");
+            lregister = new Lokalregister();
+            kpregister = new Kontaktpersonregister();
+        }
+        catch(IOException ioe)
+        {
+            visMelding("Fikk ikke lest fra fila.\nOppretter tomme registre.");
+            lregister = new Lokalregister();
+            kpregister = new Kontaktpersonregister();
+        }
+        oppdaterArrangementer(ALLE, arrangementer);
+    }
     
-    private void visInfo()
+    private void visInfo() //Metode som åpner et info vindu for arrangementet som er markert i listen
     {
         JFrame infoVindu = new InfoArr(arrListe[infoFelt.getSelectedIndex()], true);
         infoVindu.setLocationRelativeTo(this);
     }
     
-    private void kjopBillett()
+    private void kjopBillett() //Metode som åpner et kjøp vindu for arrangementet som er markert i listen
     {
         JFrame kjopVindu = new Kjop(arrListe[infoFelt.getSelectedIndex()]);
         kjopVindu.setLocationRelativeTo(this);
     }
     
+    //Metode som åpner et pop-up vindu der ansatte kan logge inn for å få opp hovedsiden for ansatte
     private void loggInn()
     {
         JPanel loggInnInfo = new JPanel(new FlowLayout());
@@ -472,11 +486,16 @@ public class Hovedside extends JFrame implements Serializable
         }
     }
     
+    //Metode som tar parameteret og oppretter en popup-boks. Parameterets betydning: melding = teksten som skal skrives på popup-boksen.
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
     }
     
+    /*Metode som tar parametrene og lager en tekst Array. Parametrenes betydning:
+    tittel = det første teks objektet i arrayen, start = starverdien til tallene i arrayen(vil være på indeks 1 i arrayen),
+    slutt = sluttverdien til tallene i arrayen(vil være på siste indeksen i arrayen).
+    Fra start til slutt i arrayen vil vær plass økes med en fra forrige tall, helt til man treffer sluttverdien.*/
     private String[] tallArray(String tittel, int start, int slutt)
     {
         String[] tall = new String[slutt - start + 2];
@@ -488,6 +507,8 @@ public class Hovedside extends JFrame implements Serializable
         return tall;
     }
     
+    /*Metode som setter fonten til alle meny-knappene til PLAIN(vanlig)
+    og setter fonten til JLabelen knapp, som blir sendt med som parameter, til BOLD(fet).*/
     private void setValgtKnapp(JLabel knapp)
     {
         arrangementer.setFont(new Font(arrangementer.getFont().getName(), Font.PLAIN, 18));
@@ -504,7 +525,8 @@ public class Hovedside extends JFrame implements Serializable
         knapp.setFont(new Font(knapp.getFont().getName(), Font.BOLD, knapp.getFont().getSize()));
     }
     
-    private class Knappelytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    //Klasse som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    private class Knappelytter implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
         {
@@ -523,6 +545,7 @@ public class Hovedside extends JFrame implements Serializable
         }
     }
     
+    //Klasse som bestemmer hvilken metode som blir utført utifra hvilken meny-knapp som blir trykket på.
     private class Labellytter implements MouseListener
     {
         public void mouseClicked(MouseEvent e)

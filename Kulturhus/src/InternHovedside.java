@@ -1,3 +1,8 @@
+/*Opprettet av: Thomas Kristiansen
+Sist endret: 18.05.2015
+
+Filen inneholder klassen InternHovedside.*/
+
 import java.awt.*;
 import java.awt.event.*;
 import java.time.*;
@@ -6,6 +11,10 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+/*Klassen er en subklasse av JFrame. Klassen er hovedvinduet for ansatte. Vinduet viser en liste over alle arrangementer
+innenfor en valgt tidsperiode, samt valg for liste av alle kontaktpersoner og lokaler. Om arrangementene og kontaktpersonene kan
+de ansatte få se mer info om hvert enkelt objekt, og for arrangementer kan de ansatte avlyse et bestemt objekt.
+I en meny øverst på siden kan de ansatte også opprette arrangementer, kontaktpersoner og lokaler, samt se statistikk.*/
 public class InternHovedside extends JFrame
 {
     private static final int MENYBREDDE = 250;
@@ -54,6 +63,10 @@ public class InternHovedside extends JFrame
     private Lokalregister lregister;
     private Kontaktpersonregister kpregister;
     
+    /*Metoden er konstruktøren til klassen InternHovedside.
+    Konstruktøren oppretter og setter sammen objektene som utgjør utseendet til vinduet.
+    Parametrenes betydning: l = Lokalregister objektet som brukes felles for hele programmet,
+    k = Kontaktpersonregister objektet som brukes felles for hele programmet.*/
     public InternHovedside(Lokalregister l, Kontaktpersonregister k)
     {
         super("Målselv Kommune - For ansatte");
@@ -276,6 +289,8 @@ public class InternHovedside extends JFrame
         setVisible(true);
     }
     
+    /*Metode som finner alle arrangementer innen for den valgt tidsperioden og typen ut ifra variabelen type,
+    og returnerer en todimensjonal array av String objekter som inneholder info om hvert arrangement.*/
     private String[][] arrInfoListe()
     {
         kolNavn = kolArr;
@@ -328,6 +343,7 @@ public class InternHovedside extends JFrame
         return arrInfoArray;
     }
     
+    //Metode som finner alle lokaler og returnerer en todimensjonal array av String objekter som inneholder info om hvert lokale.
     private String[][] lokaleInfoListe()
     {
         kolNavn = kolLokale;
@@ -351,6 +367,7 @@ public class InternHovedside extends JFrame
         return lokaleInfoArray;
     }
     
+    //Metode som finner alle kontaktpersoner og returnerer en todimensjonal array av String objekter som inneholder info om hver kontaktperson.
     private String[][] kPersonInfoListe()
     {
         kolNavn = kolKPerson;
@@ -376,6 +393,7 @@ public class InternHovedside extends JFrame
         return kPersonInfoArray;
     }
     
+    //Metode som åpner et info vindu for enten arrangementet eller kontaktpersonen som er markert i listen
     private void visInfo()
     {
         JFrame infoVindu;
@@ -410,6 +428,8 @@ public class InternHovedside extends JFrame
         infoVindu.setLocationRelativeTo(this);
     }
     
+    /*Metode som først spør den ansatte om å bekrefte at de vil slette det valgt arrangementet,
+    for så å slette arrangementet og vise et vindu med info om alle som hadde kjøpt billetter til arrangementet.*/
     private void avlysArr()
     {
         if(infoTabell.getSelectedRow() >= arrListe.length)
@@ -441,6 +461,8 @@ public class InternHovedside extends JFrame
         }
     }
     
+    /*Metode som oppdaterer tabellen ved hjelp av parametrene. Parametrenes betydning:
+    t = hva slags type som skal vises i form av et heltall(se Kulturhus.java), knapp = JLabelen som er trykke på i menyen.*/
     private void oppdaterTabell(int t, JLabel knapp)
     {
         type = t;
@@ -510,6 +532,8 @@ public class InternHovedside extends JFrame
             setValgtKnapp(knapp);
     }
     
+    /*Metode som setter fonten til alle meny-knappene til PLAIN(vanlig)
+    og setter fonten til JLabelen knapp, som blir sendt med som parameter, til BOLD(fet).*/
     private void setValgtKnapp(JLabel knapp)
     {
         arrangementer.setFont(new Font(arrangementer.getFont().getName(), Font.PLAIN, arrangementer.getFont().getSize()));
@@ -528,52 +552,59 @@ public class InternHovedside extends JFrame
         knapp.setFont(new Font(knapp.getFont().getName(), Font.BOLD, knapp.getFont().getSize()));
     }
     
+    //Metode som åpner et RegistreringsVindu objekt og setter den aktive fanen lik parameteren indeks.
     private void visRegVindu(int indeks)
     {
         JFrame regVindu = new RegistreringsVindu(lregister, kpregister, indeks);
         regVindu.setLocationRelativeTo(this);
     }
     
+    //Metode som åpner et StatistikkVindu objekt og setter den aktive fanen lik parameteren indeks.
     private void visStatistikkVindu(int indeks)
     {
         JFrame statVindu = new StatistikkVindu(lregister, indeks);
         statVindu.setLocationRelativeTo(this);
     }
     
+    //Metode som tar parameteret og oppretter en popup-boks. Parameterets betydning: melding = teksten som skal skrives på popup-boksen.
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
     }
     
+    //Privat klasse som er tabellmodellen som blir brukt i tabellen infoTabell
     public class Tabellmodell extends AbstractTableModel
     {       
-        public boolean isCellEditable(int rad, int kolonne)
+        public boolean isCellEditable(int rad, int kolonne) //Metode som gjørt at cellene i tabbellen ikke er editerbare
         {  
             return false;  
         }
         
+        //Metode som returnerer kolonnenavnet ved hjelp av indeksen gitt ved parameteren kolonne 
         public String getColumnName(int kolonne)
         {
             return kolNavn[kolonne];
         }
 
-        public int getRowCount()
+        public int getRowCount() //Metode som returnerer antall rader
         {
             return infoListe.length;
         }
 
-        public int getColumnCount()
+        public int getColumnCount() //Metode som returnerer antall kolonner
         {
             return infoListe[0].length;
         }
 
+        //Metode som returnerer verdien til objektet i en bestem celle, bestemt ut ifra parametrene rad og kolonne
         public String getValueAt(int rad, int kolonne)
         {
             return infoListe[rad][kolonne];
         }
     }
     
-    private class Knappelytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    //Lasse som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    private class Knappelytter implements ActionListener
     {       
         public void actionPerformed(ActionEvent e)
         {
@@ -599,6 +630,7 @@ public class InternHovedside extends JFrame
         }
     }
     
+    //Klasse som bestemmer hvilken metode som blir utført utifra hvilken meny-knapp som blir trykket på.
     private class Labellytter implements MouseListener
     {
         public void mouseClicked(MouseEvent e)

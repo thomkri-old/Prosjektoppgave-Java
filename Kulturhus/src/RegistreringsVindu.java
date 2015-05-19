@@ -1,3 +1,8 @@
+/*Opprettet av: Thomas Kristiansen
+Sist endret: 18.05.2015
+
+Filen inneholder klassen RegistreringsVindu.*/
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -8,6 +13,8 @@ import javax.swing.*;
 import javax.swing.filechooser.*;
 import javax.swing.plaf.basic.*;
 
+/*Klassen er en subklasse av JFrame. Klassen er et vindu hvor ansatte kan oppprette
+Kontaktpersoner, lokaler og arrangementer.*/
 public class RegistreringsVindu extends JFrame
 {
     private static final int DEBATT = 0;
@@ -25,7 +32,6 @@ public class RegistreringsVindu extends JFrame
     private JTabbedPane tabbedPane;
     private JButton avbrytKnappA, avbrytKnappKP, avbrytKnappL, regKnappA, regKnappKP, regKnappL;
     private Kommandolytter knappelytter;
-    private Tablytter tablytter;
     
     private JLabel infoTekst, arrNavn, program, bPrisBarn, bPrisVoksen, deltakere, dato, tid, kPerson, lokale, sjanger, aldersgrense, lengde, velgBilde, valgtBildeSjekk;
     private JTextField navnFelt, bpBarnFelt, bpVoksenFelt, sjangerFelt, alderFelt, lengdeFelt;
@@ -60,6 +66,11 @@ public class RegistreringsVindu extends JFrame
     private Kontaktpersonregister kpregister;
     private Lokalregister lregister;
     
+    /*Metoden er konstruktøren til klassen RegistreringsVindu.
+    Konstruktøren oppretter og setter sammen objektene som utgjør utseendet til vinduet.
+    Parametrenes betydning: l = Lokalregister objektet som brukes felles for hele programmet,
+    kp = Kontaktpersonregister objektet som brukes felles for hele programmet,
+    valgtFane = indeksen på fanen som skal være valgt når vinduet blir laget.*/
     public RegistreringsVindu(Lokalregister l, Kontaktpersonregister kp, int valgtFane)
     {
         super("Opprett");
@@ -67,11 +78,9 @@ public class RegistreringsVindu extends JFrame
         lregister = l;
         kpregister = kp;
         knappelytter = new Kommandolytter();
-        tablytter = new Tablytter();
         
         tabbedPane = new JTabbedPane();
         tabbedPane.setUI(new BasicTabbedPaneUI());
-        tabbedPane.addMouseListener(tablytter);
         tabbedPane.setBackground(this.getBackground());
         tabbedPane.setPreferredSize(new Dimension(825, 485));
         
@@ -88,6 +97,7 @@ public class RegistreringsVindu extends JFrame
         setVisible(true);
     }
     
+    //Metode som resetter JTabbedPane objektet tabbedpane, og legger til alle JPanels til fanene på nytt
     private void setTabbedPane()
     {
         tabbedPane.removeAll();
@@ -99,6 +109,7 @@ public class RegistreringsVindu extends JFrame
         tabbedPane.addTab("Arrangement", null, aPanel, "Opprett arrangement");
     }
     
+    //Metode som oppretter og returnerer et JPanel av typen t, sendt i parameteret(Se Kulturhus.java)
     private JPanel opprettVindu(int t)
     {
         type = t;
@@ -141,6 +152,7 @@ public class RegistreringsVindu extends JFrame
         return vindu;
     }
     
+    //Metode som oppretter alle objektene som skal vises i fanen for opprettelse av arrangementer
     private void opprettArrVindu()
     {
         arrNavn = new JLabel("Arrangement navn:");
@@ -348,6 +360,7 @@ public class RegistreringsVindu extends JFrame
         knapper.add(avbrytKnappA, gbcK);
     }
     
+    //Metode som oppretter alle objektene som skal vises i fanen for opprettelse av kontaktpersoner
     private void opprettKpersonVindu()
     {
         fornavn = new JLabel("Fornavn:");
@@ -424,6 +437,7 @@ public class RegistreringsVindu extends JFrame
         knapper.add(avbrytKnappKP, gbcK);
     }
     
+    //Metode som oppretter alle objektene som skal vises i fanen for opprettelse av lokaler
     private void opprettLokaleVindu()
     {
         lokaleNavn = new JLabel("Navn:");
@@ -491,6 +505,7 @@ public class RegistreringsVindu extends JFrame
         knapper.add(avbrytKnappL, gbcK);
     }
     
+    //Metode som ut ifra typen t, fra parameteret, kaller på riktig metode for å opprette riktig objekt 
     private void opprett(int t)
     {
         type = t;
@@ -502,6 +517,7 @@ public class RegistreringsVindu extends JFrame
             opprettArrangement();
     }
     
+    //Metode som oppretter et Kontaktperson objekt ut ifra feltene i fanen for opprettelse av kontaktpersoner
     private void opprettKontaktperson()
     {
         String fn = fornavnFelt.getText();
@@ -534,6 +550,7 @@ public class RegistreringsVindu extends JFrame
         }
     }
     
+    //Metode som oppretter et Lokale objekt ut ifra feltene i fanen for opprettelse av lokaler
     private void opprettLokale()
     {
         String n = lokaleNavnFelt.getText();
@@ -568,6 +585,7 @@ public class RegistreringsVindu extends JFrame
         }
     }
     
+    //Metode som oppretter et Arrangement objekt ut ifra feltene i fanen for opprettelse av arrangementer
     private void opprettArrangement()
     {
         String n = navnFelt.getText();
@@ -677,6 +695,10 @@ public class RegistreringsVindu extends JFrame
         }
     }
     
+    /*Metode som tar parametrene og lager en tekst Array. Parametrenes betydning:
+    tittel = det første teks objektet i arrayen, start = starverdien til tallene i arrayen(vil være på indeks 1 i arrayen),
+    slutt = sluttverdien til tallene i arrayen(vil være på siste indeksen i arrayen).
+    Fra start til slutt i arrayen vil vær plass økes med en fra forrige tall, helt til man treffer sluttverdien.*/
     private String[] tallArray(String tittel, int start, int slutt)
     {
         String[] tall = new String[slutt - start + 2];
@@ -688,6 +710,8 @@ public class RegistreringsVindu extends JFrame
         return tall;
     }
     
+    /*Metode som tar Lokale arrayen lArray, fra parameteret, og returnerer en String array med
+    alle navnene til Lokale objektene i lArray*/
     private String[] navnArray(Lokale[] lArray)
     {
         if(lArray == null)
@@ -699,6 +723,8 @@ public class RegistreringsVindu extends JFrame
         return navn;
     }
     
+    /*Metode som tar Kontaktperson arrayen kpArray, fra parameteret, og returnerer en String array med
+    alle navnene til Kontaktperson objektene i kpArray*/
     private String[] navnArray(Kontaktperson[] kpArray)
     {
         if(kpArray == null)
@@ -710,16 +736,19 @@ public class RegistreringsVindu extends JFrame
         return navn;
     }
     
+    //Metode som tar parameteret og oppretter en popup-boks. Parameterets betydning: melding = teksten som skal skrives på popup-boksen.
     private void visMelding(String melding)
     {
         JOptionPane.showMessageDialog(this, melding);
     }
     
-    private void lukkVindu()
+    private void lukkVindu() //Metode som lukker vinduet
     {
         this.dispose();
     }
     
+    /*Metode som starter et filvelger vindu, som gjør at brukeren kan velge et bilde fra PCen sin,
+    som blir brukt som bilde(plakat) til arrangementet som skal opprettes.*/
     private void kjorBildevelger()
     {
         filvelger = new JFileChooser();
@@ -744,12 +773,8 @@ public class RegistreringsVindu extends JFrame
         }
     }
     
-    private void packVindu()
-    {
-        this.pack();
-    }
-    
-    private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    //Klasse som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    private class Kommandolytter implements ActionListener 
     {
         public void actionPerformed(ActionEvent e)
         {
@@ -816,36 +841,5 @@ public class RegistreringsVindu extends JFrame
             else if(e.getSource() == filvelgerKnapp)
                 kjorBildevelger();
         }
-    }
-    
-    private class Tablytter implements MouseListener
-    {
-        public void mouseClicked(MouseEvent e)
-        {
-            if(e.getSource() == tabbedPane)
-            {
-                if(tabbedPane.getSelectedIndex() == 2)
-                {
-                    if(lokaleArray == null)
-                    {
-                        visMelding("Du må opprette minst ett lokale\nfør du kan opprette et arrangement.");
-                        tabbedPane.setSelectedIndex(1);
-                    }
-                    else if(kPersonArray == null)
-                    {
-                        visMelding("Du må opprette minst èn kontaktperson\nfør du kan opprette et arrangement.");
-                        tabbedPane.setSelectedIndex(0);
-                    }
-                }
-            }
-        }
-
-        public void mousePressed(MouseEvent e) { }
-
-        public void mouseReleased(MouseEvent e) { }
-
-        public void mouseEntered(MouseEvent e) { }
-
-        public void mouseExited(MouseEvent e) { }
     }
 } //End of class RegistreringsVindu

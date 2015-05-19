@@ -28,8 +28,8 @@ public class ArrangementDatoSammenlikner implements Comparator<Arrangement>, Ser
         }
     }
     
-    /*Metoden er implementert fra interfacet Comparator<>. Metoden tar to paramtere av typen Arrangement
-    Metoden tar så å sammenlikner disse to objektene, først etter dato og tid, og så alfabetisk.*/
+    /*Metoden er implementert fra interfacet Comparator<>. Metoden tar to paramtere av typen Arrangement.
+    Metoden tar så å sammenlikner disse to objektene, først etter dato og tid, og så alfabetisk etter navn.*/
     public int compare(Arrangement a1, Arrangement a2)
     {
         LocalDateTime ldt1 = a1.getDato();

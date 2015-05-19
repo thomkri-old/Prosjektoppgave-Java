@@ -1,12 +1,18 @@
+/*Opprettet av: Sara Torp Myhre
+Sist endret: 14.05.2015
+
+Filen inneholder klassen Kjop.*/
+
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 import java.text.*;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.text.*;
 
-public class Kjop extends JFrame implements Serializable
+/*Klassen er en subklasse av JFrame. Klassen er et vindu som viser litt info om et bestemt arrangement
+på et vindu der kunden kan kjøpe billett til dette arrangementet.*/ 
+public class Kjop extends JFrame
 {
     private JPanel vindu, infoPanel, hoyrePanel, kjopPanel, knappePanel, bildePanel, valgPanel;
     private JTextPane arrInfo;
@@ -24,6 +30,9 @@ public class Kjop extends JFrame implements Serializable
     DecimalFormat krFormat;
     private DateTimeFormatter dtf;
     
+    /*Metoden er konstruktøren til klassen InfoArr.
+    Konstruktøren oppretter og setter sammen objektene som utgjør utseendet til vinduet.
+    Parametrenes betydning: a = Arrangement objektet det skal vises info om og kjøpes billett til.*/
     public Kjop(Arrangement a)
     {
         super("Kjøp billett for " + a.getNavn());
@@ -171,6 +180,9 @@ public class Kjop extends JFrame implements Serializable
         setVisible(true);
     }
     
+    /*Metode som tar parametrene og skriver tekst på JTextPane-objektet arrInfo. Parameterets betydning: 
+    tekst = teksten som skal skrives, fontStr = størrelsen på skriften som skal skrives, fetSkrift = true hvis teksten skal
+    ha fet skrift og false hvis ikke, kursivSkrift = true hvis teksten skal ha kursiv skrift og false hvis ikke*/
     private void lagInfoUtskrift(String tekst, int fontStr, boolean fetSkrift, boolean kursivSkrift)
     {
         SimpleAttributeSet style = new SimpleAttributeSet();
@@ -189,6 +201,9 @@ public class Kjop extends JFrame implements Serializable
         }
     }
     
+    /*Metode som tar all info som er ført inn i tekstboksene og det som er valgt i nedfallslistene,
+    og lager et billett objekt ut ifra denne innførte videoen og variabelen arrangement,
+    som blir satt inn i billettListen til Arrangement objektet arrangement.*/ 
     private void kjopBillett()
     {
         String fn = fornavnFelt.getText();
@@ -246,6 +261,10 @@ public class Kjop extends JFrame implements Serializable
         }
     }
     
+    /*Metode som tar parametrene og lager en tekst Array. Parametrenes betydning:
+    tittel = det første teks objektet i arrayen, start = starverdien til tallene i arrayen(vil være på indeks 1 i arrayen),
+    slutt = sluttverdien til tallene i arrayen(vil være på siste indeksen i arrayen).
+    Fra start til slutt i arrayen vil hver plass økes med en fra forrige tall, helt til man treffer sluttverdien.*/
     private String[] tallArray(String tittel, int start, int slutt)
     {
         String[] tall = new String[slutt - start + 2];
@@ -257,17 +276,19 @@ public class Kjop extends JFrame implements Serializable
         return tall;
     }
     
-    private void lukkVindu()
+    private void lukkVindu() //Metode som lukker vinduet
     {
         this.dispose();
     }
     
-    private void visMelding(String melding)
+    //Metode som tar parameteret og oppretter en popup-boks. Parameterets betydning: melding = teksten som skal skrives på popup-boksen.
+    private void visMelding(String melding) 
     {
         JOptionPane.showMessageDialog(this, melding);
     }
     
-    private class Kommandolytter implements ActionListener //Kommandolytteren som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    //Klasse som bestemmer hvilken metode som blir utført utifra hvilken knapp det blir trykket på
+    private class Kommandolytter implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
         {
