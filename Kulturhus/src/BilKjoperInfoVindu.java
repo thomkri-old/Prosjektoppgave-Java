@@ -13,6 +13,9 @@ import javax.swing.text.*;
 om alle som har kjøpt billetter til et gitt arrangement etter det er avlyst.*/
 public class BilKjoperInfoVindu extends JFrame
 {
+    private static final int INFOSCROLLBREDDE = 700;
+    private static final int INFOSCROLLHOYDE = 500;
+    
     private JPanel vindu, lagrePanel;
     private JTextPane info;
     private JScrollPane infoScroll;
@@ -59,7 +62,7 @@ public class BilKjoperInfoVindu extends JFrame
         }
         
         infoScroll = new JScrollPane(info, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        infoScroll.setPreferredSize(new Dimension(700, 500));
+        infoScroll.setPreferredSize(new Dimension(INFOSCROLLBREDDE, INFOSCROLLHOYDE));
         infoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         
         lukkKnapp = new JButton("Lukk");

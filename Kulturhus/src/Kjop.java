@@ -14,6 +14,9 @@ import javax.swing.text.*;
 på et vindu der kunden kan kjøpe billett til dette arrangementet.*/ 
 public class Kjop extends JFrame
 {
+    private static final int INFOSCROLLBREDDE = 325;
+    private static final int INFOSCROLLHOYDE = 150;
+    
     private JPanel vindu, infoPanel, hoyrePanel, kjopPanel, knappePanel, bildePanel, valgPanel;
     private JTextPane arrInfo;
     private JScrollPane infoScroll;
@@ -67,7 +70,7 @@ public class Kjop extends JFrame
         arrInfo.setCaretPosition(0);
         
         infoScroll = new JScrollPane(arrInfo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        infoScroll.setPreferredSize(new Dimension(325, 150));
+        infoScroll.setPreferredSize(new Dimension(INFOSCROLLBREDDE, INFOSCROLLHOYDE));
         infoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         
         kjopPanel = new JPanel(new GridBagLayout());
@@ -171,7 +174,7 @@ public class Kjop extends JFrame
         gbcV.gridy = 0;
         
         vindu.add(infoPanel, gbcV);
-        gbcV.gridx += 1;
+        gbcV.gridx++;
         vindu.add(hoyrePanel, gbcV);
         
         add(vindu);

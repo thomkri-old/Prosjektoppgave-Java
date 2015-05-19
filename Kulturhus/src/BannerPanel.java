@@ -10,8 +10,6 @@ import javax.swing.*;
 //Klassen er en subklasse av JPanel som brukes til å vise hovedsidens banner
 public class BannerPanel extends JPanel
 {
-    private final int BREDDE = 800;
-    private final int HOYDE = 100;
     private ImageIcon bannerIkon;
     private Image banner;
     
@@ -20,7 +18,7 @@ public class BannerPanel extends JPanel
     public BannerPanel()
     {
         URL bildeURL = null;
-        bildeURL = Hovedside.class.getResource("/bilder/banner1.png");
+        bildeURL = Hovedside.class.getResource("/bilder/banner.png");
         if(bildeURL != null)
             bannerIkon = new ImageIcon(bildeURL);
         else

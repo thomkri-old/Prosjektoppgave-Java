@@ -11,6 +11,8 @@ import javax.swing.text.*;
 //Klassen er en subklasse av JFrame. Klassen er Info vindu som viser info om en bestemt Kontaktperson
 public class InfoKPerson extends JFrame
 {
+    private static final int INFOSCROLLBREDDE = 375;
+    private static final int INFOSCROLLHOYDE = 250;
     private static final int SCROLLSPEED = 16;
     
     private JPanel vindu, tekstInnholdPanel;
@@ -59,7 +61,7 @@ public class InfoKPerson extends JFrame
         
         infoScroll = new JScrollPane(tekstInnholdPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         infoScroll.getVerticalScrollBar().setUnitIncrement(SCROLLSPEED);
-        infoScroll.setPreferredSize(new Dimension(375, 250));
+        infoScroll.setPreferredSize(new Dimension(INFOSCROLLBREDDE, INFOSCROLLHOYDE));
         infoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
 
         lukkKnapp = new JButton("Lukk");

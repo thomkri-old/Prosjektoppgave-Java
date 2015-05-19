@@ -13,6 +13,8 @@ import javax.swing.text.*;
 //Klassen er en subklasse av JFrame. Klassen er Info vindu som viser info om et bestemt arrangement
 public class InfoArr extends JFrame
 {
+    private static final int INFOSCROLLBREDDE = 375;
+    private static final int INFOSCROLLHOYDE = 275;
     private static final int SCROLLSPEED = 16;
     
     private JPanel vindu, infoPanel, knappePanel, bildePanel, tekstInnholdPanel;
@@ -86,7 +88,7 @@ public class InfoArr extends JFrame
         
         arrInfoScroll = new JScrollPane(tekstInnholdPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         arrInfoScroll.getVerticalScrollBar().setUnitIncrement(SCROLLSPEED);
-        arrInfoScroll.setPreferredSize(new Dimension(375, 275));
+        arrInfoScroll.setPreferredSize(new Dimension(INFOSCROLLBREDDE, INFOSCROLLHOYDE));
         arrInfoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         
         knappePanel = new JPanel(new GridBagLayout());

@@ -18,7 +18,11 @@ I en meny øverst på siden kan de ansatte også opprette arrangementer, kontakt
 public class InternHovedside extends JFrame
 {
     private static final int MENYBREDDE = 250;
+    private static final int MENYHOYDE = 425;
+    private static final int INFOPANELBREDDE = 700;
+    private static final int INFOPANELHOYDE = 530;
     private static final int SCROLLSPEED = 16;
+    private static final int VISANTRADER = 27;
     
     private JPanel vindu, meny, hovedPanel, infoPanel, datoPanel, fraPanel, tilPanel, knapper;
     private JTable infoTabell;
@@ -106,10 +110,10 @@ public class InternHovedside extends JFrame
         hovedPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
         
         meny = new JPanel(new GridBagLayout());
-        meny.setPreferredSize(new Dimension(MENYBREDDE, 425));
+        meny.setPreferredSize(new Dimension(MENYBREDDE, MENYHOYDE));
         
         infoPanel = new JPanel(new BorderLayout());
-        infoPanel.setPreferredSize(new Dimension(700, 530));
+        infoPanel.setPreferredSize(new Dimension(INFOPANELBREDDE, INFOPANELHOYDE));
         infoPanel.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.lightGray));
         
         menyOverskrift = new JLabel("Meny");
@@ -187,7 +191,7 @@ public class InternHovedside extends JFrame
         infoListe = arrInfoListe();
         if(infoListe == null)
         {
-            infoListe = new String[27][kolNavn.length];
+            infoListe = new String[VISANTRADER][kolNavn.length];
             visMelding("Det finnes ingen arrangementer i den valgte kategorien og perioden.");
         }
         
@@ -320,8 +324,8 @@ public class InternHovedside extends JFrame
         Arrays.sort(arrListe, new ArrangementDatoSammenlikner());
         
         int antRader = arrListe.length;
-        if(antRader < 28)
-            antRader = 27;
+        if(antRader < VISANTRADER + 1)
+            antRader = VISANTRADER;
         String[][] arrInfoArray = new String[antRader][kolNavn.length];
         for(int i = 0; i < arrListe.length; i++)
         {
@@ -346,8 +350,8 @@ public class InternHovedside extends JFrame
         Arrays.sort(lokaleListe, new Lokalesammenlikner());
         
         int antRader = lokaleListe.length;
-        if(antRader < 28)
-            antRader = 27;
+        if(antRader < VISANTRADER + 1)
+            antRader = VISANTRADER;
         String[][] lokaleInfoArray = new String[antRader][kolNavn.length];
         for(int i = 0; i < lokaleListe.length; i++)
         {
@@ -370,8 +374,8 @@ public class InternHovedside extends JFrame
         Arrays.sort(kPersonListe, new KPersonsammenlikner());
         
         int antRader = kPersonListe.length;
-        if(antRader < 28)
-            antRader = 27;
+        if(antRader < VISANTRADER +1)
+            antRader = VISANTRADER;
         String[][] kPersonInfoArray = new String[antRader][kolNavn.length];
         for(int i = 0; i < kPersonListe.length; i++)
         {
@@ -468,7 +472,7 @@ public class InternHovedside extends JFrame
         
         if(infoListe == null)
         {
-            infoListe = new String[27][kolNavn.length];
+            infoListe = new String[VISANTRADER][kolNavn.length];
             if(type == Kulturhus.KONTAKTPERSON || type == Kulturhus.LOKALE)
                 visMelding("Det finnes ingen " + ((type == Kulturhus.KONTAKTPERSON)?"kontaktpersoner":"lokaler") + " i systemet");
             else

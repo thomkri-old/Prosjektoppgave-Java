@@ -21,6 +21,11 @@ public class Hovedside extends JFrame implements Serializable
     private static final int BANNERBREDDE = 800;
     private static final int BANNERHOYDE = 100;
     private static final int MENYBREDDE = 250;
+    private static final int MENYHOYDE = 350;
+    private static final int INFOPANELBREDDE = 535;
+    private static final int INFOPANELHOYDE = 530;
+    private static final int ARRINFOBREDDE = 375;
+    private static final int ARRINFOHOYDE = 160;
     private static final int VALGHOYDE = 3;
     private static final int SCROLLSPEED = 16;
     
@@ -82,10 +87,10 @@ public class Hovedside extends JFrame implements Serializable
         banner.setMaximumSize(new Dimension(BANNERBREDDE, BANNERHOYDE));
         
         meny = new JPanel(new GridBagLayout());
-        meny.setPreferredSize(new Dimension(MENYBREDDE, 350));
+        meny.setPreferredSize(new Dimension(MENYBREDDE, MENYHOYDE));
         
         infoPanel = new JPanel(new BorderLayout());
-        infoPanel.setPreferredSize(new Dimension(535, 530));
+        infoPanel.setPreferredSize(new Dimension(INFOPANELBREDDE, INFOPANELHOYDE));
         infoPanel.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.lightGray));
                 
         menyOverskrift = new JLabel("Meny");
@@ -202,10 +207,9 @@ public class Hovedside extends JFrame implements Serializable
         kjopKnapp = new JButton("Kjøp billett");
         kjopKnapp.addActionListener(knappelytter);
         
-        knapper = new JPanel(new BorderLayout());
-        knapper.add(infoKnapp, BorderLayout.LINE_START);
-        knapper.add(kjopKnapp, BorderLayout.LINE_END);
-        knapper.setBorder(BorderFactory.createEmptyBorder(0, 150, 5, 150));
+        knapper = new JPanel(new FlowLayout());
+        knapper.add(infoKnapp);
+        knapper.add(kjopKnapp);
         
         infoPanel.add(datoPanel, BorderLayout.PAGE_START);
         infoPanel.add(infoScroll, BorderLayout.CENTER);
@@ -343,7 +347,7 @@ public class Hovedside extends JFrame implements Serializable
             info.add(dato);
 
             panel.add(info);
-            panel.setPreferredSize(new Dimension(375, 160));
+            panel.setPreferredSize(new Dimension(ARRINFOBREDDE, ARRINFOHOYDE));
 
             ramme.add(panel);
             ramme.pack();

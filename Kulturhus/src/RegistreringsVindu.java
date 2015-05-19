@@ -16,7 +16,10 @@ import javax.swing.plaf.basic.*;
 /*Klassen er en subklasse av JFrame. Klassen er et vindu hvor ansatte kan oppprette
 Kontaktpersoner, lokaler og arrangementer.*/
 public class RegistreringsVindu extends JFrame
-{    
+{   
+    private static final int TABBEDPANEBREDDE = 825;
+    private static final int TABBEDPANEHOYDE = 485;
+            
     private int type;
     private JPanel kPPanel, lPanel, aPanel, vindu, utfylling, knapper;
     private JTabbedPane tabbedPane;
@@ -74,7 +77,7 @@ public class RegistreringsVindu extends JFrame
         tabbedPane = new JTabbedPane();
         tabbedPane.setUI(new BasicTabbedPaneUI());
         tabbedPane.setBackground(this.getBackground());
-        tabbedPane.setPreferredSize(new Dimension(825, 485));
+        tabbedPane.setPreferredSize(new Dimension(TABBEDPANEBREDDE, TABBEDPANEHOYDE));
         
         setTabbedPane();
         tabbedPane.setSelectedIndex(valgtFane);
