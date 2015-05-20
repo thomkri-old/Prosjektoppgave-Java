@@ -66,6 +66,7 @@ public class BilKjoperInfoVindu extends JFrame
         infoScroll = new JScrollPane(info, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         infoScroll.setPreferredSize(new Dimension(INFOSCROLLBREDDE, INFOSCROLLHOYDE));
         infoScroll.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
+        info.setCaretPosition(0);
         
         lukkKnapp = new JButton("Lukk");
         lukkKnapp.addActionListener(knappelytter);

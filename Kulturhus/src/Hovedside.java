@@ -454,8 +454,8 @@ public class Hovedside extends JFrame implements Serializable
     private void loggInn()
     {
         JPanel loggInnInfo = new JPanel(new FlowLayout());
-        JLabel brukernavnLabel = new JLabel("Brukernavn: ");
-        JLabel passordLabel = new JLabel("Passord: ");
+        JLabel brukernavnLabel = new JLabel("Brukernavn(admin): ");
+        JLabel passordLabel = new JLabel("Passord(admin123): ");
         JTextField brukernavnFelt = new JTextField(10);
         JPasswordField passordFelt = new JPasswordField(10);
         

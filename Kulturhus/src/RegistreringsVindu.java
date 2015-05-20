@@ -552,7 +552,7 @@ public class RegistreringsVindu extends JFrame
         String en = etternavnFelt.getText();
         String ep = epostFelt.getText();
         String ns = nettsideFelt.getText();
-        String f = firma.getText();
+        String f = firmaFelt.getText();
         String o = opplysningerFelt.getText();
         int typeValgtIndeks = typeKPValg.getSelectedIndex() - 1;
         if(fn.equals("") || en.equals("") || ep.equals("") || ns.equals("") || f.equals("") || o.equals(""))
