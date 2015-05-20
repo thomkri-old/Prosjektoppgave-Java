@@ -1,3 +1,5 @@
+
+
 /*Opprettet av: Sara Torp Myhre
 Sist endret: 12.05.2015
 
@@ -18,13 +20,16 @@ public class BannerPanel extends JPanel
     public BannerPanel()
     {
         URL bildeURL = null;
-        bildeURL = Hovedside.class.getResource("/bilder/banner.png");
+        bildeURL = Hovedside.class.getResource("/bilder/Banner.png");
         if(bildeURL != null)
             bannerIkon = new ImageIcon(bildeURL);
         else
             bannerIkon = null;
-        banner = bannerIkon.getImage();
-        setPreferredSize(new Dimension(banner.getWidth(this), banner.getHeight(this)));
+        if(bannerIkon != null)
+        {
+            banner = bannerIkon.getImage();
+            setPreferredSize(new Dimension(banner.getWidth(this), banner.getHeight(this)));
+        }
     }
     
     /*Metode fra klassens superklasse JFrame.

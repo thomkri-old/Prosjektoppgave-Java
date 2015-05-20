@@ -1,3 +1,5 @@
+
+
 /*Opprettet av: Thomas Kristiansen
 Sist endret: 15.05.2015
 
